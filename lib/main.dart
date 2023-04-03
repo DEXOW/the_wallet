@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:the_wallet/constants.dart';
+import 'package:the_wallet/screens/startup/startup-screen.dart';
+import 'package:the_wallet/screens/components/loading-animation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'The Wallet',
       theme: ThemeData.dark().copyWith(
-        // scaffoldBackgroundColor: 
-      )
+        scaffoldBackgroundColor: bgColor,
+      ),
+      home: LoadingPage(),
     );
   }
 }
