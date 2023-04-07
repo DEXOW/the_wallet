@@ -2,12 +2,33 @@
 
 import 'package:flutter/material.dart';
 
-bool _passwordVisible = false;
-void initState() {
-  _passwordVisible = false;
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+  
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class LoginScreen extends StatelessWidget {
+class _LoginScreenState extends State<LoginScreen> {
+  final usrUsername = TextEditingController();
+  final usrPassword = TextEditingController();
+  bool _passwordVisible = false;
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    usrUsername.dispose();
+    usrPassword.dispose();
+    super.dispose();
+  }
+
+  void initState() {
+    _passwordVisible = false;
+  }
+
+  void login() {
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -19,7 +40,7 @@ class LoginScreen extends StatelessWidget {
             alignment: AlignmentDirectional.center,
             children: [
               Positioned(
-                top: screenHeight * 0.1,
+                top: screenHeight * 0.1, // Gap from the top of the screen
                 child: Column(
                   children: [
                     Image(
@@ -28,7 +49,7 @@ class LoginScreen extends StatelessWidget {
                       height: 200,
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: screenHeight * 0.02),
+                      margin: EdgeInsets.only(top: 10),
                       child: Text(
                         'Login',
                         style: TextStyle(
@@ -43,37 +64,35 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: screenHeight * 0.05,
+                bottom: screenHeight * 0.05, // Gap from the bottom of the screen
                 child: Column(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(
-                          top: screenHeight * 0.1, left: 50.0, right: 50.0),
                       child: SizedBox(
                         width: 230.0,
                         child: TextFormField(
+                          controller: usrUsername,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(50.0)),
+                              borderRadius: BorderRadius.all(Radius.circular(50.0)),
                               borderSide: BorderSide(
                                 style: BorderStyle.none,
                                 width: 0,
                               ),
                             ),
                             filled: true,
-                            contentPadding: EdgeInsets.only(
-                                top: 15.0, bottom: 15.0, left: 30.0),
+                            contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
                             hintText: 'Username',
                           ),
                         ),
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: screenHeight * 0.02),
+                      margin: EdgeInsets.only(top: 10),
                       child: SizedBox(
                         width: 230.0,
                         child: TextFormField(
+                          controller: usrPassword,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius:
@@ -84,8 +103,7 @@ class LoginScreen extends StatelessWidget {
                               ),
                             ),
                             filled: true,
-                            contentPadding: EdgeInsets.only(
-                                top: 15.0, bottom: 15.0, left: 30.0),
+                            contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
                             hintText: 'Password',
                           ),
                           obscureText: true,
@@ -97,7 +115,9 @@ class LoginScreen extends StatelessWidget {
                     Container(
                       margin: EdgeInsets.only(top: screenHeight * 0.05),
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          login();
+                        },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
                             Color(0xE61469EF),
@@ -136,7 +156,7 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: screenHeight * 0.01),
+                      margin: EdgeInsets.only(top: 5),
                       child: Text(
                         'Version 1.0.0',
                         style: TextStyle(

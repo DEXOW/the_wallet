@@ -16,7 +16,7 @@ class StartupScreen extends StatelessWidget {
             alignment: AlignmentDirectional.center,
             children: [
               Positioned(
-                top: screenHeight * 0.1,
+                top: screenHeight * 0.1, // Gap from the top of the screen
                 child: Column(
                   children: [
                     Image(
@@ -25,7 +25,7 @@ class StartupScreen extends StatelessWidget {
                       height: 200,
                     ),
                     Container(
-                      margin: EdgeInsets.only(top: screenHeight * 0.02),
+                      margin: EdgeInsets.only(top: 10), 
                       child: Text(
                         'The Wallet',
                         style: TextStyle(
@@ -40,10 +40,9 @@ class StartupScreen extends StatelessWidget {
                 ),
               ),
               Positioned(
-                bottom: screenHeight * 0.05,
+                bottom: screenHeight * 0.05, // Gap from the bottom of the screen
                 child: Column(children: [
                   Container(
-                    margin: EdgeInsets.only(top: screenHeight * 0.02),
                     child: TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -71,7 +70,7 @@ class StartupScreen extends StatelessWidget {
                         'Create Account',
                         style: TextStyle(
                           fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
                           fontFamily: 'Inter',
                           color: Color(0xFFFFFFFF),
                         ),
@@ -79,7 +78,7 @@ class StartupScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: screenHeight * 0.02),
+                    margin: EdgeInsets.only(top: 20),
                     child: TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -106,7 +105,7 @@ class StartupScreen extends StatelessWidget {
                         'Login',
                         style: TextStyle(
                           fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
                           fontFamily: 'Inter',
                           color: Color(0xFFFFFFFF),
                         ),
@@ -126,7 +125,7 @@ class StartupScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: screenHeight * 0.01),
+                    margin: EdgeInsets.only(top: 5),
                     child: Text(
                       'Version 1.0.0',
                       style: TextStyle(
