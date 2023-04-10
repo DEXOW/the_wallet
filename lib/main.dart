@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_wallet/constants.dart';
+import 'package:the_wallet/screens/startup/startup-screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,15 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: bgColor,
       ),
-      home: const Center(
-        child: Text(
-          'Hello World',
-          style: TextStyle(
-            color: primaryColor,
-            fontSize: 20.0,
-          ),
-        ),
-      ),
+      home: StartupScreen(),
     );
   }
 }
