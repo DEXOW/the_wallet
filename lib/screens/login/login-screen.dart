@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:the_wallet/firebase/fire_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -10,14 +10,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final usrUsername = TextEditingController();
+  final usrEmail = TextEditingController();
   final usrPassword = TextEditingController();
   bool _passwordVisible = false;
 
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    usrUsername.dispose();
+    usrEmail.dispose();
     usrPassword.dispose();
     super.dispose();
   }
@@ -26,7 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordVisible = false;
   }
 
-  void login() {
+  void login(BuildContext context) {
+    FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
   }
 
   @override
@@ -71,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: SizedBox(
                         width: 230.0,
                         child: TextFormField(
-                          controller: usrUsername,
+                          controller: usrEmail,
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -82,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             filled: true,
                             contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
-                            hintText: 'Username',
+                            hintText: 'Email',
                           ),
                         ),
                       ),
@@ -116,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       margin: EdgeInsets.only(top: screenHeight * 0.05),
                       child: TextButton(
                         onPressed: () {
-                          login();
+                          login(context);
                         },
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -171,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               )
             ],
-          ),
+          )
         ),
       ),
     );
