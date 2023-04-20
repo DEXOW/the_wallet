@@ -2,7 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/login/login-screen.dart';
-import 'package:the_wallet/screens/components/loading-screen.dart';
+import 'package:the_wallet/screens/register/register-screen.dart';
+// import 'package:the_wallet/screens/components/loading-screen.dart';
 
 class StartupScreen extends StatelessWidget {
   @override
@@ -49,7 +50,7 @@ class StartupScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  LoadingScreen()), //Redirects to loading screen for testing
+                                  RegisterScreen()), //Redirects to loading screen for testing
                         );
                       },
                       style: ButtonStyle(

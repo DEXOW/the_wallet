@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:the_wallet/firebase_options.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/startup/startup-screen.dart';
@@ -31,17 +32,20 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: bgColor,
       ),
       // home: StartupScreen(),
-      home: FutureBuilder(
-        future: _initializeFirebase(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done){
-            return StartupScreen();
-          } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: bgColor),
+        child: FutureBuilder(
+          future: _initializeFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done){
+              return StartupScreen();
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
           }
-        }
+        ),
       ),
     );
   }
