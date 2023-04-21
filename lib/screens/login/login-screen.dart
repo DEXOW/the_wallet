@@ -58,14 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.arrow_back_ios),
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            style: ButtonStyle(
-                              //Remove hover effects
-                              overlayColor: MaterialStateProperty.all<Color>(
-                                const Color(0x00000000),
-                              ),
-                            ),
                             onPressed: () {
                               Navigator.pop(context);
                             },

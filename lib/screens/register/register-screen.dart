@@ -13,6 +13,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   List<int> validity_arr = [0,0,0,0];
   final fName = TextEditingController();
   final lName = TextEditingController();
+  final dateDay = TextEditingController();
+  final dateMonth = TextEditingController();
+  final dateYear = TextEditingController();
+  final phoneNumberPrefix = TextEditingController();
+  final phoneNumber = TextEditingController();
 
   // void initState() {
   //   super.initState();
@@ -44,14 +49,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.arrow_back_ios),
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            style: ButtonStyle(
-                              //Remove hover effects
-                              overlayColor: MaterialStateProperty.all<Color>(
-                                const Color(0x00000000),
-                              ),
-                            ),
                             onPressed: () {
                               Navigator.pop(context);
                             },
@@ -357,6 +354,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ],
     );
   }
+
   Widget view2(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -374,12 +372,189 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 40),
+          margin: EdgeInsets.only(top: 50),
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 15.0),
+                    child: Text(
+                      "Date Of Birth",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Color(0xFF979797)
+                      ),
+                    ),
+                  ),
+                  FittedBox(
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: SizedBox(
+                            width: 70.0,
+                            child: TextFormField(
+                              maxLength: 2,
+                              controller: dateDay,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: 'DD',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: SizedBox(
+                            width: 70.0,
+                            child: TextFormField(
+                              maxLength: 2,
+                              controller: dateMonth,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: 'MM',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: SizedBox(
+                            width: 100.0,
+                            child: TextFormField(
+                              maxLength: 4,
+                              controller: dateYear,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: 'YYYY',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20.0 ,bottom: 15.0),
+                    child: Text(
+                      "Phone Number",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Color(0xFF979797)
+                      ),
+                    ),
+                  ),
+                  FittedBox(
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: SizedBox(
+                            width: 70.0,
+                            child: TextFormField(
+                              maxLength: 2,
+                              controller: phoneNumberPrefix,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: '+01',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: SizedBox(
+                            width: 175.0,
+                            child: TextFormField(
+                              controller: phoneNumber,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0),
+                                hintText: '123 456 789',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 60),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.all(2),
                 decoration: BoxDecoration(
                   color: Color(0x5E606060),
                   borderRadius: BorderRadius.circular(50.0),
@@ -387,14 +562,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: IconButton(
                   padding: EdgeInsets.only(left: 5),
                   icon: Icon(Icons.arrow_back_ios),
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  style: ButtonStyle(
-                    //Remove hover effects
-                    overlayColor: MaterialStateProperty.all<Color>(
-                      const Color(0x00000000),
-                    ),
-                  ),
                   onPressed: () {
                     setState(() {
                       validity_arr[0] = 0;
@@ -419,7 +586,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   fixedSize: MaterialStateProperty.all<Size>(
-                    const Size(230.0, 50.0),
+                    const Size(190.0, 50.0),
                   ),
                 ),
                 child: Row(

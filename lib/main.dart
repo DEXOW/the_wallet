@@ -30,6 +30,9 @@ class MyApp extends StatelessWidget {
       title: 'The Wallet',
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: bgColor,
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
       ),
       // home: StartupScreen(),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
