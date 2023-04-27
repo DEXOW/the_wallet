@@ -7,6 +7,7 @@ import 'package:the_wallet/screens/startup/startup-screen.dart';
 import 'package:the_wallet/screens/components/loading-animation.dart';
 import 'package:the_wallet/screens/components/loading-screen.dart';
 
+import 'package:the_wallet/RSA.dart';
 
 Future<FirebaseApp> _initializeFirebase() async {
   FirebaseApp firebaseApp = await Firebase.initializeApp(
@@ -17,7 +18,13 @@ Future<FirebaseApp> _initializeFirebase() async {
 
 void main() {
   // Run the app
-  runApp(const MyApp());
+  List<int> textList = 'Hello World!'.codeUnits;
+  final cipherText = rsaEncrypt(public, Uint8List.fromList(textList));
+  final deciphertext = rsaDecrypt(private, cipherText);
+  print('cipherText: $cipherText');
+  print('deciphertext: $deciphertext');
+  print(String.fromCharCodes(deciphertext));
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

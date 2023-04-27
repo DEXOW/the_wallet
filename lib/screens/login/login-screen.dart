@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void login(BuildContext context) {
     FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
-    dispose();
+    // dispose();
   }
 
   @override
