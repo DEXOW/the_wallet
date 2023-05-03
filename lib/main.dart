@@ -17,14 +17,14 @@ Future<FirebaseApp> _initializeFirebase() async {
 }
 
 void main() {
+  //RSA Encryption
+
+  // List<int> textList = 'Hello World!'.codeUnits;
+  // final cipherText = rsaEncrypt(public, Uint8List.fromList(textList));
+  // final deciphertext = String.fromCharCodes(rsaDecrypt(private, cipherText));
+  
   // Run the app
-  List<int> textList = 'Hello World!'.codeUnits;
-  final cipherText = rsaEncrypt(public, Uint8List.fromList(textList));
-  final deciphertext = rsaDecrypt(private, cipherText);
-  print('cipherText: $cipherText');
-  print('deciphertext: $deciphertext');
-  print(String.fromCharCodes(deciphertext));
-  // runApp(const MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

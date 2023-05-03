@@ -10,14 +10,37 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  List<int> validity_arr = [0,0,0,0];
-  final fName = TextEditingController();
-  final lName = TextEditingController();
-  final dateDay = TextEditingController();
-  final dateMonth = TextEditingController();
-  final dateYear = TextEditingController();
-  final phoneNumberPrefix = TextEditingController();
-  final phoneNumber = TextEditingController();
+  List<int> validity_arr = [0,0,0,0,0];
+  // final fName = TextEditingController();
+  // final lName = TextEditingController();
+  // final usrName = TextEditingController();
+  // final email = TextEditingController();
+  // final password = TextEditingController();
+  // final confirmPassword = TextEditingController();
+  // final dateDay = TextEditingController();
+  // final dateMonth = TextEditingController();
+  // final dateYear = TextEditingController();
+  // final phoneNumberPrefix = TextEditingController();
+  // final phoneNumber = TextEditingController();
+  List<TextEditingController> controllers = [
+    TextEditingController(), //FIrst Name
+    TextEditingController(), //Last Name
+    TextEditingController(), //Username
+    TextEditingController(), //Email
+    TextEditingController(), //Password
+    TextEditingController(), //Confirm Password
+    TextEditingController(), //Birth Day
+    TextEditingController(), //Birth Month
+    TextEditingController(), //Birth Year
+    TextEditingController(), //Phone Number Prefix
+    TextEditingController(), //Phone Number
+    TextEditingController(), //OPT1
+    TextEditingController(), //OPT2
+    TextEditingController(), //OPT3
+    TextEditingController(), //OPT4
+    ];
+    // List<TextEditingController>.generate(11, (index) => TextEditingController()), //All the controllers
+
 
   // void initState() {
   //   super.initState();
@@ -47,12 +70,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: EdgeInsets.only(top: 10, left: 20),
                       child: Row(
                         children: [
-                          IconButton(
-                            icon: Icon(Icons.arrow_back_ios),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                          ),
+                          if (validity_arr[0] == 0)
+                            IconButton(
+                              icon: Icon(Icons.arrow_back_ios),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
                           Container(
                             child: Image(
                               image: AssetImage('assets/icons/icon.png'),
@@ -75,126 +99,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return view3();
                           } else if (validity_arr[3] == 0){
                             return view4();
+                          } else if (validity_arr[4] == 0){
+                          return view5();
                           } else {
                             return Container();
                           }
                         }
                       )
                     ),
-                        // Container( //Middle section
-                        //   height: screenHeight * 0.8,
-                        //   child: Column(
-                        //     mainAxisAlignment: MainAxisAlignment.center,
-                        //     children: [
-                        //       Container(
-                        //         margin: EdgeInsets.only(top: 10),
-                        //         child: Text(
-                        //           'Sign Up',
-                        //           style: TextStyle(
-                        //             fontSize: 30,
-                        //             fontWeight: FontWeight.bold,
-                        //             fontFamily: 'Inter',
-                        //             color: Color(0xE608B4F8)
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Container(
-                        //         margin: EdgeInsets.only(top: 70),
-                        //         child: SizedBox(
-                        //           width: 230.0,
-                        //           child: TextFormField(
-                        //             controller: fName,
-                        //             decoration: const InputDecoration(
-                        //               border: OutlineInputBorder(
-                        //                 borderRadius: BorderRadius.all(Radius.circular(50.0)),
-                        //                 borderSide: BorderSide(
-                        //                   style: BorderStyle.none,
-                        //                   width: 0,
-                        //                 ),
-                        //               ),
-                        //               filled: true,
-                        //               contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
-                        //               hintText: 'First Name',
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Container(
-                        //         margin: const EdgeInsets.only(top: 10),
-                        //         child: SizedBox(
-                        //           width: 230.0,
-                        //           child: TextFormField(
-                        //             controller: lName,
-                        //             decoration: const InputDecoration(
-                        //               border: OutlineInputBorder(
-                        //                 borderRadius:
-                        //                     BorderRadius.all(Radius.circular(50.0)),
-                        //                 borderSide: BorderSide(
-                        //                   style: BorderStyle.none,
-                        //                   width: 0,
-                        //                 ),
-                        //               ),
-                        //               filled: true,
-                        //               contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
-                        //               hintText: 'Last Name',
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       Container(
-                        //         margin: EdgeInsets.only(top: 40),
-                        //         child: TextButton(
-                        //           onPressed: () {
-                        //             if (fName.text == '' && lName.text == '') {
-                        //               setState(() {
-                        //                 validity_arr[0] = 0;
-                        //               });
-                        //             } else {
-                        //               setState(() {
-                        //                 validity_arr[0] = 1;
-                        //               });
-                        //             }
-                        //           },
-                        //           style: ButtonStyle(
-                        //             backgroundColor: MaterialStateProperty.all<Color>(
-                        //               const Color(0xE61469EF),
-                        //             ),
-                        //             shape:
-                        //                 MaterialStateProperty.all<RoundedRectangleBorder>(
-                        //               RoundedRectangleBorder(
-                        //                 borderRadius: BorderRadius.circular(50.0),
-                        //               ),
-                        //             ),
-                        //             fixedSize: MaterialStateProperty.all<Size>(
-                        //               const Size(230.0, 50.0),
-                        //             ),
-                        //           ),
-                        //           child: Row(
-                        //             mainAxisAlignment: MainAxisAlignment.center,
-                        //             children: [
-                        //               Text(
-                        //                 'Next',
-                        //                 style: TextStyle(
-                        //                   fontSize: 16.0,
-                        //                   fontWeight: FontWeight.bold,
-                        //                   fontFamily: 'Inter',
-                        //                   color: Color(0xFFFFFFFF),
-                        //                 ),
-                        //               ),
-                        //               Container(
-                        //                 margin: EdgeInsets.only(left: 10),
-                        //                 child: Icon(
-                        //                   Icons.arrow_forward_ios,
-                        //                   color: Colors.white,
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // );
+                    //Middle Section (Widget will be loaded by layout builder depending on the view needed on the screen)
                     Container( //Bottom Section
                       height: screenHeight * 0.1,
                       width: screenWidth,
@@ -259,7 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: SizedBox(
             width: 230.0,
             child: TextFormField(
-              controller: fName,
+              controller: controllers[0],
               decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -280,7 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: SizedBox(
             width: 230.0,
             child: TextFormField(
-              controller: lName,
+              controller: controllers[1],
               decoration: const InputDecoration(
                 border: OutlineInputBorder(
                   borderRadius:
@@ -372,179 +285,96 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         Container(
-          margin: EdgeInsets.only(top: 50),
-          child: Column(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(bottom: 15.0),
-                    child: Text(
-                      "Date Of Birth",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                        color: Color(0xFF979797)
-                      ),
-                    ),
+          margin: EdgeInsets.only(top: 70),
+          child: SizedBox(
+            width: 230.0,
+            child: TextFormField(
+              controller: controllers[2],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(50.0)),
+                  borderSide: BorderSide(
+                    style: BorderStyle.none,
+                    width: 0,
                   ),
-                  FittedBox(
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 5.0),
-                          child: SizedBox(
-                            width: 70.0,
-                            child: TextFormField(
-                              maxLength: 2,
-                              controller: dateDay,
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  borderSide: BorderSide(
-                                    style: BorderStyle.none,
-                                    width: 0,
-                                  ),
-                                ),
-                                counterText: "",
-                                filled: true,
-                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                                hintText: 'DD',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(right: 5.0),
-                          child: SizedBox(
-                            width: 70.0,
-                            child: TextFormField(
-                              maxLength: 2,
-                              controller: dateMonth,
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  borderSide: BorderSide(
-                                    style: BorderStyle.none,
-                                    width: 0,
-                                  ),
-                                ),
-                                counterText: "",
-                                filled: true,
-                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                                hintText: 'MM',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: SizedBox(
-                            width: 100.0,
-                            child: TextFormField(
-                              maxLength: 4,
-                              controller: dateYear,
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  borderSide: BorderSide(
-                                    style: BorderStyle.none,
-                                    width: 0,
-                                  ),
-                                ),
-                                counterText: "",
-                                filled: true,
-                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                                hintText: 'YYYY',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+                filled: true,
+                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                hintText: 'Username',
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(top: 20.0 ,bottom: 15.0),
-                    child: Text(
-                      "Phone Number",
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Inter',
-                        color: Color(0xFF979797)
-                      ),
-                    ),
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: SizedBox(
+            width: 230.0,
+            child: TextFormField(
+              controller: controllers[3],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(50.0)),
+                  borderSide: BorderSide(
+                    style: BorderStyle.none,
+                    width: 0,
                   ),
-                  FittedBox(
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(right: 5.0),
-                          child: SizedBox(
-                            width: 70.0,
-                            child: TextFormField(
-                              maxLength: 2,
-                              controller: phoneNumberPrefix,
-                              textAlign: TextAlign.center,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  borderSide: BorderSide(
-                                    style: BorderStyle.none,
-                                    width: 0,
-                                  ),
-                                ),
-                                counterText: "",
-                                filled: true,
-                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                                hintText: '+01',
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          child: SizedBox(
-                            width: 175.0,
-                            child: TextFormField(
-                              controller: phoneNumber,
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  borderSide: BorderSide(
-                                    style: BorderStyle.none,
-                                    width: 0,
-                                  ),
-                                ),
-                                counterText: "",
-                                filled: true,
-                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0),
-                                hintText: '123 456 789',
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
+                filled: true,
+                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                hintText: 'Email Address',
               ),
-            ],
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: SizedBox(
+            width: 230.0,
+            child: TextFormField(
+              controller: controllers[4],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(50.0)),
+                  borderSide: BorderSide(
+                    style: BorderStyle.none,
+                    width: 0,
+                  ),
+                ),
+                filled: true,
+                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                hintText: 'Password',
+              ),
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(top: 10),
+          child: SizedBox(
+            width: 230.0,
+            child: TextFormField(
+              controller: controllers[5],
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(50.0)),
+                  borderSide: BorderSide(
+                    style: BorderStyle.none,
+                    width: 0,
+                  ),
+                ),
+                filled: true,
+                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                hintText: 'Confirm Password',
+              ),
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+            ),
           ),
         ),
         Container(
@@ -618,9 +448,618 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
   Widget view3(){
-    return Container();
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Inter',
+              color: Color(0xE608B4F8)
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 50),
+          child: Column(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(bottom: 15.0),
+                    child: Text(
+                      "Date Of Birth",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Color(0xFF979797)
+                      ),
+                    ),
+                  ),
+                  FittedBox(
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: SizedBox(
+                            width: 70.0,
+                            child: TextFormField(
+                              maxLength: 2,
+                              controller: controllers[6],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: 'DD',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: SizedBox(
+                            width: 70.0,
+                            child: TextFormField(
+                              maxLength: 2,
+                              controller: controllers[7],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: 'MM',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: SizedBox(
+                            width: 100.0,
+                            child: TextFormField(
+                              maxLength: 4,
+                              controller: controllers[8],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: 'YYYY',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: EdgeInsets.only(top: 20.0 ,bottom: 15.0),
+                    child: Text(
+                      "Phone Number",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Color(0xFF979797)
+                      ),
+                    ),
+                  ),
+                  FittedBox(
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(right: 5.0),
+                          child: SizedBox(
+                            width: 70.0,
+                            child: TextFormField(
+                              maxLength: 2,
+                              controller: controllers[9],
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                counterText: "",
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                                hintText: '+01',
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: SizedBox(
+                            width: 175.0,
+                            child: TextFormField(
+                              controller: controllers[10],
+                              decoration: const InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50.0)),
+                                  borderSide: BorderSide(
+                                    style: BorderStyle.none,
+                                    width: 0,
+                                  ),
+                                ),
+                                filled: true,
+                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0),
+                                hintText: '123 456 789',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 60),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: Color(0x5E606060),
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.only(left: 5),
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    setState(() {
+                      validity_arr[1] = 0;
+                    });
+                  },
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    validity_arr[2] = 1;
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xE61469EF),
+                  ),
+                  shape:
+                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                  ),
+                  fixedSize: MaterialStateProperty.all<Size>(
+                    const Size(190.0, 50.0),
+                  ),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Next',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Inter',
+                        color: Color(0xFFFFFFFF),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
   Widget view4(){
-    return Container();
+    const otpFieldH = 60.0; //OTP field height
+    const otpFieldW = 40.0; //OTP field width
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Inter',
+              color: Color(0xE608B4F8)
+            ),
+          ),
+        ),
+        Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              //4 text boxes for OTP
+              Container(
+                margin: EdgeInsets.only(top: 60, left: 4, right: 4),
+                child: Container(
+                  width: otpFieldW,
+                  height: otpFieldH,
+                  decoration: BoxDecoration(
+                    color: Color(0x5E606060),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFF979797),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      maxLength: 1,
+                      controller: controllers[11],
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(
+                            style: BorderStyle.none,
+                            width: 0,
+                          ),
+                        ),
+                        counterText: "",
+                        // filled: true,
+                        contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        // hintText: '0',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 60, left: 4, right: 4),
+                child: Container(
+                  width: otpFieldW,
+                  height: otpFieldH,
+                  decoration: BoxDecoration(
+                    color: Color(0x5E606060),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFF979797),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      maxLength: 1,
+                      controller: controllers[12],
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(
+                            style: BorderStyle.none,
+                            width: 0,
+                          ),
+                        ),
+                        counterText: "",
+                        // filled: true,
+                        contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        // hintText: '0',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 60, left: 4, right: 4),
+                child: Container(
+                  width: otpFieldW,
+                  height: otpFieldH,
+                  decoration: BoxDecoration(
+                    color: Color(0x5E606060),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFF979797),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      maxLength: 1,
+                      controller: controllers[13],
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(
+                            style: BorderStyle.none,
+                            width: 0,
+                          ),
+                        ),
+                        counterText: "",
+                        // filled: true,
+                        contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        // hintText: '0',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 60, left: 4, right: 4),
+                child: Container(
+                  width: otpFieldW,
+                  height: otpFieldH,
+                  decoration: BoxDecoration(
+                    color: Color(0x5E606060),
+                    borderRadius: BorderRadius.circular(15.0),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(10.0),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(
+                          color: Color(0xFF979797),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: TextFormField(
+                      maxLength: 1,
+                      controller: controllers[14],
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius:
+                          BorderRadius.all(Radius.circular(15.0)),
+                          borderSide: BorderSide(
+                            style: BorderStyle.none,
+                            width: 0,
+                          ),
+                        ),
+                        counterText: "",
+                        // filled: true,
+                        contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
+                        // hintText: '0',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 30),
+          child: Text(
+            "Didn't recieve an OTP ?",
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Inter',
+              color: Color(0xFF636363),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 5),
+          child: TextButton(
+            onPressed: () {},
+            child: Text(
+              "Resend OTP",
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Inter',
+                color: Color(0xFFFFFFFF),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                margin: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: Color(0x5E606060),
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                child: IconButton(
+                  padding: EdgeInsets.only(left: 5),
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    setState(() {
+                      validity_arr[2] = 0;
+                    });
+                  },
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    validity_arr[3] = 1;
+                  });
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xE61469EF),
+                  ),
+                  shape:
+                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                  ),
+                  fixedSize: MaterialStateProperty.all<Size>(
+                    const Size(190.0, 50.0),
+                  ),
+                ),
+                child: Text(
+                  'Submit',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                    color: Color(0xFFFFFFFF),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+  Widget view5(){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Container(
+          margin: EdgeInsets.only(top: 10),
+          child: Text(
+            'Sign Up',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Inter',
+              color: Color(0xE608B4F8)
+            ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 30),
+          child: Column(
+            children: [
+              Icon(
+                Icons.check_circle,
+                color: Color(0xFF0A7F46),
+                size: 80,
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 20),
+                child: Text(
+                  "Successful",
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                    color: Color(0xFFAEAEAE),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 40),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xE61469EF),
+                  ),
+                  shape:
+                      MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50.0),
+                    ),
+                  ),
+                  fixedSize: MaterialStateProperty.all<Size>(
+                    const Size(190.0, 50.0),
+                  ),
+                ),
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Inter',
+                    color: Color(0xFFFFFFFF),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
