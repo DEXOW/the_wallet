@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:the_wallet/screens/home/home-screen.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -28,7 +29,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login(BuildContext context) {
-    FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
+    // FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
     // dispose();
   }
 
@@ -197,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   fontWeight: FontWeight.normal,
                                   fontFamily: 'Inter',
                                   color: Color(0x8FCDCDCD),
+                                  decoration: TextDecoration.underline,
                                 ),
                               ),
                             ),
