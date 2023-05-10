@@ -6,8 +6,9 @@ import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/startup/startup-screen.dart';
 import 'package:the_wallet/screens/components/loading-animation.dart';
 import 'package:the_wallet/screens/components/loading-screen.dart';
-
 import 'package:the_wallet/RSA.dart';
+import 'package:the_wallet/screens/addCard/addCard-addOptions.dart';
+import 'package:the_wallet/screens/addCard/addCard-cardType.dart';
 
 Future<FirebaseApp> _initializeFirebase() async {
   FirebaseApp firebaseApp = await Firebase.initializeApp(
@@ -22,9 +23,17 @@ void main() {
   // List<int> textList = 'Hello World!'.codeUnits;
   // final cipherText = rsaEncrypt(public, Uint8List.fromList(textList));
   // final deciphertext = String.fromCharCodes(rsaDecrypt(private, cipherText));
-  
+
   // Run the app
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    routes: {
+      '/addCardOptions' :(context) => AddCardOptions(),
+      '/addCardType' :(context) => AddCardType(),
+    },
+    home: AddCardType(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -43,19 +52,19 @@ class MyApp extends StatelessWidget {
       ),
       // home: StartupScreen(),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: bgColor),
+        value: SystemUiOverlayStyle.light
+            .copyWith(systemNavigationBarColor: bgColor),
         child: FutureBuilder(
-          future: _initializeFirebase(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done){
-              return StartupScreen();
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }
-        ),
+            future: _initializeFirebase(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return StartupScreen();
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            }),
       ),
     );
   }
