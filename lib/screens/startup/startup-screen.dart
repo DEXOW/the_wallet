@@ -1,4 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
+import 'package:the_wallet/screens/login/login-screen.dart';
+import 'package:the_wallet/screens/register/register-screen.dart';
+// import 'package:the_wallet/screens/components/loading-screen.dart';
 
 class StartupScreen extends StatelessWidget {
   @override
@@ -15,14 +20,14 @@ class StartupScreen extends StatelessWidget {
                 top: screenHeight * 0.1, // Gap from the top of the screen
                 child: Column(
                   children: [
-                    const Image(
+                    Image(
                       image: AssetImage('assets/icons/icon.png'),
                       width: 200,
                       height: 200,
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 10), 
-                      child: const Text(
+                      margin: EdgeInsets.only(top: 10), 
+                      child: Text(
                         'The Wallet',
                         style: TextStyle(
                           fontSize: 32.0,
@@ -40,10 +45,17 @@ class StartupScreen extends StatelessWidget {
                 child: Column(children: [
                   Container(
                     child: TextButton(
-                      onPressed: () { /* ... */},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  RegisterScreen()), //Redirects to loading screen for testing
+                        );
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xE61469EF),
+                          Color(0xE61469EF),
                         ),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -52,10 +64,10 @@ class StartupScreen extends StatelessWidget {
                           ),
                         ),
                         fixedSize: MaterialStateProperty.all<Size>(
-                          const Size(230.0, 50.0),
+                          Size(230.0, 50.0),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Create Account',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -67,12 +79,18 @@ class StartupScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 20),
+                    margin: EdgeInsets.only(top: 20),
                     child: TextButton(
-                      onPressed: () { /* ... */},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xD5606060),
+                          Color(0xD5606060),
                         ),
                         shape:
                             MaterialStateProperty.all<RoundedRectangleBorder>(
@@ -81,10 +99,10 @@ class StartupScreen extends StatelessWidget {
                           ),
                         ),
                         fixedSize: MaterialStateProperty.all<Size>(
-                          const Size(230.0, 50.0),
+                          Size(230.0, 50.0),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Login',
                         style: TextStyle(
                           fontSize: 16.0,
@@ -97,7 +115,7 @@ class StartupScreen extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(top: screenHeight * 0.1),
-                    child: const Text(
+                    child: Text(
                       'Legal',
                       style: TextStyle(
                         fontSize: 12.0,
@@ -108,8 +126,8 @@ class StartupScreen extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.only(top: 5),
-                    child: const Text(
+                    margin: EdgeInsets.only(top: 5),
+                    child: Text(
                       'Version 1.0.0',
                       style: TextStyle(
                         fontSize: 12.0,
