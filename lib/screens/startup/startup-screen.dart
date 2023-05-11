@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:the_wallet/screens/login/login-screen.dart';
 
 class StartupScreen extends StatelessWidget {
   @override
@@ -69,7 +70,13 @@ class StartupScreen extends StatelessWidget {
                   Container(
                     margin: const EdgeInsets.only(top: 20),
                     child: TextButton(
-                      onPressed: () { /* ... */},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                        );
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                           const Color(0xD5606060),
