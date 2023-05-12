@@ -2,14 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/components/navbar.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
   
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   void dispose() {
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Positioned( //Navbar
                       bottom: 0,
-                      child: Navbar(currentPage: 'home'),
+                      child: Navbar(currentPage: 'settings'),
                     ),
                   ]
                 ),
