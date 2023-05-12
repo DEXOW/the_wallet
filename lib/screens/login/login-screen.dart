@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_wallet/screens/home/home-screen.dart';
-import 'package:the_wallet/firebase/fire_auth.dart';
+// import 'package:the_wallet/firebase/fire_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

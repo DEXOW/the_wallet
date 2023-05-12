@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:the_wallet/constants.dart';
+import 'package:the_wallet/screens/contactlessPay/contactlessPay.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -58,6 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             children: [
                               //All your content for the page goes in here (Green zone)
+                              ContactlessPaymentWidget(),
                             ],
                           )
                         ),
