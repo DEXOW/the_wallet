@@ -38,4 +38,43 @@ class FireAuth{
 
     return user;
   }
+
+  static Future<User?> registerUsingEmailPassword({
+    required String fname,
+    required String lname,
+    required String email,
+    required String password,
+    required String confPassword,
+    required String dobDate,
+    required String dobMonth,
+    required String dobYear,
+    required String phoneNoCode,
+    required String phoneNo,
+    required String otp1,
+    required String otp2,
+    required String otp3,
+    required String otp4,
+  }) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+    try {
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      user = userCredential.user;
+      await user!.updateDisplayName("$fname $lname");
+      await user.reload();
+      user = auth.currentUser;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
+    return user;
+  }
 }

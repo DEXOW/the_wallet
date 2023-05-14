@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/home/home-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:the_wallet/validate.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -29,30 +30,13 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordVisible = false;
   }
 
-  String? validateEmail ({required String? email}){
-    print("Working");
-    if (email == null) {
-      return null;
-    }
-    RegExp emailRegExp = RegExp(
-        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-
-    if (email.isEmpty) {
-      return 'Email can\'t be empty';
-    } else if (!emailRegExp.hasMatch(email)) {
-      return 'Enter a correct email';
-    }
-
-    return null;
-  }
-
   void login(BuildContext context) async {
     await FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
-    // FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    //   if (user != null){
-    //     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
-    //   }
-    // });
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user != null){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      }
+    });
     // dispose();
   }
 
@@ -130,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 230.0,
                                 child: TextFormField(
                                   controller: usrEmail,
-                                  validator: (value) => validateEmail(email: value),
+                                  validator: (value) => Validate.validateEmail(email: value),
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -152,6 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: 230.0,
                                 child: TextFormField(
                                   controller: usrPassword,
+                                  validator: (value) => Validate.validateLoginPassword(password: value),
                                   decoration: const InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius:

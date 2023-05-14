@@ -58,7 +58,7 @@ class _NavbarState extends State<Navbar> {
 
     return Container(
       width: screenWidth,
-      color: bgColor,
+      color: primaryBgColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

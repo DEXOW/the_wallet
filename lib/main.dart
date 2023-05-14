@@ -36,14 +36,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'The Wallet',
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: bgColor,
+        scaffoldBackgroundColor: primaryBgColor,
         splashColor: Colors.transparent,
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
       ),
       // home: StartupScreen(),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: bgColor),
+        value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: primaryBgColor),
         child: FutureBuilder(
           future: _initializeFirebase(),
           builder: (context, snapshot) {
