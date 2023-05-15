@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/contactlessPay/contactlessPay.dart';
+import 'package:the_wallet/screens/linkUp/linkUp.dart';
+import 'package:the_wallet/screens/components/dropdown-menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String? currentPage = "Home";
 
   @override
   void dispose() {
@@ -43,26 +46,79 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: EdgeInsets.only(top: 10, left: 20),
                           child: Row(
                             children: [
-                              Container(
-                                child: Image(
-                                  image: AssetImage('assets/icons/icon.png'),
-                                  height: 50,
-                                  width: 50,
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_new_rounded,
+                                  color: Color(0xFFFFFFFF),
+                                ),
+                                onPressed: () {},
+                                iconSize: 25.0,
+                                color: bgColor,
+                                hoverColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                highlightColor: Colors.transparent,
+                              ),
+                              CircleAvatar(
+                                radius: 20,
+                                backgroundColor: Color(0xCCFFFFFF),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.person_rounded,
+                                    color: linkUpMain,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      PageRouteBuilder(
+                                        transitionDuration: const Duration(milliseconds: 300),
+                                        pageBuilder:
+                                            (context, animation, secondaryAnimation) =>
+                                                Placeholder(),
+                                        transitionsBuilder:
+                                            (context, animation, secondaryAnimation, child) {
+                                          const begin = Offset(0.0, -1.0);
+                                          const end = Offset.zero;
+                                          final tween = Tween(begin: begin, end: end);
+                                          final curvedAnimation = CurvedAnimation(
+                                            parent: animation,
+                                            curve: Curves.easeInOut,
+                                          );
+                                          return SlideTransition(
+                                            position: tween.animate(curvedAnimation),
+                                            child: child,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  iconSize: 20.0,
+                                  color: bgColor,
+                                  hoverColor: Colors.transparent,
+                                  splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
                                 ),
                               ),
+                              // DropDown(),
                             ],
                           ),
                         ),
                         Container( // Middle section
                           height: screenHeight * 0.9,
                           margin: EdgeInsets.symmetric(horizontal: 40),
-                          child: Column(
-                            children: [
-                              //All your content for the page goes in here (Green zone)
-                              ContactlessPaymentWidget(),
-                            ],
-                          )
-                        ),
+                          child: LayoutBuilder(
+                            builder: (BuildContext context, BoxConstraints constraints){
+                              if (currentPage == "contactless"){ 
+                                return ContactlessPaymentWidget();
+                              }
+                              else if (currentPage == "linkup"){
+                                return LinkUpWidget();
+                              }
+                              else {
+                                return Text("Nothing to show");
+                              }
+                          })
+                        //All your content for the page goes in here (Green zone)
+                        )
                       ]
                     ),
                     Positioned( //Navbar
@@ -85,7 +141,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   IconButton(
-                                    onPressed: () {}, 
+                                    onPressed: () {
+                                      setState(() {
+                                        currentPage = "contactless";
+                                      });
+                                    }, 
                                     icon: ImageIcon(
                                       AssetImage('assets/icons/contactless-icon.png'),
                                       size: 30,
@@ -109,7 +169,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: () {}, 
+                                    onPressed: () {
+                                      setState(() {
+                                        currentPage = "linkup";
+                                      });
+                                    }, 
                                     icon: ImageIcon(
                                       AssetImage('assets/icons/linkup-icon.png'),
                                       size: 30,

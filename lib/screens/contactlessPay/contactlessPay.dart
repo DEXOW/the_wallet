@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/chooseCardForContactless/chooseCardForContactless.dart';
 
-class ContactlessPaymentWidget extends StatelessWidget {
+class ContactlessPaymentWidget extends StatefulWidget {
+  ContactlessPaymentWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ContactlessPaymentWidget> createState() => _contactlesspaymentwidgetstate();
+}
+
+class _contactlesspaymentwidgetstate extends State<ContactlessPaymentWidget>{
   @override
   Widget build(BuildContext context) {
     return Column(

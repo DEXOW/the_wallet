@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/navbar.dart';
 
 class ChooseCardForContactlessWidget extends StatelessWidget {
   @override
@@ -35,35 +36,43 @@ class ChooseCardForContactlessWidget extends StatelessWidget {
                 constraints.maxHeight; // Get the height of the safe area
             double screenWidth =
                 constraints.maxWidth; // Get the width of the safe area
-            return Scaffold(
-              resizeToAvoidBottomInset:
-                  false, //Keyboard doesn't resize the screen
-              body: Column(
-                children: const [
-                  SizedBox(height: 30),
-                  Center(
-                    child: Text(
-                      'Choose One',
-                      style: TextStyle(
-                        fontFamily: 'Inter',
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Color.fromRGBO(255, 255, 255, 1),
+            return Stack(
+              children: [
+                Scaffold(
+                  resizeToAvoidBottomInset:
+                      false, //Keyboard doesn't resize the screen
+                  body: Column(
+                    children: const [
+                      SizedBox(height: 30),
+                      Center(
+                        child: Text(
+                          'Choose One',
+                          style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                          ),
+                        ),
                       ),
-                    ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Payment Cards',
+                        style: TextStyle(
+                            fontFamily: 'Inter',
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(255, 255, 255, 0.593)),
+                      )
+                    ],
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                    'Payment Cards',
-                    style: TextStyle(
-                      fontFamily: 'Inter',
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                      color: Color.fromRGBO(255, 255, 255, 0.593)
-                    ),
-                  )
-                ],
-              ),
+                ),
+                Positioned(
+                  //Navbar
+                  bottom: 0,
+                  child: Navbar(currentPage: 'contactless'),
+                ),
+              ],
             );
           }),
         ));
