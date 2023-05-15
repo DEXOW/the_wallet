@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCBKr0SieJMJ0rz6kmdMVwM0wR5nX-6PLo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>277225708946</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.theWallet</string>
+	<key>PROJECT_ID</key>
+	<string>the-wallet-2fa7c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>the-wallet-2fa7c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:277225708946:ios:6ba30ee575b0d46fc6354b</string>
+	<key>DATABASE_URL</key>
+	<string>https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
