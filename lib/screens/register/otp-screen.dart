@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/screens/register/successful-screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -281,13 +282,11 @@ class _OtpScreenState extends State<OtpScreen> {
       setState(() {
         otpFilled = true;
       });
-      print('OTP entered: $otp $otpFilled');
       // Perform further actions with the OTP value
     }else{
       setState(() {
         otpFilled = false;
       });
-      print('OTP entered: $otp $otpFilled');
     }
   }
 
@@ -297,19 +296,25 @@ class _OtpScreenState extends State<OtpScreen> {
     required int? resendToekn,
   }) async {
     PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otp);
+    // print('your name is ${widget.controllers[9].text}');
     try { 
-      FirebaseAuth.instance.signInWithCredential(credential);
+      await FirebaseAuth.instance.signInWithCredential(credential);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-verification-code') {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Invalid OTP'),
+            content: Text(
+              'Invalid OTP',
+              textAlign: TextAlign.center,
+            ),
             backgroundColor: Colors.red,
           )
         );
+        throw Exception('Invalid OTP');
       }
     } catch (e) {
       print(e);
+      throw Exception('Something went wrong');
     }
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -320,6 +325,22 @@ class _OtpScreenState extends State<OtpScreen> {
         backgroundColor: Colors.green,
       )
     );
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SuccessScreen()));
+    await FireAuth.registerUsingEmailPassword(
+      fname: widget.controllers[0].text, 
+      lname: widget.controllers[1].text, 
+      email: widget.controllers[2].text,
+      password: widget.controllers[3].text,
+      dobDate: widget.controllers[5].text,
+      dobMonth: widget.controllers[6].text,
+      dobYear: widget.controllers[7].text,
+      phoneNoCode: widget.controllers[8].text,
+      phoneNo: widget.controllers[9].text,
+      phoneAuthCredential: credential,
+    );
+
+
+    await FirebaseAuth.instance.signOut();
+
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SuccessScreen()), (Route<dynamic> route) => route.isFirst);
   }
 }

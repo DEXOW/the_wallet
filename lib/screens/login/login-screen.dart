@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void login(BuildContext context) async {
-    await FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
+    await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     filled: true,
-                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                                     hintText: 'Email',
                                   ),
                                 ),
@@ -147,7 +147,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     filled: true,
-                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                                     hintText: 'Password',
                                   ),
                                   obscureText: true,

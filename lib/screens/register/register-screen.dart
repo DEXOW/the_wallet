@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+
 import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:the_wallet/firebase/fire_store.dart';
 import 'package:the_wallet/screens/register/otp-screen.dart';
 import 'package:the_wallet/validate.dart';
 import 'package:the_wallet/constants.dart';
@@ -31,12 +33,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     TextEditingController(), //Birth Year
     TextEditingController(), //Phone Number Prefix
     TextEditingController(), //Phone Number
-    TextEditingController(), //OPT1
-    TextEditingController(), //OPT2
-    TextEditingController(), //OPT3
-    TextEditingController(), //OPT4
-    TextEditingController(), //OTP5
-    TextEditingController(), //OTP6
     ];
     // List<TextEditingController>.generate(11, (index) => TextEditingController()), //All the controllers
 
@@ -338,7 +334,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   filled: true,
-                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0,right: 30.0),
                   hintText: 'Email Address',
                 ),
               ),
@@ -361,7 +357,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   filled: true,
-                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                   hintText: 'Password',
                 ),
                 obscureText: true,
@@ -387,7 +383,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   filled: true,
-                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0),
+                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                   hintText: 'Confirm Password',
                 ),
                 obscureText: true,
@@ -421,12 +417,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextButton(
                   onPressed: () async {
                     if (_registerFormP2Key.currentState!.validate()) {
-                      bool accountCreated = await FireAuth.createUserWithEmailAndPassword(
-                        email: controllers[2].text,
-                        password: controllers[3].text,
-                        context: context,
-                      );
-                      if (accountCreated){
+                      bool accountExist = await FireStore.checkUserExist(context: context, email: controllers[2].text);
+                      if (!accountExist){
                         setState(() {
                           validityArr[1] = 1;
                         });
@@ -696,12 +688,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    if (controllers[9].text.startsWith('0')){
+                      controllers[9].text = controllers[9].text.substring(1);
+                    }
                     if (_registerFormP3Key.currentState!.validate()){
-                      FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text, onCodeSent: onCodeSent);
-                      // setState(() {
-                      //   validityArr[2] = 1;
-                      // });
+                      bool phoneExist = await FireStore.checkPhoneExist(context: context, phoneNo: controllers[8].text + controllers[9].text);
+                      if (!phoneExist){
+                        FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text, onCodeSent: onCodeSent);
+                      }
                     }
                   },
                   style: ButtonStyle(

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,68 +48,42 @@ class FireAuth{
     required String lname,
     required String email,
     required String password,
-    required String confPassword,
     required String dobDate,
     required String dobMonth,
     required String dobYear,
     required String phoneNoCode,
     required String phoneNo,
-    required String otp1,
-    required String otp2,
-    required String otp3,
-    required String otp4,
+    required PhoneAuthCredential phoneAuthCredential,
   }) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
       UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: email,
+        email: email.trim(),
         password: password,
       );
       user = userCredential.user;
-      await user!.updateDisplayName("$fname $lname");
+      await user!.updateDisplayName("${fname.trim()} ${lname.trim()}");
       await user.reload();
       user = auth.currentUser;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
+      throw Exception(e);
     } catch (e) {
-      print(e);
+      throw Exception(e);
     }
-    return user;
-  }
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    await firestore.collection('users').doc(user!.uid).set({
+      'fname': fname.trim(),
+      'lname': lname.trim(),
+      'email': email.trim(),
+      'dobDate': dobDate.trim(),
+      'dobMonth': dobMonth.trim(),
+      'dobYear': dobYear.trim(),
+      'phoneNoCode': phoneNoCode.trim(),
+      'phoneNo': phoneNo.trim(),
+    });
 
-  static Future<bool> createUserWithEmailAndPassword({
-    required BuildContext context,
-    required String email,
-    required String password,
-  }) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    try {
-      await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-        return false;
-      } else if (e.code == 'email-already-in-use') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Account already exists for that email.'),
-          ),
-        );
-        return false;
-      }
-    } catch (e) {
-      print(e);
-      return false;
-    }
-    return true;
+    return user;
   }
 
   static Future<void> verifyPhoneNumber({
@@ -145,49 +120,8 @@ class FireAuth{
       },
       codeAutoRetrievalTimeout: (String verificationId) async {
         print("timeout");
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Timeout'),
-          ),
-        );
       },
     );
   }
 
-  // void onCodeSent(String verificationId, int? resendToken) async {
-  //   String smsCode = "221144";
-  //   PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
-  //   await FirebaseAuth.instance.signInWithCredential(credential);
-  // }
-
-//6F:73:70:5E:7F:A4:49:A4:40:59:EB:24:28:B7:2E:32:FD:80:28:FB
-
-  static Future<void> updateUser({
-    required String fname,
-    required String lname,
-    required String email,
-    required String password,
-    required String confPassword,
-    required String dobDate,
-    required String dobMonth,
-    required String dobYear,
-    required String phoneNoCode,
-    required String phoneNo,
-    required String otp1,
-    required String otp2,
-    required String otp3,
-    required String otp4,
-  }) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    User? user = auth.currentUser;
-    try {
-      await user!.updateDisplayName("$fname $lname");
-      await user.reload();
-      user = auth.currentUser;
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    } catch (e) {
-      print(e);
-    }
-  }
 }
