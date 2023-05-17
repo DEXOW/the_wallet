@@ -98,11 +98,11 @@ class Validate{
     return null;
   }
 
-  static bool validateOTP ({required String? otp1, required String? otp2, required String? otp3, required String? otp4}){
-    if (otp1 == null || otp2 == null || otp3 == null || otp4 == null) {
+  static bool validateOTP ({required String? otp1, required String? otp2, required String? otp3, required String? otp4, required String? otp5, required String? otp6}){
+    if (otp1 == null || otp2 == null || otp3 == null || otp4 == null || otp5 == null || otp6 == null) {
       return false;
     }
-    if (otp1.isEmpty || otp2.isEmpty || otp3.isEmpty || otp4.isEmpty) {
+    if (otp1.isEmpty || otp2.isEmpty || otp3.isEmpty || otp4.isEmpty || otp5.isEmpty || otp6.isEmpty) {
       return false;
     }
     return true;

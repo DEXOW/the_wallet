@@ -2,9 +2,9 @@
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:the_wallet/screens/register/otp-screen.dart';
 import 'package:the_wallet/validate.dart';
 import 'package:the_wallet/constants.dart';
-// import 'package:the_wallet/screens/components/input-box.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -14,12 +14,12 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  bool otpFilled = false;
-  List<int> validity_arr = [0,0,0,0,0];
+  List<int> validityArr = [0,0,0,0,0];
+
   final _registerFormP1Key = GlobalKey<FormState>();
   final _registerFormP2Key = GlobalKey<FormState>();
   final _registerFormP3Key = GlobalKey<FormState>();
-  final _registerFormP4Key = GlobalKey<FormState>();
+
   List<TextEditingController> controllers = [
     TextEditingController(), //FIrst Name
     TextEditingController(), //Last Name
@@ -35,17 +35,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
     TextEditingController(), //OPT2
     TextEditingController(), //OPT3
     TextEditingController(), //OPT4
+    TextEditingController(), //OTP5
+    TextEditingController(), //OTP6
     ];
     // List<TextEditingController>.generate(11, (index) => TextEditingController()), //All the controllers
 
 
   void initState() {
     super.initState();
-    // validity_arr = [0,0,0,0];
+    
     setState(() {
-      controllers[6].text = selectedDate.day.toString();
-      controllers[7].text = selectedDate.month.toString();
-      controllers[8].text = selectedDate.year.toString();
+      controllers[5].text = selectedDate.day.toString();
+      controllers[6].text = selectedDate.month.toString();
+      controllers[7].text = selectedDate.year.toString();
+
+      controllers[8].text = '+94';
     });
   }
 
@@ -57,23 +61,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void register(BuildContext context) async {
-    await FireAuth.registerUsingEmailPassword(
-      fname: controllers[0].text, 
-      lname: controllers[1].text, 
-      email: controllers[2].text, 
-      password: controllers[3].text, 
-      confPassword: controllers[4].text, 
-      dobDate: controllers[5].text, 
-      dobMonth: controllers[6].text, 
-      dobYear: controllers[7].text, 
-      phoneNoCode: controllers[8].text, 
-      phoneNo: controllers[9].text, 
-      otp1: controllers[10].text, 
-      otp2: controllers[11].text, 
-      otp3: controllers[12].text, 
-      otp4: controllers[13].text
-    );
+  void onCodeSent(String verificationId, int? resendToken) async {
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => OtpScreen(verificationId: verificationId, resendToken: resendToken, controllers: controllers,)
+    ));
   }
 
   final today = DateTime.now();
@@ -118,7 +109,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: EdgeInsets.only(top: 10, left: 20),
                       child: Row(
                         children: [
-                          if (validity_arr[0] == 0)
+                          if (validityArr[0] == 0)
                             IconButton(
                               icon: Icon(Icons.arrow_back_ios),
                               onPressed: () {
@@ -139,17 +130,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       height: screenHeight * 0.8,
                       child: LayoutBuilder(
                         builder:(BuildContext context, BoxConstraints constraints){
-                          if (validity_arr[0] == 0){
+                          if (validityArr[0] == 0){
                             return view1();
-                          } else if (validity_arr[1] == 0){
+                          } else if (validityArr[1] == 0){
                             return view2();
-                          } else if (validity_arr[2] == 0){
+                          } else if (validityArr[2] == 0){
                             return view3();
-                          } else if (validity_arr[3] == 0){
-                            return view4();
-                          } else if (validity_arr[4] == 0){
-                          return view5();
-                          } else {
+                          } 
+                          else {
                             return Container();
                           }
                         }
@@ -269,7 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               onPressed: () {
                 if (_registerFormP1Key.currentState!.validate()){
                   setState(() {
-                    validity_arr[0] = 1;
+                    validityArr[0] = 1;
                   });
                 }
               },
@@ -425,17 +413,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.arrow_back_ios),
                     onPressed: () {
                       setState(() {
-                        validity_arr[0] = 0;
+                        validityArr[0] = 0;
                       });
                     },
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    if (_registerFormP2Key.currentState!.validate()){
-                      setState(() {
-                        validity_arr[1] = 1;
-                      });
+                  onPressed: () async {
+                    if (_registerFormP2Key.currentState!.validate()) {
+                      bool accountCreated = await FireAuth.createUserWithEmailAndPassword(
+                        email: controllers[2].text,
+                        password: controllers[3].text,
+                        context: context,
+                      );
+                      if (accountCreated){
+                        setState(() {
+                          validityArr[1] = 1;
+                        });
+                      }
                     }
                   },
                   style: ButtonStyle(
@@ -482,6 +477,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
   Widget view3(){
+    
     return Form(
       key: _registerFormP3Key,
       child: Column(
@@ -694,7 +690,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     icon: Icon(Icons.arrow_back_ios),
                     onPressed: () {
                       setState(() {
-                        validity_arr[1] = 0;
+                        validityArr[1] = 0;
                       });
                     },
                   ),
@@ -702,9 +698,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextButton(
                   onPressed: () {
                     if (_registerFormP3Key.currentState!.validate()){
-                      setState(() {
-                        validity_arr[2] = 1;
-                      });
+                      FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text, onCodeSent: onCodeSent);
+                      // setState(() {
+                      //   validityArr[2] = 1;
+                      // });
                     }
                   },
                   style: ButtonStyle(
@@ -748,424 +745,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ],
       ),
-    );
-  }
-  Widget view4(){
-    const otpFieldH = 60.0; //OTP field height
-    const otpFieldW = 50.0; //OTP field width
-    return Form(
-      key: _registerFormP4Key,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            margin: EdgeInsets.only(top: 10),
-            child: Text(
-              'Sign Up',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-                color: Color(0xE608B4F8)
-              ),
-            ),
-          ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //4 text boxes for OTP
-                Container(
-                  margin: EdgeInsets.only(top: 60, left: 4, right: 4),
-                  child: Container(
-                    width: otpFieldW,
-                    height: otpFieldH,
-                    decoration: BoxDecoration(
-                      color: Color(0x5E606060),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Color(0xFF979797),
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: TextFormField(
-                        maxLength: 1,
-                        autofocus: true,
-                        controller: controllers[10],
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) => {
-                          if (value.length == 1){
-                            FocusScope.of(context).nextFocus(),
-                          } else if (value.isEmpty){
-                            FocusScope.of(context).unfocus(),
-                          },
-                          otpFilled = Validate.validateOTP(
-                            otp1: controllers[10].text, 
-                            otp2: controllers[11].text, 
-                            otp3: controllers[12].text, 
-                            otp4: controllers[13].text
-                          ),
-                        },
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(
-                              style: BorderStyle.none,
-                              width: 0,
-                            ),
-                          ),
-                          counterText: "",
-                          // filled: true,
-                          contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                          // hintText: '0',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 60, left: 4, right: 4),
-                  child: Container(
-                    width: otpFieldW,
-                    height: otpFieldH,
-                    decoration: BoxDecoration(
-                      color: Color(0x5E606060),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Color(0xFF979797),
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: TextFormField(
-                        maxLength: 1,
-                        controller: controllers[11],
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) => {
-                          if (value.length == 1){
-                            FocusScope.of(context).nextFocus(),
-                          } else if (value.isEmpty){
-                            FocusScope.of(context).previousFocus(),
-                          },
-                          otpFilled = Validate.validateOTP(
-                            otp1: controllers[10].text, 
-                            otp2: controllers[11].text, 
-                            otp3: controllers[12].text, 
-                            otp4: controllers[13].text
-                          ),
-                        },
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(
-                              style: BorderStyle.none,
-                              width: 0,
-                            ),
-                          ),
-                          counterText: "",
-                          // filled: true,
-                          contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                          // hintText: '0',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 60, left: 4, right: 4),
-                  child: Container(
-                    width: otpFieldW,
-                    height: otpFieldH,
-                    decoration: BoxDecoration(
-                      color: Color(0x5E606060),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Color(0xFF979797),
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: TextFormField(
-                        maxLength: 1,
-                        controller: controllers[12],
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) => {
-                          if (value.length == 1){
-                            FocusScope.of(context).nextFocus(),
-                          } else if (value.isEmpty){
-                            FocusScope.of(context).previousFocus(),
-                          },
-                          otpFilled = Validate.validateOTP(
-                            otp1: controllers[10].text, 
-                            otp2: controllers[11].text, 
-                            otp3: controllers[12].text, 
-                            otp4: controllers[13].text
-                          ),
-                        },
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(
-                              style: BorderStyle.none,
-                              width: 0,
-                            ),
-                          ),
-                          counterText: "",
-                          // filled: true,
-                          contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                          // hintText: '0',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 60, left: 4, right: 4),
-                  child: Container(
-                    width: otpFieldW,
-                    height: otpFieldH,
-                    decoration: BoxDecoration(
-                      color: Color(0x5E606060),
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Container(
-                      margin: EdgeInsets.all(10.0),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Color(0xFF979797),
-                            width: 1,
-                          ),
-                        ),
-                      ),
-                      child: TextFormField(
-                        maxLength: 1,
-                        controller: controllers[13],
-                        keyboardType: TextInputType.number,
-                        onChanged: (value) => {
-                          if (value.length == 1){
-                            FocusScope.of(context).unfocus(),
-                            otpFilled = true,
-                          } else if (value.isEmpty){
-                            FocusScope.of(context).previousFocus(),
-                          },
-                          otpFilled = Validate.validateOTP(
-                            otp1: controllers[10].text, 
-                            otp2: controllers[11].text, 
-                            otp3: controllers[12].text, 
-                            otp4: controllers[13].text
-                          )
-                        },
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius:
-                            BorderRadius.all(Radius.circular(15.0)),
-                            borderSide: BorderSide(
-                              style: BorderStyle.none,
-                              width: 0,
-                            ),
-                          ),
-                          counterText: "",
-                          // filled: true,
-                          contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0),
-                          // hintText: '0',
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 30),
-            child: Text(
-              "Didn't recieve an OTP ?",
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Inter',
-                color: Color(0xFF636363),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 5),
-            child: TextButton(
-              onPressed: () {},
-              child: Text(
-                "Resend OTP",
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Inter',
-                  color: Color(0xFFFFFFFF),
-                ),
-              ),
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 10),
-                  padding: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    color: Color(0x5E606060),
-                    borderRadius: BorderRadius.circular(50.0),
-                  ),
-                  child: IconButton(
-                    padding: EdgeInsets.only(left: 5),
-                    icon: Icon(Icons.arrow_back_ios),
-                    onPressed: () {
-                      setState(() {
-                        validity_arr[2] = 0;
-                      });
-                    },
-                  ),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    if (Validate.validateOTP(otp1: controllers[10].text, otp2: controllers[11].text, otp3: controllers[12].text, otp4: controllers[13].text) == true) {
-                      register(context);
-                      setState(() {
-                        validity_arr[3] = 1;
-                      });
-                    }
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      otpFilled ? Color(0xE61469EF) : Color(0x5E606060),
-                    ),
-                    shape:
-                        MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0),
-                      ),
-                    ),
-                    fixedSize: MaterialStateProperty.all<Size>(
-                      const Size(190.0, 50.0),
-                    ),
-                  ),
-                  child: Text(
-                    'Submit',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Inter',
-                      color: Color(0xFFFFFFFF),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  Widget view5(){
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        Container(
-          margin: EdgeInsets.only(top: 10),
-          child: Text(
-            'Sign Up',
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Inter',
-              color: Color(0xE608B4F8)
-            ),
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 30),
-          child: Column(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: Color(0xFF0A7F46),
-                size: 80,
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                child: Text(
-                  "Successful",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
-                    color: Color(0xFFAEAEAE),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 40),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color(0xE61469EF),
-                  ),
-                  shape:
-                      MaterialStateProperty.all<RoundedRectangleBorder>(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50.0),
-                    ),
-                  ),
-                  fixedSize: MaterialStateProperty.all<Size>(
-                    const Size(190.0, 50.0),
-                  ),
-                ),
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Inter',
-                    color: Color(0xFFFFFFFF),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
