@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/Screens/account/user.dart';
-import 'package:the_wallet/Screens/components/account-bottom-buttons.dart';
-import 'package:the_wallet/Screens/account/account-edit-screen.dart';
+import 'package:the_wallet/screens/account/user.dart';
+import 'package:the_wallet/screens/components/account-bottom-buttons.dart';
+import 'package:the_wallet/screens/account/account-edit-screen.dart';
 
 class AccountEditPhone extends StatefulWidget {
   const AccountEditPhone({Key? key}) : super(key: key);

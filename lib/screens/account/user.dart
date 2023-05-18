@@ -1,6 +1,7 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class UserClass {
   String userID;
   String firstName;
   String lastName;
@@ -8,7 +9,7 @@ class User {
   String phoneNumber;
   File? picture;
 
-  User({
+  UserClass({
     required this.userID,
     required this.firstName,
     required this.lastName,
@@ -16,9 +17,23 @@ class User {
     required this.phoneNumber,
     this.picture,
   });
+
+  static UserClass? currentUser; // Static instance to store the current user
+
+  factory UserClass.fromDocumentSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
+
+    return UserClass(
+      userID: snapshot.id,
+      firstName: data['firstN'],
+      lastName: data['lastN'],
+      email: data['email'],
+      phoneNumber: data['phoneNo'],
+    );
+  }
 }
 
-final User user = User(
+final UserClass user = UserClass(
   userID: "E3422089-U7G11C",
   firstName: "Maneth",
   lastName: "Weerasinghe",

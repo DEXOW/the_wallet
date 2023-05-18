@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/Screens/components/account-bottom-buttons.dart';
-import 'package:the_wallet/Screens/account/user.dart';
-import 'package:the_wallet/Screens/account/account-main-screen.dart';
+import 'package:the_wallet/screens/components/account-bottom-buttons.dart';
+import 'package:the_wallet/screens/account/user.dart';
+import 'package:the_wallet/screens/account/account-main-screen.dart';
 
 class AccountEditPassowrd extends StatefulWidget {
   const AccountEditPassowrd({Key? key}) : super(key: key);

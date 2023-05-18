@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -56,16 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'the-wallet-2fa7c',
     databaseURL: 'https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'the-wallet-2fa7c.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCBKr0SieJMJ0rz6kmdMVwM0wR5nX-6PLo',
-    appId: '1:277225708946:ios:6ba30ee575b0d46fc6354b',
-    messagingSenderId: '277225708946',
-    projectId: 'the-wallet-2fa7c',
-    databaseURL: 'https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'the-wallet-2fa7c.appspot.com',
-    iosClientId: '277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94.apps.googleusercontent.com',
-    iosBundleId: 'com.example.theWallet',
   );
 }

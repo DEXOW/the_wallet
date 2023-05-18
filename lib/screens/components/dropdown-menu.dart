@@ -238,7 +238,7 @@ class DropDownState extends State<DropDown>
             builder: (context, child) => Container(
               padding: const EdgeInsets.only(left: 20, right: 20, top: 80),
               width: 11,
-              height: _animation.value * 600 + 0,
+              height: _animation.value * 570 + 0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0),
                 color: const Color(0xF2B5B5BD),

@@ -50,7 +50,9 @@ class BottomButtons extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              onRightButtonPressed();
+            },
             style: ButtonStyle(
               fixedSize: MaterialStateProperty.all<Size>(const Size(202, 45)),
               backgroundColor:

@@ -154,7 +154,7 @@ class EditSocialCardState extends State<EditSocialCard> {
             const SizedBox(width: 10.0),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.25),
+                padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3),
                 child: TextField(
                   controller: controller,
                   onChanged: (value) {
@@ -250,15 +250,16 @@ class EditSocialCardState extends State<EditSocialCard> {
                                 onTap: () {
                                   _pickImage();
                                 },
-                                child: Container(
-                                  child: CircleAvatar(
-                                    radius: 41.5,
-                                    backgroundImage: socialCard.picture == null
-                                        ? const AssetImage(
-                                            'assets/icons/profile_edit.png')
-                                        : FileImage(socialCard.picture!)
-                                            as ImageProvider<Object>?,
-                                  ),
+                                child: CircleAvatar(
+                                  radius: 41.5,
+                                  backgroundColor: accountMain,
+                                  child: socialCard.picture == null
+                                      ? const Icon(Icons.person_rounded,
+                                          color: linkUpMain, size: 60.0)
+                                      : CircleAvatar(
+                                          radius: 40.0,
+                                          backgroundImage:
+                                              FileImage(socialCard.picture!)),
                                 ),
                               ),
                             ),
@@ -322,56 +323,15 @@ class EditSocialCardState extends State<EditSocialCard> {
                       const SizedBox(
                         height: 20,
                       ),
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     Navigator.pushReplacement(
-                      //       context,
-                      //       PageRouteBuilder(
-                      //         transitionDuration:
-                      //             const Duration(milliseconds: 500),
-                      //         pageBuilder:
-                      //             (context, animation, secondaryAnimation) =>
-                      //                 ViewSocialCard(),
-                      //         transitionsBuilder: (context, animation,
-                      //             secondaryAnimation, child) {
-                      //           var begin = const Offset(-1.0, 0.0);
-                      //           var end = const Offset(0, 0.0);
-                      //           var curve = Curves.ease;
-
-                      //           var tween = Tween(begin: begin, end: end)
-                      //               .chain(CurveTween(curve: curve));
-
-                      //           return SlideTransition(
-                      //             position: animation.drive(tween),
-                      //             child: child,
-                      //           );
-                      //         },
-                      //       ),
-                      //     );
-                      //   },
-                      //   style: ElevatedButton.styleFrom(
-                      //     backgroundColor: const Color(0xFFFFFFFF),
-                      //     minimumSize: const Size(256, 40),
-                      //     shape: RoundedRectangleBorder(
-                      //       borderRadius: BorderRadius.circular(25),
-                      //     ),
-                      //   ),
-                      //   child: const Text(
-                      //     'View Social Card',
-                      //     style: TextStyle(
-                      //       fontFamily: 'Inter',
-                      //       color: Color(0xFF161730),
-                      //       fontSize: 14,
-                      //       fontWeight: FontWeight.bold,
-                      //     ),
-                      //   ),
-                      // )
                     ],
                   ),
                 )
               ],
             ),
-            DropDown(bottomPadding: 0, topBarColor: Colors.transparent,),
+            DropDown(
+              bottomPadding: 0,
+              topBarColor: Colors.transparent,
+            ),
             Positioned(
               bottom: 10,
               child: Navbar(currentPage: 'linkup'),

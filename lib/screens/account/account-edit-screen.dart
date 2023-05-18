@@ -1,14 +1,18 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/Screens/components/account-bottom-buttons.dart';
-import 'package:the_wallet/Screens/account/user.dart';
-import 'package:the_wallet/Screens/account/account-main-screen.dart';
-import 'package:the_wallet/Screens/account/account-edit-email-screen.dart';
-import 'package:the_wallet/Screens/account/account-edit-phone-screen.dart';
+import 'package:the_wallet/screens/account/user.dart';
+import 'package:the_wallet/screens/account/userDataProvider.dart';
+import 'package:the_wallet/screens/account/account-main-screen.dart';
+import 'package:the_wallet/screens/components/account-bottom-buttons.dart';
+import 'package:the_wallet/screens/account/account-edit-email-screen.dart';
+import 'package:the_wallet/screens/account/account-edit-phone-screen.dart';
 
 class AccountEditProfile extends StatefulWidget {
   const AccountEditProfile({Key? key}) : super(key: key);
@@ -23,10 +27,27 @@ class AccountEditProfileState extends State<AccountEditProfile> {
     (_) => TextEditingController(),
   );
 
+  late UserDataProvider _userDataProvider;
+  String downloadUrl = '';
+  Image? profilePicture;
+  File? profilePictureFile;
+
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+
   @override
   void initState() {
     super.initState();
+    _userDataProvider = Provider.of<UserDataProvider>(context, listen: false);
     setControllers();
+    if (_userDataProvider.userData.pictureUrl != '') {
+      profilePicture = Image.network(_userDataProvider.userData.pictureUrl);
+    }
+    print('${_userDataProvider.userData.fname}');
+    print('${_userDataProvider.userData.lname}');
+    print('${_userDataProvider.userData.email}');
+    print('${_userDataProvider.userData.phoneNo}');
+    print('${_userDataProvider.userData.pictureUrl}');
   }
 
   @override
@@ -38,39 +59,100 @@ class AccountEditProfileState extends State<AccountEditProfile> {
   }
 
   setControllers() {
-    textEditingControllers[0].text = user.firstName;
-    textEditingControllers[1].text = user.lastName;
-    textEditingControllers[2].text = user.email;
-    textEditingControllers[3].text = user.phoneNumber;
+    textEditingControllers[0].text = _userDataProvider.userData.fname;
+    textEditingControllers[1].text = _userDataProvider.userData.lname;
+    textEditingControllers[2].text = _userDataProvider.userData.email;
+    textEditingControllers[3].text = _userDataProvider.userData.phoneNo;
+  }
+
+  Future<void> uploadImage(File file) async {
+    final firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref('files/${file.path}');
+
+    try {
+      await ref.putFile(file);
+      print('File uploaded successfully');
+      // Retrieve the download link from the snapshot
+      downloadUrl = await ref.getDownloadURL();
+      print(downloadUrl);
+    } catch (e) {
+      print('Error occurred during file upload: $e');
+    }
   }
 
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
-    late File file;
 
-    if (Platform.isWindows) {
-      final FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
-      );
-      if (result != null && result.files.isNotEmpty) {
-        file = File(result.files.single.path!);
-      } else {
-        return;
-      }
-    } else {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        file = File(image.path);
-      } else {
-        return;
-      }
+    late XFile? pickedImage;
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+    } else if (Theme.of(context).platform == TargetPlatform.android) {
+      pickedImage = await _picker.pickImage(source: ImageSource.gallery);
     }
 
+    if (pickedImage == null) return;
+
     setState(() {
-      user.picture = file;
+      profilePictureFile = File(pickedImage!.path);
+      profilePicture = Image.file(profilePictureFile!);
     });
-    // await _saveData();
+  }
+
+  void onSaveButtonPressed() async {
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: 'manethweerasinghe@gmail.com',
+      password: 'Maneth1234',
+    );
+    String firstName = textEditingControllers[0].text;
+    String lastName = textEditingControllers[1].text;
+    String oldPictureUrl = _userDataProvider.userData.pictureUrl;
+    String url = '';
+
+    if (profilePictureFile != null) {
+      // Upload the new picture to Firebase Storage
+      await uploadImage(profilePictureFile!);
+      url = downloadUrl;
+      if (oldPictureUrl != '') {
+        try {
+          await storage.refFromURL(oldPictureUrl).delete();
+          print('Old picture deleted successfully.');
+        } catch (e) {
+          print('Error deleting old picture: $e');
+        }
+      }
+    } else if (oldPictureUrl != '') {
+      url = oldPictureUrl;
+    } else {
+      url = '';
+    }
+
+    // Update the user data in the provider
+    _userDataProvider.userData.setData(
+      firstName,
+      lastName,
+      _userDataProvider.userData.email,
+      _userDataProvider.userData.phoneNo,
+      url,
+    );
+
+    // Update the user data in Firestore
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .update({
+        'fname': firstName,
+        'lname': lastName,
+        'pictureUrl': url,
+      });
+      print('User data updated successfully.');
+    } catch (e) {
+      print('Error updating user data: $e');
+    }
+
+    // ignore: use_build_context_synchronously
+    navigateToPage(context, const AccountMain(), -1.0);
   }
 
   void navigateToPage(BuildContext context, Widget page, double offSet) {
@@ -131,7 +213,6 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                           break;
                       }
                     });
-                    // _saveData();
                   },
                   style: const TextStyle(
                     color: Colors.black,
@@ -267,12 +348,12 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                             child: CircleAvatar(
                               radius: 41.5,
                               backgroundColor: Color(0xB3000000),
-                              child: user.picture == null
+                              child: profilePicture == null
                                   ? const Icon(Icons.person_rounded,
                                       color: accountMain, size: 60.0)
                                   : CircleAvatar(
                                       radius: 40.0,
-                                      backgroundImage: FileImage(user.picture!),
+                                      backgroundImage: profilePicture!.image,
                                     ),
                             ),
                           ),
@@ -314,8 +395,8 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                     buildInputRow('Last Name', textEditingControllers[1],
                         'Cannot be empty', 'lastName'),
                     //**** EMAIL ****//
-                    buildInputRowEmailPhone(context, AccountEditEmail(), 'Email',
-                        textEditingControllers[2], 'Email', 'email'),
+                    buildInputRowEmailPhone(context, AccountEditEmail(),
+                        'Email', textEditingControllers[2], 'Email', 'email'),
                     //**** PHONE NUMBER ****//
                     buildInputRowEmailPhone(
                         context,
@@ -330,7 +411,6 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                   ],
                 ),
               ),
-              //**** BOTTOM BAR ****//
               BottomButtons(
                 leftButtonBackgroundColor: closeColor,
                 leftButtonIcon: Icons.arrow_back,
@@ -338,7 +418,9 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                 onLeftButtonPressed: () {
                   navigateToPage(context, AccountMain(), -1.0);
                 },
-                onRightButtonPressed: () {},
+                onRightButtonPressed: () {
+                  onSaveButtonPressed();
+                },
                 rightButtonBackgroundColor: const Color(0x6024FF00),
                 rightButtonIcon: Icons.check_rounded,
                 rightButtonText: "Submit",
