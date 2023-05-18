@@ -14,6 +14,7 @@ import 'package:the_wallet/screens/linkup/social-card-template.dart';
 import 'package:the_wallet/test.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(
       create: (_) => UserDataProvider(),
@@ -26,16 +27,17 @@ Future<FirebaseApp> _initializeFirebase() async {
   FirebaseApp firebaseApp = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  _loginEmailPassword("manethweerasinghe@gmail.com", "Maneth1234");
+  login('manethweerasinghe@gmail.com', 'Maneth1234');
   return firebaseApp;
 }
 
-Future<void> _loginEmailPassword(String email, String password) async {
+Future<void> login (String email, String password) async {
   try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+    print('User ID: ${userCredential.user!.uid}');
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
@@ -62,11 +64,10 @@ class MyApp extends StatelessWidget {
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              print(
-                  'Error initializing Firebase: ${snapshot.error.toString()}');
+              print('Error initializing Firebase: ${snapshot.error.toString()}');
               return const Text('Error initializing Firebase');
             } else if (snapshot.connectionState == ConnectionState.done) {
-              return const EditSocialCard();
+              return const AccountMain();
             }
             return const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
@@ -77,12 +78,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// UserClass.currentUser?.firstName = '${userData['fname']}';
-//         UserClass.currentUser?.lastName = '${userData['lname']}';
-//         UserClass.currentUser?.email = '${userData['email']}';
-//         UserClass.currentUser?.phoneNumber = '${userData['phoneNo']}';
-//         print('${UserClass.currentUser?.firstName}');
-//         print('${UserClass.currentUser?.lastName}');
-//         print('${UserClass.currentUser?.email}');
-//         print('${UserClass.currentUser?.phoneNumber}');

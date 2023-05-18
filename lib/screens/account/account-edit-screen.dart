@@ -43,11 +43,6 @@ class AccountEditProfileState extends State<AccountEditProfile> {
     if (_userDataProvider.userData.pictureUrl != '') {
       profilePicture = Image.network(_userDataProvider.userData.pictureUrl);
     }
-    print('${_userDataProvider.userData.fname}');
-    print('${_userDataProvider.userData.lname}');
-    print('${_userDataProvider.userData.email}');
-    print('${_userDataProvider.userData.phoneNo}');
-    print('${_userDataProvider.userData.pictureUrl}');
   }
 
   @override
@@ -151,7 +146,6 @@ class AccountEditProfileState extends State<AccountEditProfile> {
       print('Error updating user data: $e');
     }
 
-    // ignore: use_build_context_synchronously
     navigateToPage(context, const AccountMain(), -1.0);
   }
 
@@ -202,18 +196,7 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.25),
                 child: TextField(
                   controller: controller,
-                  onChanged: (value) {
-                    setState(() {
-                      switch (propertyName) {
-                        case 'firstName':
-                          user.firstName = value;
-                          break;
-                        case 'lastName':
-                          user.lastName = value;
-                          break;
-                      }
-                    });
-                  },
+                  onChanged: (value) {},
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 14,
@@ -270,19 +253,7 @@ class AccountEditProfileState extends State<AccountEditProfile> {
             Expanded(
               child: TextField(
                 controller: controller,
-                onChanged: (value) {
-                  setState(() {
-                    switch (propertyName) {
-                      case 'email':
-                        user.email = value;
-                        break;
-                      case 'phoneNumber':
-                        user.phoneNumber = value;
-                        break;
-                    }
-                  });
-                  // _saveData();
-                },
+                onChanged: (value) {},
                 style: const TextStyle(
                   color: tertiraryColor,
                   fontSize: 14,
@@ -378,9 +349,9 @@ class AccountEditProfileState extends State<AccountEditProfile> {
                     ),
                     Container(
                       margin: const EdgeInsets.only(top: 15),
-                      child: Text(
-                        user.userID,
-                        style: const TextStyle(
+                      child: const Text(
+                        "E3422089-U7G11C",
+                        style: TextStyle(
                           color: Color(0xAA424242),
                           fontSize: 14,
                           fontFamily: 'Inter',

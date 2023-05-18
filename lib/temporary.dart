@@ -21,6 +21,8 @@ class AccountMainState extends State<AccountMain> {
   // bool _isLoading = true;
   late UserDataProvider _userDataProvider;
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
@@ -30,18 +32,13 @@ class AccountMainState extends State<AccountMain> {
 
   Future<void> testEmailPasswordSignIn(String email, String password) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
 
       String uid = FirebaseAuth.instance.currentUser!.uid;
 
       // Retrieve user data from Firestore
       DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
           .collection('users')
-          .doc(userCredential.user!.uid)
+          .doc(auth.currentUser!.uid)
           .get();
 
       // Update user data in provider

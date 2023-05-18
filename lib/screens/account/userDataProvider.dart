@@ -11,9 +11,4 @@ class UserDataProvider extends ChangeNotifier {
   );
 
   UserData get userData => _userData;
-
-  void setData(String fname, String lname, String email, String phoneNo, String pictureUrl) {
-    _userData.setData(fname, lname, email, phoneNo, pictureUrl);
-    notifyListeners();
-  }
 }
