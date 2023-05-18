@@ -6,15 +6,16 @@ import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/startup/startup-screen.dart';
 import 'package:the_wallet/screens/components/loading-animation.dart';
 import 'package:the_wallet/screens/components/loading-screen.dart';
+import 'package:the_wallet/constants.dart';
 
 import 'package:the_wallet/RSA.dart';
 
-// Future<FirebaseApp> _initializeFirebase() async {
-//   FirebaseApp firebaseApp = await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-//   return firebaseApp;
-// }
+Future<FirebaseApp> _initializeFirebase() async {
+  FirebaseApp firebaseApp = await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  return firebaseApp;
+}
 
 void main() {
   //RSA Encryption
@@ -41,22 +42,22 @@ class MyApp extends StatelessWidget {
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
       ),
-      home: StartupScreen(),
-      // home: AnnotatedRegion<SystemUiOverlayStyle>(
-      //   value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: bgColor),
-      //   child: FutureBuilder(
-      //     future: _initializeFirebase(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.connectionState == ConnectionState.done){
-      //         return StartupScreen();
-      //       } else {
-      //         return const Center(
-      //           child: CircularProgressIndicator(),
-      //         );
-      //       }
-      //     }
-      //   ),
-      // ),
+      // home: StartupScreen(),
+      home: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: bgColor),
+        child: FutureBuilder(
+          future: _initializeFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done){
+              return StartupScreen();
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }
+        ),
+      ),
     );
   }
 }

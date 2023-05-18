@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:the_wallet/screens/home/home-screen.dart';
-// import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,8 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    usrEmail.dispose();
-    usrPassword.dispose();
+    // usrEmail.dispose();
+    // usrPassword.dispose();
     super.dispose();
   }
 
@@ -28,9 +29,16 @@ class _LoginScreenState extends State<LoginScreen> {
     _passwordVisible = false;
   }
 
-  void login(BuildContext context) {
-    // FireAuth.signInUsingEmailPassword(email: usrEmail.text, password: usrPassword.text, context: context);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+ void login(BuildContext context) async {
+    await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    if (user != null){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    }
+    else{
+    print('not working');
+    }
+    });
     // dispose();
   }
 
