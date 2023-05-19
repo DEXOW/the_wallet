@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/components/navbar.dart';
+import 'package:the_wallet/screens/components/data-classes.dart';
+import 'package:the_wallet/screens/login/login-screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

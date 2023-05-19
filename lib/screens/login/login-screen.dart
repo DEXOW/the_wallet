@@ -4,6 +4,7 @@ import 'package:the_wallet/screens/home/home-screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/validate.dart';
+import 'package:the_wallet/screens/components/data-classes.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
   final _loginFormKey = GlobalKey<FormState>();
   final usrEmail = TextEditingController();
   final usrPassword = TextEditingController();
-  bool _passwordVisible = false;
+  late bool _passwordVisible;
+  // late List<String?> name;
+  late Map<String?, dynamic> name;
 
   @override
   void dispose() {
@@ -28,11 +31,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void initState() {
     _passwordVisible = false;
+    
+    super.initState();
   }
 
   void login(BuildContext context) async {
     await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) async {
       if (user != null){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
@@ -127,6 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                                     hintText: 'Email',
                                   ),
+                                  textInputAction: TextInputAction.next,
                                 ),
                               ),
                             ),
@@ -137,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: TextFormField(
                                   controller: usrPassword,
                                   validator: (value) => Validate.validateLoginPassword(password: value),
-                                  decoration: const InputDecoration(
+                                  decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(50.0)),
@@ -147,12 +153,27 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     ),
                                     filled: true,
-                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
+                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 20.0),
                                     hintText: 'Password',
-                                  ),
-                                  obscureText: true,
+                                    suffixIcon: IconButton(
+                                      padding: EdgeInsets.only(right: 20.0),
+                                      icon: Icon(
+                                          _passwordVisible
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                          color: Color(0xFFCFC7BE),
+                                          ),
+                                      onPressed: () {
+                                          setState(() {
+                                              _passwordVisible = !_passwordVisible;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  obscureText: !_passwordVisible,
                                   enableSuggestions: false,
                                   autocorrect: false,
+                                  textInputAction: TextInputAction.done,
                                 ),
                               ),
                             ),

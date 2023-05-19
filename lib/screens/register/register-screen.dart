@@ -17,6 +17,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   List<int> validityArr = [0,0,0,0,0];
+  late bool _passwordVisible;
 
   final _registerFormP1Key = GlobalKey<FormState>();
   final _registerFormP2Key = GlobalKey<FormState>();
@@ -36,9 +37,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ];
     // List<TextEditingController>.generate(11, (index) => TextEditingController()), //All the controllers
 
+  List<FocusNode> focusNodes = [
+    FocusNode(), //First Name
+    FocusNode(), //Last Name
+    FocusNode(), //Email
+    FocusNode(), //Password
+    FocusNode(), //Confirm Password
+    FocusNode(), //Phone Number
+    ];
+
 
   void initState() {
     super.initState();
+    _passwordVisible = false;
     
     setState(() {
       controllers[5].text = selectedDate.day.toString();
@@ -207,8 +218,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: SizedBox(
               width: 230.0,
               child: TextFormField(
+                focusNode: focusNodes[0],
                 controller: controllers[0],
                 validator: (value) => Validate.validateRegName(name: value),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (term){
+                  focusNodes[0].unfocus();
+                  FocusScope.of(context).requestFocus(focusNodes[1]);
+                },
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -229,8 +246,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: SizedBox(
               width: 230.0,
               child: TextFormField(
+                focusNode: focusNodes[1],
                 controller: controllers[1],
                 validator: (value) => Validate.validateRegName(name: value),
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (term){
+                  focusNodes[1].unfocus();
+                },
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius:
@@ -322,8 +344,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: SizedBox(
               width: 230.0,
               child: TextFormField(
+                focusNode: focusNodes[2],
                 controller: controllers[2],
                 validator: (value) => Validate.validateEmail(email: value),
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (term){
+                  focusNodes[2].unfocus();
+                  FocusScope.of(context).requestFocus(focusNodes[3]);
+                },
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius:
@@ -345,9 +373,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: SizedBox(
               width: 230.0,
               child: TextFormField(
+                focusNode: focusNodes[3],
                 controller: controllers[3],
                 validator: (value) => Validate.validateRegPassword(password: value),
-                decoration: const InputDecoration(
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (term){
+                  focusNodes[3].unfocus();
+                  FocusScope.of(context).requestFocus(focusNodes[4]);
+                },
+                decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.all(Radius.circular(50.0)),
@@ -359,8 +393,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   filled: true,
                   contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                   hintText: 'Password',
-                ),
-                obscureText: true,
+                  suffixIcon: IconButton(
+                    padding: EdgeInsets.only(right: 20.0),
+                    icon: Icon(
+                        _passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                        color: Color(0xFFCFC7BE),
+                        ),
+                    onPressed: () {
+                        setState(() {
+                            _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
               ),
@@ -371,9 +419,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: SizedBox(
               width: 230.0,
               child: TextFormField(
+                focusNode: focusNodes[4],
                 controller: controllers[4],
                 validator: (value) => Validate.validateRegConfPassword(password: controllers[3].text,confPassword: value),
-                decoration: const InputDecoration(
+                textInputAction: TextInputAction.done,
+                onFieldSubmitted: (term){
+                  focusNodes[4].unfocus();
+                },
+                decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.all(Radius.circular(50.0)),
@@ -385,8 +438,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   filled: true,
                   contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 30.0),
                   hintText: 'Confirm Password',
-                ),
-                obscureText: true,
+                  suffixIcon: IconButton(
+                    padding: EdgeInsets.only(right: 20.0),
+                    icon: Icon(
+                        _passwordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                        color: Color(0xFFCFC7BE),
+                        ),
+                    onPressed: () {
+                        setState(() {
+                            _passwordVisible = !_passwordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                obscureText: !_passwordVisible,
                 enableSuggestions: false,
                 autocorrect: false,
               ),
@@ -638,9 +705,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: SizedBox(
                               width: 175.0,
                               child: TextFormField(
+                                focusNode: focusNodes[5],
                                 controller: controllers[9],
                                 validator: (value) => Validate.validatePhoneNo(phoneNo: value),
                                 keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (value) {
+                                  focusNodes[5].unfocus();
+                                },
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius:
