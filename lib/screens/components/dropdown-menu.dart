@@ -285,7 +285,7 @@ class DropDownState extends State<DropDown>
           ),
         ),
         Positioned(
-          top: 20,
+          top: 24,
           right: 25,
           child: Column(
             children: [
@@ -293,14 +293,17 @@ class DropDownState extends State<DropDown>
                 backgroundColor: _containerColor,
                 radius: 20.0,
                 child: IconButton(
-                  icon: Icon(
-                    _isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: _iconColor,
+                  icon: Transform.scale(
+                    scale: 1.5,
+                    child: Icon(
+                      _isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                      color: _iconColor,
+                    ),
                   ),
                   onPressed: () {
                     toggleExpand();
                   },
-                  iconSize: 25.0,
+                  iconSize: 24.0,
                   color: _iconColor,
                   hoverColor: Colors.transparent,
                   splashColor: Colors.transparent,

@@ -4,20 +4,23 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/screens/linkup/edit-social-card-screen.dart';
+import 'package:the_wallet/screens/linkup/social-card-data-provider.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/account/userDataProvider.dart';
-import 'package:the_wallet/screens/account/account-main-screen.dart';
-import 'package:the_wallet/screens/linkup/social-card-template.dart';
-import 'package:the_wallet/test.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => UserDataProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<UserDataProvider>(
+            create: (_) => UserDataProvider()),
+        ChangeNotifierProvider<SocialCardDataProvider>(
+            create: (_) => SocialCardDataProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -31,9 +34,10 @@ Future<FirebaseApp> _initializeFirebase() async {
   return firebaseApp;
 }
 
-Future<void> login (String email, String password) async {
+Future<void> login(String email, String password) async {
   try {
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
@@ -45,6 +49,24 @@ Future<void> login (String email, String password) async {
       print('Wrong password provided for that user.');
     }
   }
+
+  // FirebaseAuth auth = FirebaseAuth.instance;
+
+  // final snapshot = await FirebaseFirestore.instance
+  //     .collection('users')
+  //     .doc('${auth.currentUser!.uid}/cards/socialcard')
+  //     .snapshots()
+  //     .first;
+
+  //     //set the data of the pictureUrl in snapshot.data to empty string
+  //      await FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc('${auth.currentUser!.uid}/cards/socialcard')
+  //         .update({
+  //       'pictureUrl': '',
+  //     });
+
+  // print('THIS IS SNAPSHOT DATA: ${snapshot.data()}');
 }
 
 class MyApp extends StatelessWidget {
@@ -56,7 +78,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'The Wallet',
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: bgColor,
+        scaffoldBackgroundColor: linkUpMain,
       ),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -64,10 +86,11 @@ class MyApp extends StatelessWidget {
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              print('Error initializing Firebase: ${snapshot.error.toString()}');
+              print(
+                  'Error initializing Firebase: ${snapshot.error.toString()}');
               return const Text('Error initializing Firebase');
             } else if (snapshot.connectionState == ConnectionState.done) {
-              return const AccountMain();
+              return const EditSocialCard();
             }
             return const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),

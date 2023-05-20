@@ -35,6 +35,8 @@ class AccountEditProfileState extends State<AccountEditProfile> {
   firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
 
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
@@ -94,11 +96,6 @@ class AccountEditProfileState extends State<AccountEditProfile> {
   }
 
   void onSaveButtonPressed() async {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: 'manethweerasinghe@gmail.com',
-      password: 'Maneth1234',
-    );
     String firstName = textEditingControllers[0].text;
     String lastName = textEditingControllers[1].text;
     String oldPictureUrl = _userDataProvider.userData.pictureUrl;
@@ -135,7 +132,7 @@ class AccountEditProfileState extends State<AccountEditProfile> {
     try {
       await FirebaseFirestore.instance
           .collection('users')
-          .doc(userCredential.user!.uid)
+          .doc(auth.currentUser!.uid)
           .update({
         'fname': firstName,
         'lname': lastName,
@@ -146,7 +143,7 @@ class AccountEditProfileState extends State<AccountEditProfile> {
       print('Error updating user data: $e');
     }
 
-    navigateToPage(context, const AccountMain(), -1.0);
+    navigateToPage(context, AccountMain(), -1.0);
   }
 
   void navigateToPage(BuildContext context, Widget page, double offSet) {

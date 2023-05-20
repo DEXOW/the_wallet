@@ -1,15 +1,15 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/Screens/linkup/social-card-template.dart';
 import 'package:the_wallet/Screens/components/navbar.dart';
 import 'package:the_wallet/Screens/components/dropdown-menu.dart';
+import 'package:the_wallet/screens/linkup/social-card-data-provider.dart';
 
 class EditSocialCard extends StatefulWidget {
   const EditSocialCard({Key? key}) : super(key: key);
@@ -24,25 +24,50 @@ class EditSocialCardState extends State<EditSocialCard> {
     (_) => TextEditingController(),
   );
 
-  bool _isMenuOpen = false;
+  bool isDataLoaded = false;
+  late SocialCardDataProvider socialCardDataProvider;
+  String downloadUrl = '';
+  Image? profilePicture;
+  File? profilePictureNew;
+  final ValueNotifier<bool> updatePicture = ValueNotifier(false);
 
-  SocialCard socialCard = SocialCard(
-    firstName: '',
-    lastName: '',
-    career: '',
-    age: '',
-    email: '',
-    phoneNumber: '',
-    linkedIn: '',
-    twitter: '',
-    instagram: '',
-    facebook: '',
-    picture: null,
-  );
+  firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
 
-  void toggleMenu() {
+  FirebaseAuth auth = FirebaseAuth.instance;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   socialCardDataProvider =
+  //       Provider.of<SocialCardDataProvider>(context, listen: false);
+  //   if (socialCardDataProvider.socialCardData.pictureUrl != '') {
+  //     profilePicture =
+  //         Image.network(socialCardDataProvider.socialCardData.pictureUrl);
+  //   }
+  //   fetchData();
+  // }
+
+  // @override
+  // void didChangeDependencies() async {
+  //   super.didChangeDependencies();
+  //   setState(() {
+  //     isDataLoaded = true;
+  //   });
+  // }
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    socialCardDataProvider =
+        Provider.of<SocialCardDataProvider>(context, listen: false);
+    await fetchData();
     setState(() {
-      _isMenuOpen = !_isMenuOpen;
+      isDataLoaded = true;
+      if (socialCardDataProvider.socialCardData.pictureUrl != '') {
+        profilePicture =
+            Image.network(socialCardDataProvider.socialCardData.pictureUrl);
+      }
     });
   }
 
@@ -54,93 +79,252 @@ class EditSocialCardState extends State<EditSocialCard> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
+  Future<void> fetchData() async {
+    await updateSocialCardData(); // Wait for data to be fetched
+    setControllers(); // Update the controllers with the fetched data
   }
 
-  Future<void> _loadData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final socialCardJson = prefs.getString('socialCard');
-    if (socialCardJson != null) {
-      final jsonMap = json.decode(socialCardJson) as Map<String, dynamic>;
-      setState(() {
-        socialCard = SocialCard.fromJson(jsonMap);
-        textEditingControllers[0].text = socialCard.firstName;
-        textEditingControllers[1].text = socialCard.lastName;
-        textEditingControllers[2].text = socialCard.career;
-        textEditingControllers[3].text = socialCard.age;
-        textEditingControllers[4].text = socialCard.email;
-        textEditingControllers[5].text = socialCard.phoneNumber;
-        textEditingControllers[6].text = socialCard.linkedIn;
-        textEditingControllers[7].text = socialCard.twitter;
-        textEditingControllers[8].text = socialCard.instagram;
-        textEditingControllers[9].text = socialCard.facebook;
-      });
-    } else {
-      setState(() {
-        socialCard = SocialCard(
-          firstName: '',
-          lastName: '',
-          career: '',
-          age: '',
-          email: '',
-          phoneNumber: '',
-          linkedIn: '',
-          twitter: '',
-          instagram: '',
-          facebook: '',
-          picture: null,
+  void setControllers() {
+    textEditingControllers[0].text =
+        socialCardDataProvider.socialCardData.fname;
+    textEditingControllers[1].text =
+        socialCardDataProvider.socialCardData.lname;
+    textEditingControllers[2].text =
+        socialCardDataProvider.socialCardData.career;
+    textEditingControllers[3].text = socialCardDataProvider.socialCardData.age;
+    textEditingControllers[4].text =
+        socialCardDataProvider.socialCardData.email;
+    textEditingControllers[5].text =
+        socialCardDataProvider.socialCardData.phoneNo;
+    textEditingControllers[6].text =
+        socialCardDataProvider.socialCardData.linkedIn;
+    textEditingControllers[7].text =
+        socialCardDataProvider.socialCardData.twitter;
+    textEditingControllers[8].text =
+        socialCardDataProvider.socialCardData.instagram;
+    textEditingControllers[9].text =
+        socialCardDataProvider.socialCardData.facebook;
+  }
+
+  Future<void> updateSocialCardData() async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc('${auth.currentUser!.uid}/cards/socialcard')
+          .snapshots()
+          .first;
+
+      print('THIS IS SNAPSHOT DATA: ${snapshot.data()}');
+
+      final data = snapshot.data();
+      if (data != null) {
+        socialCardDataProvider.socialCardData.setData(
+          data['fname'] ?? '',
+          data['lname'] ?? '',
+          data['career'] ?? '',
+          data['age'] ?? '',
+          data['email'] ?? '',
+          data['phoneNo'] ?? '',
+          data['linkedIn'] ?? '',
+          data['twitter'] ?? '',
+          data['instagram'] ?? '',
+          data['facebook'] ?? '',
+          data['pictureUrl'] ?? '',
         );
-      });
+      }
+    } catch (e) {
+      print(e);
     }
-  }
-
-  Future<void> _saveData() async {
-    final prefs = await SharedPreferences.getInstance();
-    final socialCardJson = json.encode(socialCard.toJson());
-    await prefs.setString('socialCard', socialCardJson);
   }
 
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    late File file;
+    final ImagePicker picker = ImagePicker();
 
-    if (Platform.isWindows) {
-      final FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.image,
-        allowMultiple: false,
-      );
-      if (result != null && result.files.isNotEmpty) {
-        file = File(result.files.single.path!);
-      } else {
-        return;
-      }
-    } else {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        file = File(image.path);
-      } else {
-        return;
-      }
+    late XFile? pickedImage;
+    if (Theme.of(context).platform == TargetPlatform.iOS) {
+      pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    } else if (Theme.of(context).platform == TargetPlatform.android) {
+      pickedImage = await picker.pickImage(source: ImageSource.gallery);
     }
 
-    setState(() {
-      socialCard.picture = file;
-    });
-    await _saveData();
+    if (pickedImage == null) return;
+
+    profilePictureNew = File(pickedImage!.path);
+    profilePicture = Image.file(profilePictureNew!);
+
+    //Update the UI
+    updatePicture.value = !updatePicture.value;
   }
 
-  Widget buildInputRow(String label, TextEditingController controller,
-      String hintText, String propertyName) {
+  Future<void> uploadImage(File file) async {
+    final firebase_storage.Reference ref =
+        firebase_storage.FirebaseStorage.instance.ref('files/${file.path}');
+
+    try {
+      await ref.putFile(file);
+      print('File uploaded successfully');
+      // Retrieve the download link from the snapshot
+      downloadUrl = await ref.getDownloadURL();
+    } catch (e) {
+      print('Error occurred during file upload: $e');
+    }
+  }
+
+  void onSaveButtonPressed() async {
+    String oldPictureUrl = socialCardDataProvider.socialCardData.pictureUrl;
+    String url = '';
+
+    final loadingSnackBar = ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(linkUpSecondary),
+              ),
+            ),
+            SizedBox(width: 20),
+            Text(
+              'Saving changes...',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: linkUpMain,
+      ),
+    );
+
+    // Upload the image to Firebase Storage
+    url = await uploadImageToFirebaseStorage(url, oldPictureUrl);
+
+    //Reset the profilePictureNew
+    profilePictureNew = null;
+
+    // Update the user data in the provider
+    updateSocialCardDataInProvider(url);
+
+    // Update the user data in Firestore
+    try {
+      updateSocialCardDatainFirebaseFirestore(url);
+
+      // Hide the loading SnackBar
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      // Show success SnackBar
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Changes saved successfully!',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: linkUpSecondary,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              fontFamily: 'Inter',
+            ),
+          ),
+          backgroundColor: linkUpMain,
+        ),
+      );
+    } catch (e) {
+      // Hide the loading SnackBar
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      // Show error SnackBar
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Error saving changes.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              fontFamily: 'Inter',
+            ),
+          ),
+          backgroundColor: Colors.grey,
+        ),
+      );
+    }
+  }
+
+  Future<void> updateSocialCardDataInProvider(String url) async {
+    socialCardDataProvider.socialCardData.setData(
+        textEditingControllers[0].text,
+        textEditingControllers[1].text,
+        textEditingControllers[2].text,
+        textEditingControllers[3].text,
+        textEditingControllers[4].text,
+        textEditingControllers[5].text,
+        textEditingControllers[6].text,
+        textEditingControllers[7].text,
+        textEditingControllers[8].text,
+        textEditingControllers[9].text,
+        url);
+  }
+
+  Future<String> uploadImageToFirebaseStorage(
+      String url, String oldPictureUrl) async {
+    if (profilePictureNew != null) {
+      // Upload the new picture to Firebase Storage
+      await uploadImage(profilePictureNew!);
+      url = downloadUrl;
+      if (oldPictureUrl != '') {
+        try {
+          await storage.refFromURL(oldPictureUrl).delete();
+          print('Old picture deleted successfully.');
+        } catch (e) {
+          print('Error deleting old picture: $e');
+        }
+      }
+    } else {
+      url = oldPictureUrl;
+    }
+    return url;
+  }
+
+  Future<void> updateSocialCardDatainFirebaseFirestore(String url) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc('${auth.currentUser!.uid}/cards/socialcard')
+        .update({
+      'fname': textEditingControllers[0].text,
+      'lname': textEditingControllers[1].text,
+      'career': textEditingControllers[2].text,
+      'age': textEditingControllers[3].text,
+      'email': textEditingControllers[4].text,
+      'phoneNo': textEditingControllers[5].text,
+      'linkedin': textEditingControllers[6].text,
+      'twitter': textEditingControllers[7].text,
+      'instagram': textEditingControllers[8].text,
+      'facebook': textEditingControllers[9].text,
+      'pictureUrl': url,
+    });
+  }
+
+  Widget buildInputRow(
+      String label, TextEditingController controller, String hintText) {
     return SizedBox(
       height: 40,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               label,
@@ -157,43 +341,7 @@ class EditSocialCardState extends State<EditSocialCard> {
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3),
                 child: TextField(
                   controller: controller,
-                  onChanged: (value) {
-                    setState(() {
-                      switch (propertyName) {
-                        case 'firstName':
-                          socialCard.firstName = value;
-                          break;
-                        case 'lastName':
-                          socialCard.lastName = value;
-                          break;
-                        case 'career':
-                          socialCard.career = value;
-                          break;
-                        case 'age':
-                          socialCard.age = value;
-                          break;
-                        case 'email':
-                          socialCard.email = value;
-                          break;
-                        case 'phoneNumber':
-                          socialCard.phoneNumber = value;
-                          break;
-                        case 'linkedIn':
-                          socialCard.linkedIn = value;
-                          break;
-                        case 'twitter':
-                          socialCard.twitter = value;
-                          break;
-                        case 'instagram':
-                          socialCard.instagram = value;
-                          break;
-                        case 'facebook':
-                          socialCard.facebook = value;
-                          break;
-                      }
-                    });
-                    _saveData();
-                  },
+                  onChanged: (value) {},
                   style: const TextStyle(
                     color: Color(0xBFFFFFFF),
                     fontSize: 14,
@@ -226,119 +374,217 @@ class EditSocialCardState extends State<EditSocialCard> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: linkUpMain,
-        body: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 16.0, right: 16.0, bottom: 30),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              child: GestureDetector(
-                                onTap: () {
-                                  _pickImage();
-                                },
-                                child: CircleAvatar(
-                                  radius: 41.5,
-                                  backgroundColor: accountMain,
-                                  child: socialCard.picture == null
-                                      ? const Icon(Icons.person_rounded,
-                                          color: linkUpMain, size: 60.0)
-                                      : CircleAvatar(
-                                          radius: 40.0,
-                                          backgroundImage:
-                                              FileImage(socialCard.picture!)),
+    // Use FutureBuilder to handle asynchronous loading of data
+    return FutureBuilder(
+      future: fetchData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Display a loading indicator while waiting for data
+          return const Scaffold(
+            backgroundColor: linkUpMain,
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else {
+          // Data has been loaded, build your UI
+          return Scaffold(
+            body: SafeArea(
+              child: Scaffold(
+                backgroundColor: linkUpMain,
+                body: isDataLoaded
+                    ? Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16.0, right: 16.0, bottom: 30),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                _pickImage();
+                                              },
+                                              child: CircleAvatar(
+                                                  radius: 41.5,
+                                                  backgroundColor:
+                                                      Color(0xCCFFFFFF),
+                                                  child: ValueListenableBuilder<
+                                                      bool>(
+                                                    valueListenable:
+                                                        updatePicture,
+                                                    builder: (context, value,
+                                                        child) {
+                                                      return profilePicture ==
+                                                              null
+                                                          ? const Icon(
+                                                              Icons
+                                                                  .person_rounded,
+                                                              color: linkUpMain,
+                                                              size: 60.0)
+                                                          : CircleAvatar(
+                                                              radius: 40.0,
+                                                              backgroundImage:
+                                                                  profilePicture!
+                                                                      .image,
+                                                            );
+                                                    },
+                                                  )),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            bottom: 0,
+                                            right: 0,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                _pickImage();
+                                              },
+                                              child: const CircleAvatar(
+                                                radius: 12.5,
+                                                backgroundColor:
+                                                    Color(0xFFFFFFFF),
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  color: linkUpMain,
+                                                  size: 15,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    const Text(
+                                      'Upload Photo',
+                                      style: TextStyle(
+                                        color: Color(0xFFFFFFFF),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    buildInputRow(
+                                        'First Name',
+                                        textEditingControllers[0],
+                                        'Enter First Name'),
+                                    buildDividerInput(),
+                                    buildInputRow(
+                                        'Last Name',
+                                        textEditingControllers[1],
+                                        'Enter Last Name'),
+                                    buildDividerInput(),
+                                    buildInputRow(
+                                        'Career',
+                                        textEditingControllers[2],
+                                        'Enter Career'),
+                                    buildDividerInput(),
+                                    buildInputRow(
+                                      'Age',
+                                      textEditingControllers[3],
+                                      'Enter Age',
+                                    ),
+                                    buildDividerInput(),
+                                    buildInputRow(
+                                        'Email',
+                                        textEditingControllers[4],
+                                        'Enter Email'),
+                                    buildDividerInput(),
+                                    buildInputRow(
+                                        'Phone Number',
+                                        textEditingControllers[5],
+                                        'Enter Phone Number'),
+                                    buildDividerInput(),
+                                    buildInputRow('LinkedIn',
+                                        textEditingControllers[6], 'LinkedIn'),
+                                    buildDividerInput(),
+                                    buildInputRow('Twitter',
+                                        textEditingControllers[7], 'Twitter'),
+                                    buildDividerInput(),
+                                    buildInputRow('Instagram',
+                                        textEditingControllers[8], 'Instagram'),
+                                    buildDividerInput(),
+                                    buildInputRow('Facebook',
+                                        textEditingControllers[9], 'Facebook'),
+                                    const SizedBox(height: 10),
+                                    Container(
+                                      width: double.infinity,
+                                      height: 35,
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 50.0),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: const Color(0xCCFFFFFF),
+                                      ),
+                                      child: TextButton(
+                                        onPressed: () {
+                                          onSaveButtonPressed();
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const SizedBox(width: 2),
+                                            Transform.scale(
+                                              scale: 2,
+                                              child: const Icon(
+                                                Icons
+                                                    .check_circle_outline_rounded,
+                                                color: linkUpMain,
+                                                size: 18,
+                                              ),
+                                            ),
+                                            // const SizedBox(width: 10),
+                                            const Expanded(
+                                              child: Text(
+                                                'Save Changes',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                  color: linkUpMain,
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w900,
+                                                  fontFamily: 'Inter',
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(width: 15)
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: GestureDetector(
-                                onTap: () {},
-                                child: Image.asset(
-                                  'assets/icons/edit.png',
-                                  width: 24,
-                                  height: 24,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                              )
+                            ],
+                          ),
+                          DropDown(
+                            bottomPadding: 0,
+                            topBarColor: Colors.transparent,
+                          ),
+                          Positioned(
+                            bottom: 10,
+                            child: Navbar(currentPage: 'linkup'),
+                          ),
+                        ],
+                      )
+                    : const Center(
+                        child: CircularProgressIndicator(),
                       ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Upload Photo',
-                        style: TextStyle(
-                          color: Color(0xFFFFFFFF),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          fontFamily: 'Inter',
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      buildInputRow('First Name', textEditingControllers[0],
-                          'Enter First Name', 'firstName'),
-                      buildDividerInput(),
-                      buildInputRow('Last Name', textEditingControllers[1],
-                          'Enter Last Name', 'lastName'),
-                      buildDividerInput(),
-                      buildInputRow('Career', textEditingControllers[2],
-                          'Enter Career', 'career'),
-                      buildDividerInput(),
-                      buildInputRow(
-                          'Age', textEditingControllers[3], 'Enter Age', 'age'),
-                      buildDividerInput(),
-                      buildInputRow('Email', textEditingControllers[4],
-                          'Enter Email', 'email'),
-                      buildDividerInput(),
-                      buildInputRow('Phone Number', textEditingControllers[5],
-                          'Enter Phone Number', 'phoneNumber'),
-                      buildDividerInput(),
-                      buildInputRow('LinkedIn', textEditingControllers[6],
-                          'LinkedIn', 'linkedIn'),
-                      buildDividerInput(),
-                      buildInputRow('Twitter', textEditingControllers[7],
-                          'Twitter', 'twitter'),
-                      buildDividerInput(),
-                      buildInputRow('Instagram', textEditingControllers[8],
-                          'Instagram', 'instagram'),
-                      buildDividerInput(),
-                      buildInputRow('Facebook', textEditingControllers[9],
-                          'Facebook', 'facebook'),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                )
-              ],
+              ),
             ),
-            DropDown(
-              bottomPadding: 0,
-              topBarColor: Colors.transparent,
-            ),
-            Positioned(
-              bottom: 10,
-              child: Navbar(currentPage: 'linkup'),
-            ),
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }
