@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
-import 'package:the_wallet/screens/home/home-screen.dart';
+import 'package:provider/provider.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
+
+import 'package:the_wallet/screens/home/home-screen.dart';
 import 'package:the_wallet/validate.dart';
 import 'package:the_wallet/screens/components/data-classes.dart';
 
@@ -18,8 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final usrEmail = TextEditingController();
   final usrPassword = TextEditingController();
   late bool _passwordVisible;
-  // late List<String?> name;
-  late Map<String?, dynamic> name;
+
+  @override
+  void initState() {
+    super.initState();
+    _passwordVisible = false;
+    
+  }
 
   @override
   void dispose() {
@@ -29,11 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void initState() {
-    _passwordVisible = false;
-    
-    super.initState();
-  }
 
   void login(BuildContext context) async {
     await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
@@ -42,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
       }
     });
-    // dispose();
   }
 
   @override

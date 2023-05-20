@@ -46,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     FocusNode(), //Phone Number
     ];
 
-
+  @override
   void initState() {
     super.initState();
     _passwordVisible = false;
@@ -60,6 +60,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
   }
 
+  @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
     for (int i = 0; i < controllers.length; i++){

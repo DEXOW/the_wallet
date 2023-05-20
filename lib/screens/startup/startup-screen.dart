@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:the_wallet/screens/home/home-screen.dart';
 import 'package:the_wallet/screens/login/login-screen.dart';
 import 'package:the_wallet/screens/register/register-screen.dart';
-// import 'package:the_wallet/screens/components/loading-screen.dart';
 
 class StartupScreen extends StatelessWidget {
   @override
@@ -86,7 +84,7 @@ class StartupScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen()),
+                              builder: (context) => LoginScreen()),
                         );
                       },
                       style: ButtonStyle(
