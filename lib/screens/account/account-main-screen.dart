@@ -11,6 +11,8 @@ import 'package:the_wallet/screens/account/account-edit-password-screen.dart';
 import 'package:the_wallet/screens/account/account-edit-screen.dart';
 
 class AccountMain extends StatelessWidget {
+  const AccountMain({super.key});
+
   @override
   Widget build(BuildContext context) {
     final _userDataProvider = Provider.of<UserDataProvider>(context);

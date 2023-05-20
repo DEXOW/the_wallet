@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/screens/linkup/edit-social-card-screen.dart';
 import 'package:the_wallet/screens/linkup/social-card-data-provider.dart';
+import 'package:the_wallet/screens/linkup/view-social-card-screen.dart';
 import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -41,7 +42,6 @@ Future<void> login(String email, String password) async {
       email: email,
       password: password,
     );
-    print('User ID: ${userCredential.user!.uid}');
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
@@ -49,24 +49,6 @@ Future<void> login(String email, String password) async {
       print('Wrong password provided for that user.');
     }
   }
-
-  // FirebaseAuth auth = FirebaseAuth.instance;
-
-  // final snapshot = await FirebaseFirestore.instance
-  //     .collection('users')
-  //     .doc('${auth.currentUser!.uid}/cards/socialcard')
-  //     .snapshots()
-  //     .first;
-
-  //     //set the data of the pictureUrl in snapshot.data to empty string
-  //      await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc('${auth.currentUser!.uid}/cards/socialcard')
-  //         .update({
-  //       'pictureUrl': '',
-  //     });
-
-  // print('THIS IS SNAPSHOT DATA: ${snapshot.data()}');
 }
 
 class MyApp extends StatelessWidget {
@@ -90,7 +72,7 @@ class MyApp extends StatelessWidget {
                   'Error initializing Firebase: ${snapshot.error.toString()}');
               return const Text('Error initializing Firebase');
             } else if (snapshot.connectionState == ConnectionState.done) {
-              return const EditSocialCard();
+              return const ViewSocialCard();
             }
             return const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),

@@ -294,7 +294,7 @@ class DropDownState extends State<DropDown>
                 radius: 20.0,
                 child: IconButton(
                   icon: Transform.scale(
-                    scale: 1.5,
+                    scale: 1.2,
                     child: Icon(
                       _isExpanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
                       color: _iconColor,

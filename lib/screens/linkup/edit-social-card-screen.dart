@@ -114,8 +114,6 @@ class EditSocialCardState extends State<EditSocialCard> {
           .snapshots()
           .first;
 
-      print('THIS IS SNAPSHOT DATA: ${snapshot.data()}');
-
       final data = snapshot.data();
       if (data != null) {
         socialCardDataProvider.socialCardData.setData(
@@ -448,14 +446,23 @@ class EditSocialCardState extends State<EditSocialCard> {
                                               onTap: () {
                                                 _pickImage();
                                               },
-                                              child: const CircleAvatar(
-                                                radius: 12.5,
-                                                backgroundColor:
-                                                    Color(0xFFFFFFFF),
-                                                child: Icon(
-                                                  Icons.edit,
-                                                  color: linkUpMain,
-                                                  size: 15,
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: Colors.white,
+                                                        width: 1.2),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            50)),
+                                                child: const CircleAvatar(
+                                                  radius: 12.5,
+                                                  backgroundColor:
+                                                      Color(0xCCFFFFFF),
+                                                  child: Icon(
+                                                    Icons.edit,
+                                                    color: linkUpMain,
+                                                    size: 15,
+                                                  ),
                                                 ),
                                               ),
                                             ),
