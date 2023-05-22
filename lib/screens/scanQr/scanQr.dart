@@ -1,8 +1,12 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:the_wallet/screens/components/showSocialCard.dart';
 
 class ScanQrCodeWidget extends StatefulWidget {
   ScanQrCodeWidget({Key? key}) : super(key: key);
@@ -11,24 +15,122 @@ class ScanQrCodeWidget extends StatefulWidget {
   State<ScanQrCodeWidget> createState() => _scanqrcodewidgetstate();
 }
 
+class SocialCardData {
+  String fname;
+  String lname;
+  String career;
+  String age;
+  String email;
+  String phoneNo;
+  String linkedIn;
+  String twitter;
+  String instagram;
+  String facebook;
+  String pictureUrl;
+
+  SocialCardData({
+    required this.fname,
+    required this.lname,
+    required this.career,
+    required this.age,
+    required this.email,
+    required this.phoneNo,
+    required this.linkedIn,
+    required this.twitter,
+    required this.instagram,
+    required this.facebook,
+    required this.pictureUrl,
+  });
+}
+
 class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
   // Create an instance of QRViewController
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
   late String? scannedData = '';
 
+  SocialCardData socialcardData = SocialCardData(
+      fname: '',
+      lname: '',
+      career: '',
+      age: '',
+      email: '',
+      phoneNo: '',
+      linkedIn: '',
+      twitter: '',
+      instagram: '',
+      facebook: '',
+      pictureUrl: '');
+
   // Function to handle QR scan results
   void _onQRViewCreated(QRViewController controller) {
     this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
+    String? cardID;
+    Map<String, dynamic> cardIDMAP;
+    String? finalCardID;
+    controller.scannedDataStream.listen((scanData) async {
       // Handle the scanned QR code data here
       setState(() {
         scannedData = scanData.code;
+        cardID = scanData.code;
+        cardIDMAP = json.decode(cardID!);
+        finalCardID = cardIDMAP['cardID'];
       });
-      // Close the scanner after successful scan
+
+      // Pause the scanner after successful scan
       controller.pauseCamera();
-      controller.dispose();
+
+      await searchCardFirestore(finalCardID!);
+
+      openSocialCard();
+
+      // await searchCardFirestore(finalCardID!);
+      // controller.dispose();
     });
+  }
+
+  void openSocialCard() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ViewSocialCard(
+          firstname: socialcardData.fname,
+          lastname: socialcardData.lname,
+          career: socialcardData.career,
+          age: socialcardData.age,
+          phoneNo: socialcardData.phoneNo,
+          email: socialcardData.email,
+          linkedIn: socialcardData.linkedIn,
+          twitter: socialcardData.twitter,
+          instagram: socialcardData.instagram,
+          facebook: socialcardData.facebook,
+          pictureUrl: socialcardData.pictureUrl,
+        ),
+      ),
+    );
+  }
+
+  Future<void> searchCardFirestore(String cardID) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final cardList = await firestore.collectionGroup('cards').get();
+
+    if (cardList.docs.any((element) => element['cardID'] == cardID)) {
+      Map<String, dynamic> cardData;
+      cardData = cardList.docs
+          .firstWhere((element) => element['cardID'] == cardID)
+          .data();
+      socialcardData.fname = cardData['fname'];
+      socialcardData.lname = cardData['lname'];
+      socialcardData.career = cardData['career'];
+      socialcardData.age = cardData['age'];
+      socialcardData.email = cardData['email'];
+      socialcardData.phoneNo = cardData['phoneNo'];
+      // socialcardData.linkedIn = cardData['linkedIn'];
+      // socialcardData.twitter = cardData['twitter'];
+      // socialcardData.instagram = cardData['instagram'];
+      // socialcardData.facebook = cardData['facebook'];
+      socialcardData.pictureUrl = cardData['pictureUrl'];
+    }
   }
 
   @override
@@ -55,26 +157,19 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                 constraints.maxHeight; //Get the height of the safe area
             double screenWidth =
                 constraints.maxWidth; // Get the width of the safe area
-            double qrSize = screenWidth * 0.7; // Adjust the size of the QR code widget
+            double qrSize =
+                screenWidth * 0.7; // Adjust the size of the QR code widget
             return Stack(children: [
               Scaffold(
                 resizeToAvoidBottomInset: false,
                 body: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Center(
-                    //   child: SizedBox(
-                    //     height: 250, // Set a specific height
-                    //     width: 250, // Set a specific width
-                    //     child: QRView(
-                    //         key: qrKey, onQRViewCreated: _onQRViewCreated),
-                    //   ),
-                    // ),
-
                     Center(
                       child: Container(
                         height: qrSize,
                         width: qrSize,
+                        margin: EdgeInsets.only(bottom: 200),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.white, // Customize the border color
@@ -91,16 +186,6 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    Text(
-                      'Scanned QR Code Data:',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      scannedData ?? '',
-                      style: TextStyle(fontSize: 16),
                     ),
                   ],
                 ),
