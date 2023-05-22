@@ -567,8 +567,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (picked != null && picked != selectedDate){
                             setState(() {
                               selectedDate = picked;
-                              controllers[5].text = selectedDate.day.toString();
-                              controllers[6].text = selectedDate.month.toString();
+                              selectedDate.day < 10 ? controllers[5].text = '0${selectedDate.day}' : controllers[5].text = selectedDate.day.toString();
+                              // controllers[5].text = selectedDate.day.toString();
+                              selectedDate.month < 10 ? controllers[6].text = '0${selectedDate.month}' : controllers[6].text = selectedDate.month.toString();
+                              // controllers[6].text = selectedDate.month.toString();
                               controllers[7].text = selectedDate.year.toString();
                             });
                           }
@@ -599,7 +601,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Container(
                               width: //maxwidth
-                                  MediaQuery.of(context).size.width * 0.35,
+                                  MediaQuery.of(context).size.width * 0.38,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

@@ -65,16 +65,35 @@ class FireAuth {
       throw Exception(e);
     }
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await firestore.collection('users').doc(user!.uid).set({
-      'fname': fname.trim(),
-      'lname': lname.trim(),
-      'email': email.trim(),
-      'dobDate': dobDate.trim(),
-      'dobMonth': dobMonth.trim(),
-      'dobYear': dobYear.trim(),
-      'phoneNoCode': phoneNoCode.trim(),
-      'phoneNo': phoneNo.trim(),
-    });
+    try{
+      await firestore.collection('users').doc(user!.uid).set({
+        'fname': fname.trim(),
+        'lname': lname.trim(),
+        'email': email.trim(),
+        'dobDate': dobDate.trim(),
+        'dobMonth': dobMonth.trim(),
+        'dobYear': dobYear.trim(),
+        'phoneNoCode': phoneNoCode.trim(),
+        'phoneNo': phoneNo.trim(),
+      }).then((value) async {
+
+        await firestore.collection('users').doc(user!.uid).collection('cards').doc('socialCard').set({
+          'cardID': firestore.collection('users').doc().id,
+          'fname': fname.trim(),
+          'lname': lname.trim(),
+          'career': '',
+          'age': DateTime(DateTime.now().year - DateTime.parse('$dobYear-$dobMonth-$dobDate').year).year.toString(),
+          'email': email.trim(),
+          'phoneNo': phoneNoCode.trim() + phoneNo.trim(),
+          'linkedin': '',
+          'twitter': '',
+          'facebook': '',
+          'instagram': '',
+        });
+      });
+    } catch (e) {
+      throw Exception(e);
+    }
 
     return user;
   }

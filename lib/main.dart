@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         highlightColor: Colors.transparent,
         hoverColor: Colors.transparent,
       ),
-      // home: StartupScreen(),
       home: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light.copyWith(systemNavigationBarColor: primaryBgColor),
         child: FutureBuilder(
