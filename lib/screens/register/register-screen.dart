@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/firebase/fire_store.dart';
@@ -71,7 +71,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void onCodeSent(String verificationId, int? resendToken) async {
     Navigator.push(context, MaterialPageRoute(
-      builder: (context) => OtpScreen(verificationId: verificationId, resendToken: resendToken, controllers: controllers,)
+      builder: (context) => OtpScreen(controllers: controllers,)
     ));
   }
 
@@ -588,8 +588,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (picked != null && picked != selectedDate){
                             setState(() {
                               selectedDate = picked;
-                              controllers[5].text = selectedDate.day.toString();
-                              controllers[6].text = selectedDate.month.toString();
+                              selectedDate.day < 10 ? controllers[5].text = '0${selectedDate.day}' : controllers[5].text = selectedDate.day.toString();
+                              selectedDate.month < 10 ? controllers[6].text = '0${selectedDate.month}' : controllers[6].text = selectedDate.month.toString();
                               controllers[7].text = selectedDate.year.toString();
                             });
                           }
@@ -620,7 +620,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           children: [
                             Container(
                               width: //maxwidth
-                                  MediaQuery.of(context).size.width * 0.35,
+                                  MediaQuery.of(context).size.width * 0.37,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -769,6 +769,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       bool phoneExist = await FireStore.checkPhoneExist(context: context, phoneNo: controllers[8].text + controllers[9].text);
                       if (!phoneExist){
                         FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text, onCodeSent: onCodeSent);
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => OtpScreen(controllers: controllers)
+                        ));
                       }
                     }
                   },

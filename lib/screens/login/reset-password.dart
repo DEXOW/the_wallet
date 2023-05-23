@@ -2,29 +2,25 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:the_wallet/firebase/fire_auth.dart';
 
-import 'package:the_wallet/screens/home/home-screen.dart';
-import 'package:the_wallet/screens/login/reset-password.dart';
+import 'package:the_wallet/screens/startup/startup-screen.dart';
 import 'package:the_wallet/validate.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
   
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final _loginFormKey = GlobalKey<FormState>();
   final usrEmail = TextEditingController();
   final usrPassword = TextEditingController();
-  late bool _passwordVisible;
 
   @override
   void initState() {
     super.initState();
-    _passwordVisible = false;
     
   }
 
@@ -37,11 +33,25 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
-  void login(BuildContext context) async {
-    User? user = await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
-      if (user != null){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+  void sendPasswordResetLink(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: usrEmail.text);
+    } on FirebaseException catch (e) {
+      if (e.code == 'user-not-found') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No user found for that email'),
+          ),
+        );
       }
+      rethrow;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Password reset link sent to email'),
+      ),
+    );
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false,);
   }
 
   @override
@@ -103,13 +113,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             Container(
                               margin: EdgeInsets.only(top: 10),
                               child: Text(
-                                'Welcome Back',
+                                'Reset Password',
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                   fontFamily: 'Inter',
                                   color: Color(0xE608B4F8)
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
                             Container(
@@ -136,52 +147,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(top: 10),
-                              child: SizedBox(
-                                width: 230.0,
-                                child: TextFormField(
-                                  controller: usrPassword,
-                                  validator: (value) => Validate.validateLoginPassword(password: value),
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(50.0)),
-                                      borderSide: BorderSide(
-                                        style: BorderStyle.none,
-                                        width: 0,
-                                      ),
-                                    ),
-                                    filled: true,
-                                    contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 30.0, right: 20.0),
-                                    hintText: 'Password',
-                                    suffixIcon: IconButton(
-                                      padding: EdgeInsets.only(right: 20.0),
-                                      icon: Icon(
-                                          _passwordVisible
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                          color: Color(0xFFCFC7BE),
-                                          ),
-                                      onPressed: () {
-                                          setState(() {
-                                              _passwordVisible = !_passwordVisible;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                  obscureText: !_passwordVisible,
-                                  enableSuggestions: false,
-                                  autocorrect: false,
-                                  textInputAction: TextInputAction.done,
-                                ),
-                              ),
-                            ),
-                            Container(
                               margin: EdgeInsets.only(top: 40),
                               child: TextButton(
                                 onPressed: () {
                                   if (_loginFormKey.currentState!.validate()){
-                                    login(context);
+                                    sendPasswordResetLink(context);
                                   }
                                 },
                                 style: ButtonStyle(
@@ -199,44 +169,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Login',
+                                  'Reset',
                                   style: TextStyle(
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Inter',
                                     color: Color(0xFFFFFFFF),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5),
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const ResetPasswordScreen(),
-                                    ),
-                                  );
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<Color>(
-                                    const Color(0x00000000),
-                                  ),
-                                  //Remove hover effects
-                                  overlayColor: MaterialStateProperty.all<Color>(
-                                    const Color(0x00000000),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Forgot password?',
-                                  style: TextStyle(
-                                    fontSize: 12.0,
-                                    fontWeight: FontWeight.normal,
-                                    fontFamily: 'Inter',
-                                    color: Color(0x8FCDCDCD),
-                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),

@@ -1,11 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:the_wallet/screens/register/register-screen.dart';
 
+String _verificiationId = '';
+int? _resendToken = 0;
 class FireAuth{
-  bool otpSent = false;
 
   static Future<User?> signInUsingEmailPassword({
     required String email,
@@ -54,6 +53,7 @@ class FireAuth{
     required String phoneNoCode,
     required String phoneNo,
     required PhoneAuthCredential phoneAuthCredential,
+    required context,
   }) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
@@ -72,21 +72,48 @@ class FireAuth{
       throw Exception(e);
     }
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    await firestore.collection('users').doc(user!.uid).set({
-      'fname': fname.trim(),
-      'lname': lname.trim(),
-      'email': email.trim(),
-      'dobDate': dobDate.trim(),
-      'dobMonth': dobMonth.trim(),
-      'dobYear': dobYear.trim(),
-      'phoneNoCode': phoneNoCode.trim(),
-      'phoneNo': phoneNo.trim(),
-    });
+    try{
+      await firestore.collection('users').doc(user!.uid).set({
+        'fname': fname.trim(),
+        'lname': lname.trim(),
+        'email': email.trim(),
+        'dobDate': dobDate.trim(),
+        'dobMonth': dobMonth.trim(),
+        'dobYear': dobYear.trim(),
+        'phoneNoCode': phoneNoCode.trim(),
+        'phoneNo': phoneNo.trim(),
+      }).then((value) async {
 
+        await firestore.collection('users').doc(user!.uid).collection('cards').doc('socialCard').set({
+          'cardID': firestore.collection('users').doc().id,
+          'fname': fname.trim(),
+          'lname': lname.trim(),
+          'career': '',
+          'age': DateTime(DateTime.now().year - DateTime.parse('$dobYear-$dobMonth-$dobDate').year).year.toString(),
+          'email': email.trim(),
+          'phoneNo': phoneNoCode.trim() + phoneNo.trim(),
+          'linkedin': '',
+          'twitter': '',
+          'facebook': '',
+          'instagram': '',
+        });
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Something went wrong',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.red,
+        )
+      );
+      throw Exception(e);
+    }
     return user;
   }
 
-  static Future<void> verifyPhoneNumber({
+  static Future<bool> verifyPhoneNumber({
     required String phoneNumber,
     required BuildContext context,
     required Function onCodeSent,
@@ -116,12 +143,56 @@ class FireAuth{
         }
       },
       codeSent: (String verificationId, int? resendToken) async {
-        onCodeSent(verificationId, resendToken);
+        // onCodeSent(verificationId, resendToken);
+        _verificiationId = verificationId;
+        _resendToken = resendToken;
+        print("code sent");
       },
       codeAutoRetrievalTimeout: (String verificationId) async {
         print("timeout");
       },
+      forceResendingToken: _resendToken,
     );
+    print('returning ture');
+    return true;
+  }
+
+  static Future<PhoneAuthCredential> submitOTP({
+    required BuildContext context,
+    required String otp,
+    required List<TextEditingController> controllers,
+  }) async {
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificiationId, smsCode: otp);
+    // print('your name is ${controllers[9].text}');
+    try { 
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Invalid OTP',
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: Colors.red,
+          )
+        );
+        throw Exception('Invalid OTP');
+      }
+    } catch (e) {
+      print(e);
+      throw Exception('Something went wrong');
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'OTP Verified',
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Colors.green,
+      )
+    );
+    return credential;
   }
 
 }

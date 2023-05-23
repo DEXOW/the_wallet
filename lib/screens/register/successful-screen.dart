@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/screens/startup/startup-screen.dart';
 
 
 class SuccessScreen extends StatefulWidget {
-  const SuccessScreen({Key? key}) : super(key: key);
+  final List<TextEditingController> controllers;
+  final PhoneAuthCredential credential;
+  const SuccessScreen({Key? key, required this.controllers, required this.credential}) : super(key: key);
 
   @override
   _SuccessScreenState createState() => _SuccessScreenState();
@@ -23,142 +27,165 @@ class _SuccessScreenState extends State<SuccessScreen> {
             double screenWidth = constraints.maxWidth; // Get the width of the safe area
             return Scaffold(
               resizeToAvoidBottomInset: false,
-              body: SizedBox( //SizedBox to set the height and width of the Page
-                height: screenHeight,
-                width: screenWidth,
-                child: Column(
-                  children: [
-                    Container(
-                      height: screenHeight * 0.1,
-                      alignment: Alignment.topLeft,
-                      padding: EdgeInsets.only(top: 10, left: 20),
-                      child: Row(
-                        children: [
-                          Container(
-                            child: Image(
-                              image: AssetImage('assets/icons/icon.png'),
-                              height: 50,
-                              width: 50,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container( //Middle section
-                      height: screenHeight * 0.8,
+              body: FutureBuilder(
+                future: FireAuth.registerUsingEmailPassword(
+                  fname: widget.controllers[0].text, 
+                  lname: widget.controllers[1].text, 
+                  email: widget.controllers[2].text,
+                  password: widget.controllers[3].text,
+                  dobDate: widget.controllers[5].text,
+                  dobMonth: widget.controllers[6].text,
+                  dobYear: widget.controllers[7].text,
+                  phoneNoCode: widget.controllers[8].text,
+                  phoneNo: widget.controllers[9].text,
+                  phoneAuthCredential: widget.credential,
+                  context: context,
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done){
+                    return SizedBox( //SizedBox to set the height and width of the Page
+                      height: screenHeight,
+                      width: screenWidth,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Container(
-                            margin: EdgeInsets.only(top: 10),
-                            child: Text(
-                              'Sign Up',
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Inter',
-                                color: Color(0xE608B4F8)
-                              ),
+                            height: screenHeight * 0.1,
+                            alignment: Alignment.topLeft,
+                            padding: EdgeInsets.only(top: 10, left: 20),
+                            child: Row(
+                              children: [
+                                Container(
+                                  child: Image(
+                                    image: AssetImage('assets/icons/icon.png'),
+                                    height: 50,
+                                    width: 50,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 30),
+                          Container( //Middle section
+                            height: screenHeight * 0.8,
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Icon(
-                                  Icons.check_circle,
-                                  color: Color(0xFF0A7F46),
-                                  size: 80,
-                                ),
                                 Container(
-                                  margin: EdgeInsets.only(top: 20),
+                                  margin: EdgeInsets.only(top: 10),
                                   child: Text(
-                                    "Successful",
+                                    'Sign Up',
                                     style: TextStyle(
                                       fontSize: 30,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Inter',
-                                      color: Color(0xFFAEAEAE),
+                                      color: Color(0xE608B4F8)
                                     ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 30),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: Color(0xFF0A7F46),
+                                        size: 80,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 20),
+                                        child: Text(
+                                          "Successful",
+                                          style: TextStyle(
+                                            fontSize: 30,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Inter',
+                                            color: Color(0xFFAEAEAE),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(top: 40),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false);
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(
+                                            const Color(0xE61469EF),
+                                          ),
+                                          shape:
+                                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(50.0),
+                                            ),
+                                          ),
+                                          fixedSize: MaterialStateProperty.all<Size>(
+                                            const Size(190.0, 50.0),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Login',
+                                          style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Inter',
+                                            color: Color(0xFFFFFFFF),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(top: 40),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                          Container( //Bottom Section
+                            height: screenHeight * 0.1,
+                            width: screenWidth,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false);
-                                  },
-                                  style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<Color>(
-                                      const Color(0xE61469EF),
-                                    ),
-                                    shape:
-                                        MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(50.0),
-                                      ),
-                                    ),
-                                    fixedSize: MaterialStateProperty.all<Size>(
-                                      const Size(190.0, 50.0),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Login',
+                                Container(
+                                  margin: EdgeInsets.only(top: 10),
+                                  child: const Text(
+                                    'Legal',
                                     style: TextStyle(
-                                      fontSize: 16.0,
+                                      fontSize: 12.0,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Inter',
-                                      color: Color(0xFFFFFFFF),
+                                      color: Color(0x8FCDCDCD),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 5),
+                                  child: const Text(
+                                    'Version 1.0.0',
+                                    style: TextStyle(
+                                      fontSize: 12.0,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Inter',
+                                      color: Color(0x8FCDCDCD),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ),
+                          )
                         ],
                       ),
-                    ),
-                    Container( //Bottom Section
-                      height: screenHeight * 0.1,
-                      width: screenWidth,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                            margin: EdgeInsets.only(top: 10),
-                            child: const Text(
-                              'Legal',
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Inter',
-                                color: Color(0x8FCDCDCD),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 5),
-                            child: const Text(
-                              'Version 1.0.0',
-                              style: TextStyle(
-                                fontSize: 12.0,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Inter',
-                                color: Color(0x8FCDCDCD),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                }
               ),
             );
           }

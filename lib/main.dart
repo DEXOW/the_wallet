@@ -4,10 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:the_wallet/firebase_options.dart';
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/screens/components/data-classes.dart';
+import 'package:the_wallet/data-classes/user-data.dart';
 import 'package:the_wallet/screens/startup/startup-screen.dart';
 
-import 'package:the_wallet/RSA.dart';
+// import 'package:the_wallet/RSA.dart';
 
 Future<FirebaseApp> _initializeFirebase() async {
   FirebaseApp firebaseApp = await Firebase.initializeApp(
@@ -27,7 +27,7 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserDataProvider>(create: (context) => UserDataProvider()),
+        ChangeNotifierProvider.value(value: UserDataProvider()),
       ],
       child: const MyApp(),
     ),
