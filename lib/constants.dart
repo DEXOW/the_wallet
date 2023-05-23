@@ -4,6 +4,7 @@ const linkUpMain = Color(0xFF161730);
 const linkUpSecondary = Color(0xFFFFFFFF);
 const primaryColor = Color(0xFF1569EF);
 const secondaryColor = Color(0xFFFFFFFF);
+const primaryBgColor = Color(0xFF161730);
 const bgColor = Color(0xFF161730);
 
 const accountMain = Color(0xFFD9D9D9);

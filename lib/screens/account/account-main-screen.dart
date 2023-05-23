@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/components/account-bottom-buttons.dart';
-import 'package:the_wallet/screens/account/user.dart';
-import 'package:the_wallet/screens/account/userDataProvider.dart';
+import 'package:the_wallet/data_classes/userData.dart';
 import 'package:the_wallet/screens/account/account-edit-password-screen.dart';
 import 'package:the_wallet/screens/account/account-edit-screen.dart';
 

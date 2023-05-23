@@ -24,3 +24,15 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 }
+
+class UserDataProvider extends ChangeNotifier {
+  final UserData _userData = UserData(
+    fname: '',
+    lname: '',
+    email: '',
+    phoneNo: '',
+    pictureUrl: '',
+  );
+
+  UserData get userData => _userData;
+}

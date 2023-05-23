@@ -1,26 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:the_wallet/screens/linkup/edit-social-card-screen.dart';
-import 'package:the_wallet/screens/linkup/social-card-data-provider.dart';
-import 'package:the_wallet/screens/linkup/view-social-card-screen.dart';
-import 'firebase_options.dart';
 import 'package:provider/provider.dart';
+import 'package:the_wallet/Screens/linkup/edit-social-card-screen.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/screens/account/userDataProvider.dart';
+import 'package:the_wallet/data_classes/userData.dart';
+import 'package:the_wallet/data_classes/social-card-data.dart';
+import 'package:the_wallet/temporary.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<UserDataProvider>(
-            create: (_) => UserDataProvider()),
-        ChangeNotifierProvider<SocialCardDataProvider>(
-            create: (_) => SocialCardDataProvider()),
+        ChangeNotifierProvider.value(
+          value: UserDataProvider(),
+        ),
+        ChangeNotifierProvider.value(
+          value: SocialCardDataProvider(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -45,14 +47,56 @@ Future<void> login(String email, String password) async {
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       print('No user found for that email.');
-    } else if (e.code == 'wrong-password') {
+    } else if (e.code == 'wrong-password') { 
       print('Wrong password provided for that user.');
     }
   }
+  // FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // final userList = await firestore.collectionGroup('cards').get();
+  // String cardID = '5';
+
+  // userList.docs.forEach((element) => print(element.data()));
+
+  // if (userList.docs.any((element) =>
+  //     element['cardID'] == cardID)) {
+  //   print('Card found for that ID: $cardID');
+  //   print('This is the card: ${userList.docs.firstWhere((element) => element['cardID'] == cardID).data()}');
+  // } else {
+  //   print('No card found for that ID: $cardID');
+  // }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return MaterialApp(
+  //     debugShowCheckedModeBanner: false,
+  //     title: 'The Wallet',
+  //     theme: ThemeData.dark().copyWith(
+  //       scaffoldBackgroundColor: linkUpMain,
+  //     ),
+  //     home: AnnotatedRegion<SystemUiOverlayStyle>(
+  //       value: SystemUiOverlayStyle.light,
+  //       child: FutureBuilder(
+  //         future: _initializeFirebase(),
+  //         builder: (context, snapshot) {
+  //           if (snapshot.hasError) {
+  //             print(
+  //                 'Error initializing Firebase: ${snapshot.error.toString()}');
+  //             return const Text('Error initializing Firebase');
+  //           } else if (snapshot.connectionState == ConnectionState.done) {
+  //             return const EditSocialCard();
+  //           }
+  //           return const CircularProgressIndicator(
+  //             valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+  //           );
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -62,24 +106,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: linkUpMain,
       ),
-      home: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light,
-        child: FutureBuilder(
-          future: _initializeFirebase(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print(
-                  'Error initializing Firebase: ${snapshot.error.toString()}');
-              return const Text('Error initializing Firebase');
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              return const ViewSocialCard();
-            }
-            return const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-            );
-          },
-        ),
-      ),
+      home: const HomeScreen(),
     );
   }
 }

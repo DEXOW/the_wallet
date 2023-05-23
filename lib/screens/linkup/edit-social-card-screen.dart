@@ -5,11 +5,12 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as path;
 
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/Screens/components/navbar.dart';
 import 'package:the_wallet/Screens/components/dropdown-menu.dart';
-import 'package:the_wallet/screens/linkup/social-card-data-provider.dart';
+import 'package:the_wallet/data_classes/social-card-data.dart';
 
 class EditSocialCard extends StatefulWidget {
   const EditSocialCard({Key? key}) : super(key: key);
@@ -36,39 +37,17 @@ class EditSocialCardState extends State<EditSocialCard> {
 
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   socialCardDataProvider =
-  //       Provider.of<SocialCardDataProvider>(context, listen: false);
-  //   if (socialCardDataProvider.socialCardData.pictureUrl != '') {
-  //     profilePicture =
-  //         Image.network(socialCardDataProvider.socialCardData.pictureUrl);
-  //   }
-  //   fetchData();
-  // }
-
-  // @override
-  // void didChangeDependencies() async {
-  //   super.didChangeDependencies();
-  //   setState(() {
-  //     isDataLoaded = true;
-  //   });
-  // }
-
   @override
   void didChangeDependencies() async {
     super.didChangeDependencies();
     socialCardDataProvider =
         Provider.of<SocialCardDataProvider>(context, listen: false);
     await fetchData();
-    setState(() {
-      isDataLoaded = true;
-      if (socialCardDataProvider.socialCardData.pictureUrl != '') {
-        profilePicture =
-            Image.network(socialCardDataProvider.socialCardData.pictureUrl);
-      }
-    });
+    isDataLoaded = true;
+    if (socialCardDataProvider.socialCardData.pictureUrl != '') {
+      profilePicture =
+          Image.network(socialCardDataProvider.socialCardData.pictureUrl);
+    }
   }
 
   @override
@@ -150,13 +129,14 @@ class EditSocialCardState extends State<EditSocialCard> {
     profilePictureNew = File(pickedImage!.path);
     profilePicture = Image.file(profilePictureNew!);
 
-    //Update the UI
+    //Update the UI for the new profile picture
     updatePicture.value = !updatePicture.value;
   }
 
   Future<void> uploadImage(File file) async {
-    final firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref('files/${file.path}');
+    final firebase_storage.Reference ref = firebase_storage
+        .FirebaseStorage.instance
+        .ref('files/${path.basename(file.path)}');
 
     try {
       await ref.putFile(file);
@@ -168,96 +148,23 @@ class EditSocialCardState extends State<EditSocialCard> {
     }
   }
 
-  void onSaveButtonPressed() async {
-    String oldPictureUrl = socialCardDataProvider.socialCardData.pictureUrl;
-    String url = '';
-
-    final loadingSnackBar = ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 24,
-              width: 24,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(linkUpSecondary),
-              ),
-            ),
-            SizedBox(width: 20),
-            Text(
-              'Saving changes...',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                fontFamily: 'Inter',
-              ),
-            ),
-          ],
+  void showSnackBar(BuildContext context, String message, Color backgroundColor,
+      {SnackBarAction? action}) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 14,
+          fontFamily: 'Inter',
         ),
-        backgroundColor: linkUpMain,
       ),
+      backgroundColor: backgroundColor,
+      action: action,
     );
-
-    // Upload the image to Firebase Storage
-    url = await uploadImageToFirebaseStorage(url, oldPictureUrl);
-
-    //Reset the profilePictureNew
-    profilePictureNew = null;
-
-    // Update the user data in the provider
-    updateSocialCardDataInProvider(url);
-
-    // Update the user data in Firestore
-    try {
-      updateSocialCardDatainFirebaseFirestore(url);
-
-      // Hide the loading SnackBar
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      // Show success SnackBar
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Changes saved successfully!',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: linkUpSecondary,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              fontFamily: 'Inter',
-            ),
-          ),
-          backgroundColor: linkUpMain,
-        ),
-      );
-    } catch (e) {
-      // Hide the loading SnackBar
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      // Show error SnackBar
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Error saving changes.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              fontFamily: 'Inter',
-            ),
-          ),
-          backgroundColor: Colors.grey,
-        ),
-      );
-    }
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   Future<void> updateSocialCardDataInProvider(String url) async {
@@ -314,6 +221,43 @@ class EditSocialCardState extends State<EditSocialCard> {
     });
   }
 
+  void onSaveButtonPressed() async {
+    String oldPictureUrl = socialCardDataProvider.socialCardData.pictureUrl;
+    String url = '';
+
+    final loadingSnackBar =
+        showSnackBar(context, 'Saving changes...', linkUpMain);
+
+    // Upload the image to Firebase Storage and return the updated URL
+    url = await uploadImageToFirebaseStorage(url, oldPictureUrl);
+
+    // Reset the profilePictureNew
+    profilePictureNew = null;
+
+    // Update the user data in the provider
+    updateSocialCardDataInProvider(url);
+
+    // Update the user data in Firestore
+    try {
+      await updateSocialCardDatainFirebaseFirestore(url);
+
+      // Hide the loading SnackBar
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      // Show success SnackBar
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, 'Changes saved successfully!', linkUpMain);
+    } catch (e) {
+      // Hide the loading SnackBar
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+      // Show error SnackBar
+      // ignore: use_build_context_synchronously
+      showSnackBar(context, 'Error saving changes.', Colors.grey);
+    }
+  }
+
   Widget buildInputRow(
       String label, TextEditingController controller, String hintText) {
     return SizedBox(
@@ -322,7 +266,7 @@ class EditSocialCardState extends State<EditSocialCard> {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          // crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               label,
@@ -338,6 +282,8 @@ class EditSocialCardState extends State<EditSocialCard> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 3),
                 child: TextField(
+                  cursorColor: Colors.white,
+                  cursorOpacityAnimates: true,
                   controller: controller,
                   onChanged: (value) {},
                   style: const TextStyle(
@@ -527,10 +473,10 @@ class EditSocialCardState extends State<EditSocialCard> {
                                         textEditingControllers[9], 'Facebook'),
                                     const SizedBox(height: 10),
                                     Container(
-                                      width: double.infinity,
+                                      width: 170,
                                       height: 35,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 50.0),
+                                      // margin: const EdgeInsets.symmetric(
+                                      //     horizontal: 50.0),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(50),
                                         color: const Color(0xCCFFFFFF),
@@ -551,17 +497,14 @@ class EditSocialCardState extends State<EditSocialCard> {
                                                 size: 18,
                                               ),
                                             ),
-                                            // const SizedBox(width: 10),
-                                            const Expanded(
-                                              child: Text(
-                                                'Save Changes',
-                                                textAlign: TextAlign.center,
-                                                style: TextStyle(
-                                                  color: linkUpMain,
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w900,
-                                                  fontFamily: 'Inter',
-                                                ),
+                                            const SizedBox(width: 20),
+                                            const Text(
+                                              'Save Changes',
+                                              style: TextStyle(
+                                                color: linkUpMain,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w900,
+                                                fontFamily: 'Inter',
                                               ),
                                             ),
                                             const SizedBox(width: 15)

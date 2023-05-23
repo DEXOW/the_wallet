@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/Screens/components/dropdown-menu.dart';
 import 'package:the_wallet/Screens/components/navbar.dart';
-import 'package:the_wallet/screens/linkup/social-card-data-provider.dart';
+import 'package:the_wallet/data_classes/social-card-data.dart';
 
 class ViewSocialCard extends StatelessWidget {
   const ViewSocialCard({super.key});
@@ -56,7 +55,7 @@ class ViewSocialCard extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 41.5,
-            backgroundColor: Color(0xB3000000),
+            backgroundColor: const Color(0xB3000000),
             child: socialCardDataProvider.socialCardData.pictureUrl.isEmpty
                 ? const Icon(Icons.person_rounded,
                     color: accountMain, size: 60.0)
@@ -211,7 +210,7 @@ class ViewSocialCard extends StatelessWidget {
                   final data = snapshot.data?.data();
 
                   if (data == null) {
-                    return Text('User data not found in Firestore.');
+                    return const Text('User data not found in Firestore.');
                   }
 
                   socialCardDataProvider.socialCardData.setData(

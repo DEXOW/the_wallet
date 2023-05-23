@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:path/path.dart' as path;
 
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/screens/account/user.dart';
-import 'package:the_wallet/screens/account/userDataProvider.dart';
-import 'package:the_wallet/screens/account/account-main-screen.dart';
 import 'package:the_wallet/screens/components/account-bottom-buttons.dart';
+import 'package:the_wallet/data_classes/userData.dart';
+import 'package:the_wallet/screens/account/account-main-screen.dart';
 import 'package:the_wallet/screens/account/account-edit-email-screen.dart';
 import 'package:the_wallet/screens/account/account-edit-phone-screen.dart';
 
@@ -64,7 +64,7 @@ class AccountEditProfileState extends State<AccountEditProfile> {
 
   Future<void> uploadImage(File file) async {
     final firebase_storage.Reference ref =
-        firebase_storage.FirebaseStorage.instance.ref('files/${file.path}');
+        firebase_storage.FirebaseStorage.instance.ref('files/${path.basename(file.path)}');
 
     try {
       await ref.putFile(file);
