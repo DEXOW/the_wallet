@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:the_wallet/screens/components/showSocialCard.dart';
+import 'package:the_wallet/screens/components/socialCard.dart';
 
 class ScanQrCodeWidget extends StatefulWidget {
   ScanQrCodeWidget({Key? key}) : super(key: key);
@@ -90,23 +90,51 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
   }
 
   void openSocialCard() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ViewSocialCard(
-          firstname: socialcardData.fname,
-          lastname: socialcardData.lname,
-          career: socialcardData.career,
-          age: socialcardData.age,
-          phoneNo: socialcardData.phoneNo,
-          email: socialcardData.email,
-          linkedIn: socialcardData.linkedIn,
-          twitter: socialcardData.twitter,
-          instagram: socialcardData.instagram,
-          facebook: socialcardData.facebook,
-          pictureUrl: socialcardData.pictureUrl,
-        ),
-      ),
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            height: 420,
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                ViewSocialCard(
+                  firstname: socialcardData.fname,
+                  lastname: socialcardData.lname,
+                  career: socialcardData.career,
+                  age: socialcardData.age,
+                  phoneNo: socialcardData.phoneNo,
+                  email: socialcardData.email,
+                  linkedIn: socialcardData.linkedIn,
+                  twitter: socialcardData.twitter,
+                  instagram: socialcardData.instagram,
+                  facebook: socialcardData.facebook,
+                  pictureUrl: socialcardData.pictureUrl,
+                ),
+                TextButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.white),
+                  ),
+                  child: SizedBox(
+                    width: 200,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text('Save Social Card'),
+                        Icon(Icons.get_app),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -169,7 +197,7 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                       child: Container(
                         height: qrSize,
                         width: qrSize,
-                        margin: EdgeInsets.only(bottom: 200),
+                        margin: EdgeInsets.only(bottom: 150),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.white, // Customize the border color

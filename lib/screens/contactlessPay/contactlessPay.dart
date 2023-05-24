@@ -42,12 +42,7 @@ class _contactlesspaymentwidgetstate extends State<ContactlessPaymentWidget> {
           ),
         Container(
           margin: EdgeInsets.only(top: 150),
-          child: Image.asset(
-            'assets/icons/contactless.png',
-            scale: 1.1,
-            // width: 500,
-            // height: 500,
-          ),
+          child: IconButton( onPressed: () => {}, icon: const Icon(Icons.contactless,), iconSize: 100),
         ),
         const SizedBox(height: 2),
         const Text(

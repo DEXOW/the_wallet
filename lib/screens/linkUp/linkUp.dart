@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:the_wallet/qr.dart';
 import 'package:the_wallet/screens/scanQr/scanQr.dart';
-import 'package:the_wallet/screens/components/showSocialCard.dart';
+import 'package:the_wallet/screens/components/socialCard.dart';
 
 class LinkUpWidget extends StatefulWidget {
   LinkUpWidget({Key? key}) : super(key: key);
@@ -15,45 +15,9 @@ class LinkUpWidget extends StatefulWidget {
 }
 
 class _linkupwidgetstate extends State<LinkUpWidget> {
-  // var jsonData = {
-  //   'id': 1,
-  // };
-
-  // late Map<String,dynamic> SocialCardData;
-
-  // String firstname = '';
-
-  // @override
-  // void didChangeDependencies() async {
-  //   super.didChangeDependencies();
-  //   await fetchData();
-  // }
-
-  // Future<void> updateSocialCardData() async {
-  //   try {
-  //     final snapshot = await FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc('${auth.currentUser!.uid}/cards/socialcard')
-  //         .snapshots()
-  //         .first;
-
-  //     SocialCardData = snapshot.data()!;
-  //     print('This is data ${SocialCardData}');
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // Future<void> fetchData() async {
-  //   await updateSocialCardData(); // Wait for data to be fetched
-  // }
-
-  // FirebaseAuth auth = FirebaseAuth.instance;
-
-  Map<String, dynamic> socialCardData = {
-    'cardID' : ''
-  };
+  Map<String, dynamic> socialCardData = {'cardID': ''};
   String firstname = '';
+  bool showqrCode = true;
 
   @override
   void initState() {
@@ -68,7 +32,7 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
           .doc('${auth.currentUser!.uid}/cards/socialcard')
           .get();
 
-          final data = snapshot.data();
+      final data = snapshot.data();
 
       if (data != null) {
         socialCardData['cardID'] = data['cardID'];
@@ -85,6 +49,31 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
     setState(() {
       // Rebuild the widget after data is fetched
     });
+  }
+
+  Widget qrCode() {
+    return Column(
+      children: [
+        QRCodeWidget(json.encode(socialCardData)),
+        SizedBox(height: 40),
+        ElevatedButton(
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ScanQrCodeWidget()));
+            },
+            child: Text('Scan QR')),
+      ],
+    );
+  }
+
+  Widget nfcCode() {
+    return Column(
+      children: [
+        IconButton( onPressed: () => {}, icon: const Icon(Icons.contactless,), iconSize: 200),
+        SizedBox(height: 40),
+        ElevatedButton(onPressed: () {}, child: Text('Scan NFC')),
+      ],
+    );
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -113,16 +102,18 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  QRCodeWidget(json.encode(socialCardData)),
-                  SizedBox(height: 40),
-                  ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScanQrCodeWidget()));
-                      },
-                      child: Text('Scan QR')),
+
+                  LayoutBuilder(
+                    builder: (BuildContext context, BoxConstraints contraints){
+                      if (showqrCode == true){
+                        return qrCode();
+                      }
+                      else{
+                        return nfcCode();
+                      }
+                    }
+                    ),
+
                   SizedBox(height: 60),
                   SizedBox(
                     width: 250,
@@ -145,10 +136,23 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
                                         color: Colors.grey,
                                       ),
                                       child: Center(
-                                        child: Image.asset(
+                                        child: TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.transparent),
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              showqrCode = true;
+                                            });
+                                          },
+                                          child: Image.asset(
                                             'assets/icons/qrCode.png',
                                             width: 30,
-                                            height: 30),
+                                            height: 30,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(height: 10),
@@ -172,10 +176,23 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
                                         color: Colors.grey,
                                       ),
                                       child: Center(
-                                        child: Image.asset(
+                                        child: TextButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all<
+                                                    Color>(Colors.transparent),
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              showqrCode = false;
+                                            });
+                                          },
+                                          child: Image.asset(
                                             'assets/icons/contactless.png',
                                             width: 30,
-                                            height: 30),
+                                            height: 30,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                     SizedBox(height: 10),

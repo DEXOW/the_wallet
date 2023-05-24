@@ -27,6 +27,33 @@ class ViewSocialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+    Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context),
+          ),
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(right: 330),
+              child: Center(
+                child: Text(
+                  'Back',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: 'Inter',
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            )
+          ],
+        ),
+    );
 
     String getProperty(String propertyName) {
       switch (propertyName) {
@@ -194,73 +221,71 @@ class ViewSocialCard extends StatelessWidget {
       );
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 100.0),
-      child: SizedBox(
-        width: double.infinity,
-        height: 380,
-        child: Card(
-          color: const Color(0xFFFFFFFF),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+    return Container(
+      width: double.infinity,
+      height: 370,
+      // margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Card(
+        color: const Color(0xFFFFFFFF),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 15.0,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 15.0,
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 30),
-                  child: buildSocialCardHeader(),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15, right: 15),
+                child: buildSocialCardHeader(),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  top: 20,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    top: 20,
-                  ),
-                  child: Column(
-                    children: [
-                      buildSocialCardRow(
-                        'assets/icons/email.png',
-                        'email',
-                        false,
-                      ),
-                      const SizedBox(height: 8),
-                      buildSocialCardRow(
-                        'assets/icons/phone.png',
-                        'phone',
-                        false,
-                      ),
-                      const SizedBox(height: 8),
-                      buildSocialCardRow(
-                        'assets/icons/LinkedIn.png',
-                        'linkedIn',
-                        true,
-                      ),
-                      const SizedBox(height: 8),
-                      buildSocialCardRow(
-                        'assets/icons/twitter.png',
-                        'twitter',
-                        true,
-                      ),
-                      const SizedBox(height: 8),
-                      buildSocialCardRow(
-                        'assets/icons/instagram.png',
-                        'instagram',
-                        true,
-                      ),
-                      const SizedBox(height: 8),
-                      buildSocialCardRow(
-                        'assets/icons/facebook.png',
-                        'facebook',
-                        true,
-                      ),
-                    ],
-                  ),
+                child: Column(
+                  children: [
+                    buildSocialCardRow(
+                      'assets/icons/email.png',
+                      'email',
+                      false,
+                    ),
+                    const SizedBox(height: 8),
+                    buildSocialCardRow(
+                      'assets/icons/phone.png',
+                      'phone',
+                      false,
+                    ),
+                    const SizedBox(height: 8),
+                    buildSocialCardRow(
+                      'assets/icons/LinkedIn.png',
+                      'linkedIn',
+                      true,
+                    ),
+                    const SizedBox(height: 8),
+                    buildSocialCardRow(
+                      'assets/icons/twitter.png',
+                      'twitter',
+                      true,
+                    ),
+                    const SizedBox(height: 8),
+                    buildSocialCardRow(
+                      'assets/icons/instagram.png',
+                      'instagram',
+                      true,
+                    ),
+                    const SizedBox(height: 8),
+                    buildSocialCardRow(
+                      'assets/icons/facebook.png',
+                      'facebook',
+                      true,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
