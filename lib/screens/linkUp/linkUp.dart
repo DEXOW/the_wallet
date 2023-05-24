@@ -2,6 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 import 'dart:convert';
 import 'package:the_wallet/qr.dart';
 import 'package:the_wallet/screens/scanQr/scanQr.dart';
@@ -18,6 +19,7 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
   Map<String, dynamic> socialCardData = {'cardID': ''};
   String firstname = '';
   bool showqrCode = true;
+  ValueNotifier<dynamic> result = ValueNotifier(null);
 
   @override
   void initState() {
@@ -71,9 +73,23 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
       children: [
         IconButton( onPressed: () => {}, icon: const Icon(Icons.contactless,), iconSize: 200),
         SizedBox(height: 40),
-        ElevatedButton(onPressed: () {}, child: Text('Scan NFC')),
+        ElevatedButton(onPressed: () {
+          _tagRead();
+        }, child: Text('Scan NFC')),
       ],
     );
+  }
+
+    void _tagRead() {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+
+      result.value = tag.data;
+      print(result.value);
+      print('Printing ${tag.handle}');
+
+      NfcManager.instance.stopSession();
+
+    });
   }
 
   FirebaseAuth auth = FirebaseAuth.instance;
