@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+String _verificationId = '';
+int? _resendToken = 0;
 class FireAuth {
   static Future<User?> signInUsingEmailPassword({
     required String email,
@@ -47,6 +49,7 @@ class FireAuth {
     required String phoneNoCode,
     required String phoneNo,
     required PhoneAuthCredential phoneAuthCredential,
+    required context,
   }) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
@@ -92,16 +95,21 @@ class FireAuth {
         });
       });
     } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong!'),
+          backgroundColor: Colors.red,
+        ),
+      );
       throw Exception(e);
     }
-
     return user;
   }
 
-  static Future<void> verifyPhoneNumber({
+  static Future<bool> verifyPhoneNumber({
     required String phoneNumber,
     required BuildContext context,
-    required Function onCodeSent,
+    // required Function onCodeSent,
   }) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth.verifyPhoneNumber(
@@ -119,17 +127,68 @@ class FireAuth {
         if (e.code == 'invalid-phone-number') {
           ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('The provided phone number is not valid.'),
+            content: Text(
+              'The provided phone number is not valid.',
+              textAlign: TextAlign.center,
+            ),
           ),
         );
         }
       },
       codeSent: (String verificationId, int? resendToken) async {
-        onCodeSent(verificationId, resendToken);
+        _verificationId = verificationId;
+        _resendToken = resendToken;
       },
       codeAutoRetrievalTimeout: (String verificationId) async {
         throw("Timeout");
       },
+      forceResendingToken: _resendToken,
     );
+    return true;
+  }
+
+   static Future<PhoneAuthCredential> submitOTP({
+    required BuildContext context,
+    required String otp,
+    required List<TextEditingController> controllers,
+  }) async {
+    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: _verificationId, smsCode: otp);
+    try { 
+      await FirebaseAuth.instance.signInWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'invalid-verification-code') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Invalid OTP',
+              textAlign: TextAlign.center,
+            ),
+            backgroundColor: Colors.red,
+          )
+        );
+        throw Exception('Invalid OTP');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Something went wrong!',
+            textAlign: TextAlign.center,
+          ),
+          backgroundColor: Colors.red,
+        )
+      );
+      throw Exception(e);
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'OTP Verified',
+          textAlign: TextAlign.center,
+        ),
+        backgroundColor: Colors.green,
+      )
+    );
+    return credential;
   }
 }

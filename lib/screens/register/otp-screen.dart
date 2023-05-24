@@ -8,10 +8,8 @@ import 'package:flutter/services.dart';
 
 
 class OtpScreen extends StatefulWidget {
-  final String verificationId;
-  final int? resendToken;
   final List<TextEditingController> controllers;
-  const OtpScreen({Key? key, required this.verificationId, required this.resendToken, required this.controllers}) : super(key: key);
+  const OtpScreen({Key? key, required this.controllers}) : super(key: key);
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -123,7 +121,9 @@ class _OtpScreenState extends State<OtpScreen> {
                             Container(
                               margin: const EdgeInsets.only(top: 5),
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  FireAuth.verifyPhoneNumber(phoneNumber: widget.controllers[8].text + widget.controllers[9].text, context: context);
+                                },
                                 child: const Text(
                                   "Resend OTP",
                                   style: TextStyle(
@@ -159,7 +159,9 @@ class _OtpScreenState extends State<OtpScreen> {
                                     onPressed: () async {
                                       if (otpFilled) 
                                       {
-                                        submitOTP(otp: otpDigits.join(), verificationId: widget.verificationId, resendToekn: widget.resendToken);
+                                        PhoneAuthCredential credential = await FireAuth.submitOTP(context: context, otp: otpDigits.join(), controllers: widget.controllers);
+                                        await FirebaseAuth.instance.signOut();
+                                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SuccessScreen(controllers: widget.controllers,credential: credential)), (Route<dynamic> route) => route.isFirst);
                                       }
                                     },
                                     style: ButtonStyle(
@@ -292,57 +294,5 @@ class _OtpScreenState extends State<OtpScreen> {
         otpFilled = false;
       });
     }
-  }
-
-  void submitOTP({
-    required String otp,
-    required String verificationId,
-    required int? resendToekn,
-  }) async {
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: otp);
-    try { 
-      await FirebaseAuth.instance.signInWithCredential(credential);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'invalid-verification-code') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Invalid OTP',
-              textAlign: TextAlign.center,
-            ),
-            backgroundColor: Colors.red,
-          )
-        );
-        throw Exception('Invalid OTP');
-      }
-    } catch (e) {
-      throw Exception('Something went wrong');
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'OTP Verified',
-          textAlign: TextAlign.center,
-        ),
-        backgroundColor: Colors.green,
-      )
-    );
-    await FireAuth.registerUsingEmailPassword(
-      fname: widget.controllers[0].text, 
-      lname: widget.controllers[1].text, 
-      email: widget.controllers[2].text,
-      password: widget.controllers[3].text,
-      dobDate: widget.controllers[5].text,
-      dobMonth: widget.controllers[6].text,
-      dobYear: widget.controllers[7].text,
-      phoneNoCode: widget.controllers[8].text,
-      phoneNo: widget.controllers[9].text,
-      phoneAuthCredential: credential,
-    );
-
-
-    await FirebaseAuth.instance.signOut();
-
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SuccessScreen()), (Route<dynamic> route) => route.isFirst);
   }
 }

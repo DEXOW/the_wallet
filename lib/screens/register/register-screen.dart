@@ -68,12 +68,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
-  void onCodeSent(String verificationId, int? resendToken) async {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => OtpScreen(verificationId: verificationId, resendToken: resendToken, controllers: controllers,)
-    ));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -568,9 +562,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             setState(() {
                               selectedDate = picked;
                               selectedDate.day < 10 ? controllers[5].text = '0${selectedDate.day}' : controllers[5].text = selectedDate.day.toString();
-                              // controllers[5].text = selectedDate.day.toString();
                               selectedDate.month < 10 ? controllers[6].text = '0${selectedDate.month}' : controllers[6].text = selectedDate.month.toString();
-                              // controllers[6].text = selectedDate.month.toString();
                               controllers[7].text = selectedDate.year.toString();
                             });
                           }
@@ -749,7 +741,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (_registerFormP3Key.currentState!.validate()){
                       bool phoneExist = await FireStore.checkPhoneExist(context: context, phoneNo: controllers[8].text + controllers[9].text);
                       if (!phoneExist){
-                        FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text, onCodeSent: onCodeSent);
+                        FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text);
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) => OtpScreen(controllers: controllers)
+                        ));
                       }
                     }
                   },
