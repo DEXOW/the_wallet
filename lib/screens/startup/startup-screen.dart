@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/login/login-screen.dart';
+import 'package:the_wallet/screens/register/register-screen.dart';
 
 class StartupScreen extends StatelessWidget {
   @override
@@ -41,7 +42,14 @@ class StartupScreen extends StatelessWidget {
                 child: Column(children: [
                   Container(
                     child: TextButton(
-                      onPressed: () { /* ... */},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterScreen()
+                          ),
+                        );
+                      },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                           const Color(0xE61469EF),
