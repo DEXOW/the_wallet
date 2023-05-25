@@ -1,9 +1,52 @@
-import 'package:flutter/material.dart';
-import '../components/navbar.dart';
+// ignore_for_file: prefer_const_constructors
 
-class ChooseCardForContactlessWidget extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:the_wallet/screens/components/tempcards.dart';
+import '../components/navbar.dart';
+import 'package:the_wallet/screens/chooseCardForContactless/chooseCardForContactless.dart';
+
+class ChooseCardForContactlessWidget extends StatefulWidget {
+  ChooseCardForContactlessWidget({Key? key}) : super(key: key);
+
+  @override
+  State<ChooseCardForContactlessWidget> createState() =>
+      _choosecardforcontactlesswidget();
+}
+
+class _choosecardforcontactlesswidget
+    extends State<ChooseCardForContactlessWidget> {
+  int num = 3;
+
+  // static Widget _cards(int identifier, Function(int) onPressed) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       onPressed(identifier);
+  //     },
+  //     child: Container(
+  //       key: ValueKey(identifier),
+  //       width: 350,
+  //       height: 200,
+  //       margin: EdgeInsets.only(bottom: 16, top: 16),
+  //       decoration: BoxDecoration(
+  //         color: Color.fromRGBO(255, 0, 0, 1),
+  //         borderRadius: BorderRadius.circular(10),
+  //       ),
+  //       child: Center(child: Text(
+  //         'Card $identifier',
+  //         style: TextStyle(
+  //           color: Colors.white,
+  //           fontSize: 24,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       )),
+  //     ),
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
+    int num = 3;
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -42,7 +85,7 @@ class ChooseCardForContactlessWidget extends StatelessWidget {
                   resizeToAvoidBottomInset:
                       false, //Keyboard doesn't resize the screen
                   body: Column(
-                    children: const [
+                    children: [
                       SizedBox(height: 30),
                       Center(
                         child: Text(
@@ -63,6 +106,19 @@ class ChooseCardForContactlessWidget extends StatelessWidget {
                             fontSize: 17,
                             fontWeight: FontWeight.bold,
                             color: Color.fromRGBO(255, 255, 255, 0.593)),
+                      ),
+                      // _cards(),
+                      Container(
+                        height: screenHeight * 0.75,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: LayoutBuilder(builder:
+                              (BuildContext context, BoxConstraints constraints) {
+                            return Column(
+                              children: [for (int i = 1; i <= num; i++) buildCards(identifier:i)],
+                            );
+                          }),
+                        ),
                       )
                     ],
                   ),

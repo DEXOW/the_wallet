@@ -58,12 +58,25 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
       children: [
         QRCodeWidget(json.encode(socialCardData)),
         SizedBox(height: 40),
-        ElevatedButton(
+        Container(
+          width: 100,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 18, 60, 158),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: TextButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ScanQrCodeWidget()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ScanQrCodeWidget()),
+              );
             },
-            child: Text('Scan QR')),
+            child: Text(
+              'Scan QR',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -71,24 +84,126 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
   Widget nfcCode() {
     return Column(
       children: [
-        IconButton( onPressed: () => {}, icon: const Icon(Icons.contactless,), iconSize: 200),
+        IconButton(
+            onPressed: () => {},
+            icon: const Icon(
+              Icons.contactless,
+            ),
+            iconSize: 185),
         SizedBox(height: 40),
-        ElevatedButton(onPressed: () {
-          _tagRead();
-        }, child: Text('Scan NFC')),
+        Container(
+          width: 100,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 18, 60, 158),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: TextButton(
+            onPressed: () {
+              _tagRead();
+            },
+            child: Text(
+              'Scan NFC',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
       ],
     );
   }
 
-    void _tagRead() {
-    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+  Widget qrIcon() {
+    return Column(
+      children: [
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey,
+          ),
+          child: Center(
+            child: ClipOval(
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                ),
+                onPressed: () {
+                  setState(() {
+                    showqrCode = true;
+                  });
+                },
+                child: Image.asset(
+                  'assets/icons/qrCode.png',
+                  width: 30,
+                  height: 30,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'QR',
+          style: TextStyle(
+            fontSize: 12,
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
+    );
+  }
 
+  Widget nfcIcon() {
+    return Column(
+      children: [
+        Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.grey,
+          ),
+          child: Center(
+            child: ClipOval(
+              child: TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                ),
+                onPressed: () {
+                  setState(() {
+                    showqrCode = false;
+                  });
+                },
+                child: Image.asset(
+                  'assets/icons/contactless.png',
+                  width: 30,
+                  height: 30,
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'NFC',
+          style: TextStyle(
+            fontSize: 12,
+            fontFamily: 'Inter',
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _tagRead() {
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       result.value = tag.data;
-      print(result.value);
-      print('Printing ${tag.handle}');
 
       NfcManager.instance.stopSession();
-
     });
   }
 
@@ -118,115 +233,42 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-
-                  LayoutBuilder(
-                    builder: (BuildContext context, BoxConstraints contraints){
-                      if (showqrCode == true){
-                        return qrCode();
-                      }
-                      else{
-                        return nfcCode();
-                      }
+                  LayoutBuilder(builder:
+                      (BuildContext context, BoxConstraints contraints) {
+                    if (showqrCode == true) {
+                      return qrCode();
+                    } else {
+                      return nfcCode();
                     }
-                    ),
-
+                  }),
                   SizedBox(height: 60),
                   SizedBox(
                     width: 250,
-                    child: Stack(
-                      alignment: Alignment.centerRight,
-                      children: [
-                        Positioned(
-                          child: SizedBox(
-                            width: 150,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey,
-                                      ),
-                                      child: Center(
-                                        child: TextButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.transparent),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              showqrCode = true;
-                                            });
-                                          },
-                                          child: Image.asset(
-                                            'assets/icons/qrCode.png',
-                                            width: 30,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'QR',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'Inter',
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Column(
-                                  children: [
-                                    Container(
-                                      width: 50,
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Colors.grey,
-                                      ),
-                                      child: Center(
-                                        child: TextButton(
-                                          style: ButtonStyle(
-                                            backgroundColor:
-                                                MaterialStateProperty.all<
-                                                    Color>(Colors.transparent),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              showqrCode = false;
-                                            });
-                                          },
-                                          child: Image.asset(
-                                            'assets/icons/contactless.png',
-                                            width: 30,
-                                            height: 30,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'NFC',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontFamily: 'Inter',
-                                        fontStyle: FontStyle.italic,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                    child: AnimatedAlign(
+                      alignment: showqrCode
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft,
+                      duration: Duration(
+                          milliseconds: 300), // Adjust the duration as desired
+                      curve: Curves
+                          .easeInOut, // Adjust the animation curve as desired
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            child: SizedBox(
+                              width: 150,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  qrIcon(),
+                                  nfcIcon(),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
