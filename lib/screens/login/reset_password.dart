@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/screens/components/global.dart';
 
-import 'package:the_wallet/screens/startup/startup-screen.dart';
+import 'package:the_wallet/screens/startup/startup_screen.dart';
 import 'package:the_wallet/validate.dart';
 
 class ResetPasswordScreen extends StatefulWidget {

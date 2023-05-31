@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/screens/components/global.dart';
-import 'package:the_wallet/screens/register/successful-screen.dart';
+import 'package:the_wallet/screens/register/successful_screen.dart';
 
 
 class OtpScreen extends StatefulWidget {

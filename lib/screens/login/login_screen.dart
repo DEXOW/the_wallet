@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
 
-import 'package:the_wallet/screens/home/home-screen.dart';
-import 'package:the_wallet/screens/login/reset-password.dart';
+import 'package:the_wallet/screens/home/home_screen.dart';
+import 'package:the_wallet/screens/login/reset_password.dart';
 import 'package:the_wallet/validate.dart';
 
 class LoginScreen extends StatefulWidget {

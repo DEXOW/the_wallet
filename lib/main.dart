@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:the_wallet/firebase_options.dart';
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/screens/startup/startup-screen.dart';
+import 'package:the_wallet/screens/startup/startup_screen.dart';
 
 Future<FirebaseApp> _initializeFirebase() async {
   FirebaseApp firebaseApp = await Firebase.initializeApp(

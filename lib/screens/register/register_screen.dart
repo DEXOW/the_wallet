@@ -5,7 +5,7 @@ import 'package:country_code_picker/country_code_picker.dart';
 
 import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/firebase/fire_store.dart';
-import 'package:the_wallet/screens/register/otp-screen.dart';
+import 'package:the_wallet/screens/register/otp_screen.dart';
 import 'package:the_wallet/validate.dart';
 import 'package:the_wallet/constants.dart';
 

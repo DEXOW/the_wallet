@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
 
-import 'package:the_wallet/screens/startup/startup-screen.dart';
+import 'package:the_wallet/screens/startup/startup_screen.dart';
 
 
 class SuccessScreen extends StatefulWidget {
