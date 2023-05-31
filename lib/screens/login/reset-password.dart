@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:the_wallet/screens/components/global.dart';
 
 import 'package:the_wallet/screens/startup/startup-screen.dart';
 import 'package:the_wallet/validate.dart';
@@ -35,20 +36,14 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: usrEmail.text.trim());
     } on FirebaseException catch (e) {
       if (e.code == 'user-not-found') {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No user found for that email'),
-          ),
-        );
+        SnackBarNotify.showSnackBar(context: context, message: 'No User Found For That Email', bgcolor: Colors.red, textColor: Colors.white);
       }
       rethrow;
     }
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Password reset link sent to email'),
-      ),
-    );
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false,);
+    if (context.mounted){
+      SnackBarNotify.showSnackBar(context: context, message: 'Password Reset Link Sent', bgcolor: Colors.green, textColor: Colors.black);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false,);
+    }
   }
 
   @override

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:the_wallet/firebase/fire_auth.dart';
-import 'package:the_wallet/screens/register/successful-screen.dart';
+import 'package:flutter/services.dart';
+import 'package:pinput/pinput.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 
+import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:the_wallet/screens/components/global.dart';
+import 'package:the_wallet/screens/register/successful-screen.dart';
 
 
 class OtpScreen extends StatefulWidget {
@@ -17,39 +19,42 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
 
-  late List<TextEditingController> otpControllers;
-  late List<FocusNode> otpFocusNodes;
-  late List<FocusNode> otpFocusNodes2;
-  late List<String> otpDigits;
+  DateTime cooldown = DateTime.now().add(const Duration(minutes: 1));
+  late TextEditingController otpController;
   final int digitCount = 6;
   late bool otpFilled;
 
   @override
   void initState() {
     super.initState();
-    otpControllers = List<TextEditingController>.generate(digitCount, (index) => TextEditingController());
-    otpFocusNodes = List<FocusNode>.generate(digitCount, (index) => FocusNode());
-    otpFocusNodes2 = List<FocusNode>.generate(digitCount, (index) => FocusNode());
-    otpDigits = List<String>.generate(digitCount, (index) => "");
+    otpController = TextEditingController();
     otpFilled = false;
   }
 
   @override
   void dispose() {
-    for (var element in otpControllers) {
-      element.dispose();
-    }
-    for (var element in otpFocusNodes) {
-      element.dispose();
-    }
-    for (var element in otpFocusNodes2) {
-      element.dispose();
-    }
+    otpController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final defaultPinTheme = PinTheme(
+      width: 45,
+      height: 60,
+      margin: const EdgeInsets.only(top: 60),
+      textStyle: const TextStyle(
+        fontSize: 20, 
+        color: Color(0xFFEAEFF3), 
+        fontWeight: FontWeight.w600
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0x5E606060),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -99,11 +104,11 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                             ),
                             Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: 
-                                  //6 text boxes for OTP
-                                  List.generate(digitCount, (index) => buildDigitField(index)),
+                              child: Pinput(
+                                length: digitCount,
+                                defaultPinTheme: defaultPinTheme,
+                                controller: otpController,
+                                onChanged: (value){updateOtpValue();},
                               ),
                             ),
                             Container(
@@ -122,7 +127,14 @@ class _OtpScreenState extends State<OtpScreen> {
                               margin: const EdgeInsets.only(top: 5),
                               child: TextButton(
                                 onPressed: () {
+                                  //Add a 1 min cooldown to resend OTP button
+                                  if (DateTime.now().isAfter(cooldown)) {
+                                    SnackBarNotify.showSnackBar(context: context, message: "Please wait for 1 minute before resending OTP", bgcolor: const Color(0xE61469EF), textColor: const Color(0xFFFFFFFF));
+                                    return;
+                                  }
                                   FireAuth.verifyPhoneNumber(phoneNumber: widget.controllers[8].text + widget.controllers[9].text, context: context);
+                                  SnackBarNotify.showSnackBar(context: context, message: "OTP sent successfully", bgcolor: const Color(0xE61469EF), textColor: const Color(0xFFFFFFFF));
+                                  cooldown = DateTime.now().add(const Duration(minutes: 1));
                                 },
                                 child: const Text(
                                   "Resend OTP",
@@ -157,11 +169,12 @@ class _OtpScreenState extends State<OtpScreen> {
                                   ),
                                   TextButton(
                                     onPressed: () async {
-                                      if (otpFilled) 
-                                      {
-                                        PhoneAuthCredential credential = await FireAuth.submitOTP(context: context, otp: otpDigits.join(), controllers: widget.controllers);
+                                      if (otpFilled) {
+                                        PhoneAuthCredential credential = await FireAuth.submitOTP(context: context, otp: otpController.text, controllers: widget.controllers);
                                         await FirebaseAuth.instance.signOut();
-                                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SuccessScreen(controllers: widget.controllers,credential: credential)), (Route<dynamic> route) => route.isFirst);
+                                        if (context.mounted){
+                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SuccessScreen(controllers: widget.controllers,credential: credential)), (Route<dynamic> route) => route.isFirst);
+                                        }
                                       }
                                     },
                                     style: ButtonStyle(
@@ -238,51 +251,8 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  Widget buildDigitField(int index) {
-    return Container(
-      width: 40.0,
-      height: 60.0,
-      margin: const EdgeInsets.only(top: 60, left: 4.0, right: 4.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: const Color(0x5E606060),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: RawKeyboardListener(
-        focusNode: otpFocusNodes2[index],
-        onKey: (event) {
-          if (event.logicalKey == LogicalKeyboardKey.backspace) {
-            if (otpControllers[index].text.isEmpty && index > 0) {
-              // Move focus to the previous field
-              FocusScope.of(context).requestFocus(otpFocusNodes[index - 1]);
-            }
-          }
-        },
-        child: TextField(
-          controller: otpControllers[index],
-          focusNode: otpFocusNodes[index],
-          textAlign: TextAlign.center,
-          keyboardType: TextInputType.number,
-          maxLength: 1,
-          decoration: const InputDecoration(
-            counterText: '',
-            border: InputBorder.none
-          ),
-          onChanged: (value) {
-            otpDigits[index] = value;
-            if (value.isNotEmpty && index < digitCount - 1) {
-              // Move focus to the next field
-              FocusScope.of(context).requestFocus(otpFocusNodes[index + 1]);
-            }
-            updateOtpValue();
-          },
-        ),
-      ),
-    );
-  }
-
   void updateOtpValue() {
-    final otp = otpDigits.join();
+    final otp = otpController.text;
     if (otp.length == digitCount) {
       // All digits entered
       setState(() {

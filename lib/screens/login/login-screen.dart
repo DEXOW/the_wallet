@@ -40,7 +40,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void login(BuildContext context) async {
     User? user = await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
     if (user != null){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      if (context.mounted){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      }
     }
   }
 

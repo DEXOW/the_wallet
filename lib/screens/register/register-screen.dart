@@ -41,18 +41,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _registerFormP2Key = GlobalKey<FormState>();
     _registerFormP3Key = GlobalKey<FormState>();
 
-    controllers = List<TextEditingController>.generate(10, (index) => TextEditingController()); //All the controllers
+    controllers = List<TextEditingController>.generate(8, (index) => TextEditingController()); //All the controllers
     focusNodes = List<FocusNode>.generate(6, (index) => FocusNode()); //All the controllers
 
     today = DateTime.now();
     selectedDate = DateTime(DateTime.now().year - minAllowedAge);
     
     setState(() {
-      controllers[5].text = selectedDate.day.toString();
-      controllers[6].text = selectedDate.month.toString();
-      controllers[7].text = selectedDate.year.toString();
+      controllers[5].text = selectedDate.toString();
 
-      controllers[8].text = '+94';
+      controllers[6].text = '+94';
     });
   }
 
@@ -561,9 +559,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (picked != null && picked != selectedDate){
                             setState(() {
                               selectedDate = picked;
-                              selectedDate.day < 10 ? controllers[5].text = '0${selectedDate.day}' : controllers[5].text = selectedDate.day.toString();
-                              selectedDate.month < 10 ? controllers[6].text = '0${selectedDate.month}' : controllers[6].text = selectedDate.month.toString();
-                              controllers[7].text = selectedDate.year.toString();
+                              controllers[5].text = selectedDate.toString();
                             });
                           }
                         },
@@ -600,7 +596,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Container(
                                     margin: const EdgeInsets.only(right: 15.0),
                                     child: Text(
-                                      "${controllers[5].text}  /",
+                                      "${DateTime.parse(controllers[5].text).day}  /",
                                       style: const TextStyle(
                                         fontSize: 15,
                                         color: Color(0xFFFFFFFF)
@@ -610,7 +606,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Container(
                                     margin: const EdgeInsets.only(right: 15.0),
                                     child: Text(
-                                      "${controllers[6].text}  /",
+                                      "${DateTime.parse(controllers[5].text).month}  /",
                                       style: const TextStyle(
                                         fontSize: 15,
                                         color: Color(0xFFFFFFFF)
@@ -620,7 +616,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   Container(
                                     margin: const EdgeInsets.only(right: 15.0),
                                     child: Text(
-                                      controllers[7].text,
+                                      "${DateTime.parse(controllers[5].text).year}",
                                       style: const TextStyle(
                                         fontSize: 15,
                                         color: Color(0xFFFFFFFF)
@@ -663,7 +659,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               color: secondaryBgColor,
                             ),
                             child: CountryCodePicker(
-                              onChanged: (value) => {controllers[8].text = value.toString()},
+                              onChanged: (value) => {controllers[6].text = value.toString()},
                               initialSelection: 'LK',
                               favorite: const ['+94'],
                               showCountryOnly: false,
@@ -680,7 +676,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               width: 175.0,
                               child: TextFormField(
                                 focusNode: focusNodes[5],
-                                controller: controllers[9],
+                                controller: controllers[7],
                                 validator: (value) => Validate.validatePhoneNo(phoneNo: value),
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.done,
@@ -735,16 +731,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    if (controllers[9].text.startsWith('0')){
-                      controllers[9].text = controllers[9].text.substring(1);
+                    if (controllers[7].text.startsWith('0')){
+                      controllers[7].text = controllers[7].text.substring(1);
                     }
                     if (_registerFormP3Key.currentState!.validate()){
-                      bool phoneExist = await FireStore.checkPhoneExist(context: context, phoneNo: controllers[8].text + controllers[9].text);
+                      bool phoneExist = await FireStore.checkPhoneExist(context: context, phoneNo: controllers[6].text + controllers[7].text);
                       if (!phoneExist){
-                        FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text);
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => OtpScreen(controllers: controllers)
-                        ));
+                        if (context.mounted){
+                          FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[6].text + controllers[7].text);
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) => OtpScreen(controllers: controllers)
+                          ));
+                        }
                       }
                     }
                   },
