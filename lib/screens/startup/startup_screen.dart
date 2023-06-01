@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:the_wallet/screens/login/login-screen.dart';
-import 'package:the_wallet/screens/register/register-screen.dart';
+import 'package:the_wallet/screens/login/login_screen.dart';
+import 'package:the_wallet/screens/register/register_screen.dart';
 
 class StartupScreen extends StatelessWidget {
   @override

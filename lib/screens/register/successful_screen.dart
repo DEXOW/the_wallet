@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
 
-import 'package:the_wallet/screens/startup/startup-screen.dart';
+import 'package:the_wallet/screens/startup/startup_screen.dart';
 
 
 class SuccessScreen extends StatefulWidget {
@@ -33,11 +33,9 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   lname: widget.controllers[1].text, 
                   email: widget.controllers[2].text,
                   password: widget.controllers[3].text,
-                  dobDate: widget.controllers[5].text,
-                  dobMonth: widget.controllers[6].text,
-                  dobYear: widget.controllers[7].text,
-                  phoneNoCode: widget.controllers[8].text,
-                  phoneNo: widget.controllers[9].text,
+                  dob: widget.controllers[5].text,
+                  phoneNoCode: widget.controllers[6].text,
+                  phoneNo: widget.controllers[7].text,
                   phoneAuthCredential: widget.credential,
                   context: context,
                 ),
