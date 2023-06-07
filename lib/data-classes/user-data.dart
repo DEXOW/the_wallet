@@ -8,7 +8,8 @@ class UserData extends ChangeNotifier {
   String? dobMonth;
   String? dobYear;
   String? phoneNo;
-  String? imgUrl;
+  String? pictureUrl;
+  String? socialCardId;
 
   UserData({
     required this.fname,
@@ -18,7 +19,8 @@ class UserData extends ChangeNotifier {
     required this.dobMonth,
     required this.dobYear,
     required this.phoneNo,
-    required this.imgUrl,
+    required this.pictureUrl,
+    required this.socialCardId,
   });
 
   void setData({
@@ -29,7 +31,8 @@ class UserData extends ChangeNotifier {
     String? dobMonth, 
     String? dobYear, 
     String? phoneNo, 
-    String? imgUrl
+    String? pictureUrl,
+    String? socialCardId,
   }) {
     this.fname = fname;
     this.lname = lname;
@@ -38,7 +41,8 @@ class UserData extends ChangeNotifier {
     this.dobMonth = dobMonth;
     this.dobYear = dobYear;
     this.phoneNo = phoneNo;
-    this.imgUrl = imgUrl;
+    this.pictureUrl = pictureUrl;
+    this.socialCardId = socialCardId;
     notifyListeners();
   }
 }
@@ -52,7 +56,8 @@ class UserDataProvider extends ChangeNotifier {
     dobMonth: '',
     dobYear: '',
     phoneNo: '',
-    imgUrl: '',
+    pictureUrl: '',
+    socialCardId: '',
   );
 
   UserData get userData => _userData;

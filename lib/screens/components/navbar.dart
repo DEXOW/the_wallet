@@ -1,20 +1,30 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:the_wallet/constants.dart';
-import 'package:the_wallet/screens/settings/settings-screen.dart';
-import 'package:the_wallet/screens/home/home-screen.dart';
+import 'package:the_wallet/main.dart';
+import 'package:the_wallet/screens/components/data-classes.dart';
 
 class Navbar extends StatefulWidget {
-  String currentPage;
-  Navbar({Key? key, required this.currentPage}) : super(key: key);
+  const Navbar({Key? key}) : super(key: key);
 
   @override
   State<Navbar> createState() => _NavbarState();
 }
 
 class _NavbarState extends State<Navbar> {
-  NavNavigator({required BuildContext context, required final destination}){
+  late PageDataProvider pageDataProvider;
+  late String currentPage;
+  Map<String, String> navIcons = {
+    'contactless': 'assets/icons/contactless-icon.png',
+    'wallet': 'assets/icons/wallet-icon.png',
+    'home': 'assets/icons/home-icon.png',
+    'linkup': 'assets/icons/linkup-icon.png',
+    'settings': 'assets/icons/settings-icon.png',
+  };
+  Color selectedColor = const Color(0xFF1568EF);
+  Color unselectedColor = const Color(0xFF000000);
+  
+  navNavigator({required BuildContext context, required final destination}){
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => destination), // Add animation
@@ -22,39 +32,15 @@ class _NavbarState extends State<Navbar> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    currentPage = 'home';
+  }
+
+  @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    String currentPage = widget.currentPage;
-    Color selectedColor = Color(0xFF1568EF);
-    Color unselectedColor = Color(0xFF000000);
-
-    Color homeIconColor = unselectedColor;
-    Color walletIconColor = unselectedColor;
-    Color linkupIconColor = unselectedColor;
-    Color settingsIconColor = unselectedColor;
-    Color contactlessIconColor = unselectedColor;
-
-    if (currentPage == 'home'){
-      setState(() {
-        homeIconColor = selectedColor;
-      });
-    } else if (currentPage == 'wallet'){
-      setState(() {
-        walletIconColor = selectedColor;
-      });
-    } else if (currentPage == 'linkup'){
-      setState(() {
-        linkupIconColor = selectedColor;
-      });
-    } else if (currentPage == 'settings'){
-      setState(() {
-        settingsIconColor = selectedColor;
-      });
-    } else if (currentPage == 'contactless'){
-      setState(() {
-        contactlessIconColor = selectedColor;
-      });
-    }
+    pageDataProvider = Provider.of<PageDataProvider>(context);
 
     late double navWidth;
     return LayoutBuilder(
@@ -75,56 +61,32 @@ class _NavbarState extends State<Navbar> {
               Container(
                 height: 60,
                 width: navWidth,
-                // constraints: BoxConstraints(maxWidth: 360, minWidth: 150),
-                margin: EdgeInsets.only(top: 15, bottom: 10, left: 25, right: 25),
+                margin: const EdgeInsets.only(top: 15, bottom: 10, left: 25, right: 25),
                 decoration: BoxDecoration(
-                  color: Color(0xFFFFFFFF),
+                  color: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconButton(
-                      onPressed: () {}, 
-                      icon: ImageIcon(
-                        AssetImage('assets/icons/contactless-icon.png'),
-                        size: 30,
-                        color: contactlessIconColor,
+                  children: List.generate(
+                    navIcons.entries.length, 
+                    (i) => GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          currentPage = navIcons.keys.elementAt(i);
+                          // pageDataProvider.setCurrentScreen(currentPage);
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        child: ImageIcon(
+                          AssetImage(navIcons.values.elementAt(i)),
+                          size: 30,
+                          color: navIcons.keys.elementAt(i) == currentPage ? selectedColor : unselectedColor,
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () {}, 
-                      icon: ImageIcon(
-                        AssetImage('assets/icons/wallet-icon.png'),
-                        size: 30,
-                        color: walletIconColor,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {NavNavigator(context: context, destination: HomeScreen());}, 
-                      icon: ImageIcon(
-                        AssetImage('assets/icons/home-icon.png'),
-                        size: 30,
-                        color: homeIconColor,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {}, 
-                      icon: ImageIcon(
-                        AssetImage('assets/icons/linkup-icon.png'),
-                        size: 30,
-                        color: linkupIconColor,
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: () {NavNavigator(context: context, destination: SettingsScreen());}, 
-                      icon: ImageIcon(
-                        AssetImage('assets/icons/settings-icon.png'),
-                        size: 30,
-                        color: settingsIconColor,
-                      ),
-                    ),
-                  ],
+                    )
+                  ),
                 ),
               ),
             ],

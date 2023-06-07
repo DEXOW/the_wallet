@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -72,30 +74,33 @@ class FireAuth{
       throw Exception(e);
     }
     FirebaseFirestore firestore = FirebaseFirestore.instance;
+    String socialCardId = firestore.collection('users').doc().id;
     try{
       await firestore.collection('users').doc(user!.uid).set({
         'fname': fname.trim(),
         'lname': lname.trim(),
-        'email': email.trim(),
+        'email': email.trim().toLowerCase(),
         'dobDate': dobDate.trim(),
         'dobMonth': dobMonth.trim(),
         'dobYear': dobYear.trim(),
         'phoneNoCode': phoneNoCode.trim(),
         'phoneNo': phoneNo.trim(),
+        'pictureUrl': '',
+        'socialCardId': socialCardId,
       }).then((value) async {
 
-        await firestore.collection('users').doc(user!.uid).collection('cards').doc('socialCard').set({
-          'cardID': firestore.collection('users').doc().id,
+        await firestore.collection('users').doc(user!.uid).collection('cards').doc(socialCardId).set({
           'fname': fname.trim(),
           'lname': lname.trim(),
           'career': '',
           'age': DateTime(DateTime.now().year - DateTime.parse('$dobYear-$dobMonth-$dobDate').year).year.toString(),
-          'email': email.trim(),
+          'email': email.trim().toLowerCase(),
           'phoneNo': phoneNoCode.trim() + phoneNo.trim(),
           'linkedin': '',
           'twitter': '',
           'facebook': '',
           'instagram': '',
+          'pictureUrl': '',
         });
       });
     } catch (e) {
@@ -116,7 +121,6 @@ class FireAuth{
   static Future<bool> verifyPhoneNumber({
     required String phoneNumber,
     required BuildContext context,
-    required Function onCodeSent,
   }) async {
     print("verifyPhoneNumber");
     FirebaseAuth auth = FirebaseAuth.instance;

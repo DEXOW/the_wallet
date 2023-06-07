@@ -768,7 +768,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     if (_registerFormP3Key.currentState!.validate()){
                       bool phoneExist = await FireStore.checkPhoneExist(context: context, phoneNo: controllers[8].text + controllers[9].text);
                       if (!phoneExist){
-                        FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text, onCodeSent: onCodeSent);
+                        FireAuth.verifyPhoneNumber(context: context, phoneNumber: controllers[8].text + controllers[9].text);
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) => OtpScreen(controllers: controllers)
                         ));

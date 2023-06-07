@@ -16,7 +16,7 @@ class SocialCardData extends CardData{
   String twitter;
   String instagram;
   String facebook;
-  String imgUrl;
+  String pictureUrl;
 
   SocialCardData({
     required this.fname,
@@ -29,6 +29,6 @@ class SocialCardData extends CardData{
     required this.twitter,
     required this.instagram,
     required this.facebook,
-    required this.imgUrl,
+    required this.pictureUrl,
   }) : super();
 }

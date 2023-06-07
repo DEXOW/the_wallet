@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:the_wallet/firebase_options.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/data-classes/user-data.dart';
+import 'package:the_wallet/screens/components/data-classes.dart';
 import 'package:the_wallet/screens/startup/startup-screen.dart';
 
 // import 'package:the_wallet/RSA.dart';
@@ -28,6 +29,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: UserDataProvider()),
+        ChangeNotifierProvider.value(value: PageDataProvider()),
       ],
       child: const MyApp(),
     ),

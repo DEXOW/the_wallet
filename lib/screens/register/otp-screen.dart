@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:pinput/pinput.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
 import 'package:the_wallet/screens/register/successful-screen.dart';
 
@@ -19,39 +20,42 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
 
-  late List<TextEditingController> otpControllers;
-  late List<FocusNode> otpFocusNodes;
-  late List<FocusNode> otpFocusNodes2;
-  late List<String> otpDigits;
+  late TextEditingController otpController;
+  // late List<String> otpDigits;
   final int digitCount = 6;
   late bool otpFilled;
 
   @override
   void initState() {
     super.initState();
-    otpControllers = List<TextEditingController>.generate(digitCount, (index) => TextEditingController());
-    otpFocusNodes = List<FocusNode>.generate(digitCount, (index) => FocusNode());
-    otpFocusNodes2 = List<FocusNode>.generate(digitCount, (index) => FocusNode());
-    otpDigits = List<String>.generate(digitCount, (index) => "");
+    otpController = TextEditingController();
+    // otpDigits = List<String>.generate(digitCount, (index) => "");
     otpFilled = false;
   }
 
   @override
   void dispose() {
-    otpControllers.forEach((element) => element.dispose());
-    otpFocusNodes.forEach((element) => element.dispose());
-    otpFocusNodes2.forEach((element) => element.dispose());
+    otpController.dispose();
     super.dispose();
   }
 
-  void onCodeSent(String verificationId, int? resendToken) async {
-    setState(() {
-      
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    final defaultPinTheme = PinTheme(
+      width: 45,
+      height: 60,
+      margin: EdgeInsets.only(top: 60),
+      textStyle: TextStyle(
+        fontSize: 20, 
+        color: Color(0xFFEAEFF3), 
+        fontWeight: FontWeight.w600
+      ),
+      decoration: BoxDecoration(
+        color: Color(0x5E606060),
+        borderRadius: BorderRadius.circular(10),
+      ),
+    );
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -101,12 +105,12 @@ class _OtpScreenState extends State<OtpScreen> {
                               ),
                             ),
                             Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: 
-                                  //6 text boxes for OTP
-                                  List.generate(digitCount, (index) => buildDigitField(index)),
-                              ),
+                              child: Pinput(
+                              length: 6,
+                              defaultPinTheme: defaultPinTheme,
+                              controller: otpController,
+                              onChanged: (value){updateOtpValue();},
+                            ),
                             ),
                             Container(
                               margin: EdgeInsets.only(top: 30),
@@ -124,7 +128,7 @@ class _OtpScreenState extends State<OtpScreen> {
                               margin: EdgeInsets.only(top: 5),
                               child: TextButton(
                                 onPressed: () {
-                                  FireAuth.verifyPhoneNumber(context: context, phoneNumber: widget.controllers[8].text + widget.controllers[9].text, onCodeSent: onCodeSent);
+                                  FireAuth.verifyPhoneNumber(context: context, phoneNumber: widget.controllers[8].text + widget.controllers[9].text);
                                 },
                                 child: Text(
                                   "Resend OTP",
@@ -161,7 +165,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     onPressed: () async {
                                       if (otpFilled) 
                                       {
-                                        PhoneAuthCredential credential = await FireAuth.submitOTP(context: context,otp: otpDigits.join(), controllers: widget.controllers);
+                                        PhoneAuthCredential credential = await FireAuth.submitOTP(context: context,otp: otpController.text, controllers: widget.controllers);
                                         await FirebaseAuth.instance.signOut();
                                         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SuccessScreen(controllers: widget.controllers,credential: credential)), (Route<dynamic> route) => route.isFirst);
                                       }
@@ -240,51 +244,8 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  Widget buildDigitField(int index) {
-    return Container(
-      width: 40.0,
-      height: 60.0,
-      margin: EdgeInsets.only(top: 60, left: 4.0, right: 4.0),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: Color(0x5E606060),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: RawKeyboardListener(
-        focusNode: otpFocusNodes2[index],
-        onKey: (event) {
-          if (event.logicalKey == LogicalKeyboardKey.backspace) {
-            if (otpControllers[index].text.isEmpty && index > 0) {
-              // Move focus to the previous field
-              FocusScope.of(context).requestFocus(otpFocusNodes[index - 1]);
-            }
-          }
-        },
-        child: TextField(
-          controller: otpControllers[index],
-          focusNode: otpFocusNodes[index],
-          textAlign: TextAlign.center,
-          keyboardType: TextInputType.number,
-          maxLength: 1,
-          decoration: InputDecoration(
-            counterText: '',
-            border: InputBorder.none
-          ),
-          onChanged: (value) {
-            otpDigits[index] = value;
-            if (value.isNotEmpty && index < digitCount - 1) {
-              // Move focus to the next field
-              FocusScope.of(context).requestFocus(otpFocusNodes[index + 1]);
-            }
-            updateOtpValue();
-          },
-        ),
-      ),
-    );
-  }
-
   void updateOtpValue() {
-    final otp = otpDigits.join();
+    final otp = otpController.text;
     if (otp.length == digitCount) {
       // All digits entered
       setState(() {
@@ -297,5 +258,49 @@ class _OtpScreenState extends State<OtpScreen> {
       });
     }
   }
+  // Widget buildDigitField() {
+    // return Container(
+    //   width: 40.0,
+    //   height: 60.0,
+    //   margin: EdgeInsets.only(top: 60, left: 4.0, right: 4.0),
+    //   alignment: Alignment.center,
+    //   decoration: BoxDecoration(
+    //     color: Color(0x5E606060),
+    //     borderRadius: BorderRadius.circular(10.0),
+    //   ),
+    //   child: RawKeyboardListener(
+    //     focusNode: otpFocusNodes2[index],
+    //     onKey: (event) {
+    //       if (event.logicalKey == LogicalKeyboardKey.backspace) {
+    //         if (otpControllers[index].text.isEmpty && index > 0) {
+    //           // Move focus to the previous field
+    //           FocusScope.of(context).requestFocus(otpFocusNodes[index - 1]);
+    //         }
+    //       }
+    //     },
+    //     child: TextField(
+    //       controller: otpControllers[index],
+    //       focusNode: otpFocusNodes[index],
+    //       textAlign: TextAlign.center,
+    //       keyboardType: TextInputType.number,
+    //       maxLength: 1,
+    //       decoration: InputDecoration(
+    //         counterText: '',
+    //         border: InputBorder.none
+    //       ),
+    //       onChanged: (value) {
+    //         otpDigits[index] = value;
+    //         if (value.isNotEmpty && index < digitCount - 1) {
+    //           // Move focus to the next field
+    //           FocusScope.of(context).requestFocus(otpFocusNodes[index + 1]);
+    //         }
+    //         updateOtpValue();
+    //       },
+    //     ),
+    //   ),
+    // );
+  // }
+
+  
 
 }

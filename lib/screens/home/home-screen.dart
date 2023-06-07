@@ -1,11 +1,17 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:the_wallet/screens/components/data-classes.dart';
 import 'package:the_wallet/screens/components/navbar.dart';
 import 'package:the_wallet/data-classes/user-data.dart';
 import 'package:the_wallet/screens/login/login-screen.dart';
+import 'package:the_wallet/screens/settings/settings-screen.dart';
+import 'package:the_wallet/screens/startup/startup-screen.dart';
+
+import '../../firebase/fire_auth.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,17 +23,15 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   late UserDataProvider userDataProvider;
+  late PageDataProvider pageDataProvider;
+  late ValueNotifier<String> currentScreen;
 
   @override
   void initState() {
     super.initState();
-
-    if (auth.currentUser == null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-      );
-    }
+    currentScreen = ValueNotifier('home');
+    print('UID =${auth.currentUser?.uid} , Email = ${auth.currentUser?.email}');
+    // auth.signOut();
   }
 
   @override
@@ -38,6 +42,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     userDataProvider = Provider.of<UserDataProvider>(context);
+    pageDataProvider = Provider.of<PageDataProvider>(context);
+
+    if (auth.currentUser == null) {
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => LoginScreen()),
+      //     (route) => route.isFirst,
+      //   );
+      // });
+      FireAuth.signInUsingEmailPassword(email: 'thinaltp@gmail.com', password: 'TTP@2k4', context: context);
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -49,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return Scaffold(
               resizeToAvoidBottomInset: false, //Keyboard doesn't resize the screen
               body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid).snapshots(),
+                stream: FirebaseFirestore.instance.collection('users').doc(auth.currentUser?.uid).snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
@@ -82,8 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     dobMonth: data['dobMonth'],
                     dobYear: data['dobYear'],
                     phoneNo: data['phoneNo'],
-                    imgUrl: data['imgUrl'],
+                    pictureUrl: data['pictureUrl'],
+                    socialCardId: data['socialCardId'],
                   );
+                  // print(userDataProvider.userData.socialCardId);
                   
                   return SizedBox( //SizedBox to set the height and width of the Page
                     height: screenHeight,
@@ -109,25 +127,34 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             Container( // Middle section
-                              height: screenHeight * 0.9,
+                              height: screenHeight * 0.8,
                               margin: EdgeInsets.symmetric(horizontal: 40),
-                              child: Column(
-                                children: [
-                                  //All your content for the page goes in here (Green zone)
-                                ],
+                              child: ValueListenableBuilder<String>(
+                                valueListenable: currentScreen,
+                                builder: (context, value, child) {
+                                  pageDataProvider.addListener(() {
+                                    currentScreen.value = pageDataProvider.currentScreen;
+                                  });
+                                  if (currentScreen.value == 'settings') {
+                                    return SettingsScreen();
+                                  } else { 
+                                    return Center(child: Text('Home Screen'));
+                                  }
+                                }
                               )
                             ),
                           ]
                         ),
                         Positioned( //Navbar
                           bottom: 0,
-                          child: Navbar(currentPage: 'home'),
+                          child: Navbar(),
                         ),
                       ]
                     ),
                   );
                 }
               ),
+              // bottomNavigationBar: Navbar(),
             );
           }
         ),

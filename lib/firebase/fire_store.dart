@@ -8,7 +8,7 @@ class FireStore {
   }) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final userList = await firestore.collection('users').get();
-    if (userList.docs.any((element) => element['email'] == email)) { 
+    if (userList.docs.any((element) => element['email'] == email.trim().toLowerCase())) { 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('User account already exists'),

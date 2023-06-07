@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:the_wallet/screens/login/login-screen.dart';
+import 'package:the_wallet/screens/home/home-screen.dart';
 import 'package:the_wallet/screens/register/register-screen.dart';
 
 class StartupScreen extends StatelessWidget {
@@ -84,7 +85,7 @@ class StartupScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
+                              builder: (context) => HomeScreen()),
                         );
                       },
                       style: ButtonStyle(
