@@ -3,9 +3,11 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/components/socialCard.dart';
 
 class ScanQrCodeWidget extends StatefulWidget {
@@ -48,6 +50,7 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
   late String? scannedData = '';
+  late String? finalCardID;
 
   SocialCardData socialcardData = SocialCardData(
       fname: '',
@@ -67,7 +70,6 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
     this.controller = controller;
     String? cardID;
     Map<String, dynamic> cardIDMAP;
-    String? finalCardID;
     controller.scannedDataStream.listen((scanData) async {
       // Handle the scanned QR code data here
       setState(() {
@@ -80,6 +82,8 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
       // Pause the scanner after successful scan
       controller.pauseCamera();
 
+      // await addCard(finalCardID!);
+
       await searchCardFirestore(finalCardID!);
 
       openSocialCard();
@@ -87,6 +91,19 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
       // await searchCardFirestore(finalCardID!);
       // controller.dispose();
     });
+  }
+
+  Future<void> addCard(String cardID) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    final docRef = FirebaseFirestore.instance
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection('cards')
+        .doc('savedsocialcards');
+    final doc = await docRef.get();
+    final List<dynamic> array = doc['cardIDs'];
+    array.add(cardID);
+    await docRef.update({'cardIDs': array});
   }
 
   void openSocialCard() {
@@ -114,7 +131,14 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                   pictureUrl: socialcardData.pictureUrl,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    addCard(finalCardID!);
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(); // Close the dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Card successfully added', style: TextStyle(color: Color.fromARGB(255, 174, 167, 167)),), backgroundColor: bgColor,),
+                    );
+                  },
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
@@ -142,11 +166,13 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     final cardList = await firestore.collectionGroup('cards').get();
 
-    if (cardList.docs.any((element) => element['cardID'] == cardID)) {
+    if (cardList.docs.any((element) => element.id == cardID)) {
       Map<String, dynamic> cardData;
-      cardData = cardList.docs
-          .firstWhere((element) => element['cardID'] == cardID)
-          .data();
+      // cardData = cardList.docs.firstWhere((element) => element['cardID'] == cardID).data();
+
+      cardData =
+          cardList.docs.where((element) => element.id == cardID).first.data();
+
       socialcardData.fname = cardData['fname'];
       socialcardData.lname = cardData['lname'];
       socialcardData.career = cardData['career'];
@@ -158,6 +184,7 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
       // socialcardData.instagram = cardData['instagram'];
       // socialcardData.facebook = cardData['facebook'];
       socialcardData.pictureUrl = cardData['pictureUrl'];
+      // }
     }
   }
 

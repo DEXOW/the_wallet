@@ -202,6 +202,7 @@ class _linkupwidgetstate extends State<LinkUpWidget> {
   void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       result.value = tag.data;
+      print('This is the result ${result}');
 
       NfcManager.instance.stopSession();
     });
