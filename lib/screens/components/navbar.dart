@@ -65,8 +65,8 @@ class _NavbarState extends State<Navbar> {
           Container(
             height: 60,
             // width: 360,
-            constraints: BoxConstraints(maxWidth: 360, minWidth: 150),
-            margin: EdgeInsets.only(top: 15, bottom: 10, left: 25, right: 25),
+            constraints: BoxConstraints(maxWidth: 310, minWidth: 150),
+            margin: EdgeInsets.only(top: 15, bottom: 20, left: 25, right: 25),
             decoration: BoxDecoration(
               color: Color(0xFFFFFFFF),
               borderRadius: BorderRadius.circular(50),
