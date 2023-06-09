@@ -61,7 +61,7 @@ class FireAuth {
           'fname': fname.trim(),
           'lname': lname.trim(),
           'email': email.trim(),
-          'dobDate': DateTime.parse(dob.trim()),
+          'dob': DateTime.parse(dob.trim()),
           'phoneNoCode': phoneNoCode.trim(),
           'phoneNo': phoneNo.trim(),
           'picutreUrl': '',

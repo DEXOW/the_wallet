@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:the_wallet/firebase_options.dart';
+
 import 'package:the_wallet/constants.dart';
+import 'package:the_wallet/data_classes/user_data.dart';
 import 'package:the_wallet/screens/startup/startup_screen.dart';
 
 Future<FirebaseApp> _initializeFirebase() async {
@@ -12,8 +16,25 @@ Future<FirebaseApp> _initializeFirebase() async {
   return firebaseApp;
 }
 
+class GlobalProvider extends ChangeNotifier {
+  String currentScreen = 'home';
+
+  void setCurrentScreen(newCurrentScreen){
+    currentScreen = newCurrentScreen;
+    notifyListeners();
+  }
+}
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: UserDataProvider()),
+        ChangeNotifierProvider.value(value: GlobalProvider()),
+      ],
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

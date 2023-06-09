@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:the_wallet/firebase/fire_auth.dart';
+import 'package:the_wallet/main.dart';
 
-import 'package:the_wallet/screens/home/home_screen.dart';
+import 'package:the_wallet/screens/root/root_screen.dart';
 import 'package:the_wallet/screens/login/reset_password.dart';
 import 'package:the_wallet/validate.dart';
 
@@ -15,6 +17,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  late GlobalProvider globalProvider;
   final _loginFormKey = GlobalKey<FormState>();
   late TextEditingController usrEmail;
   late TextEditingController usrPassword;
@@ -38,16 +41,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void login(BuildContext context) async {
+    globalProvider = Provider.of<GlobalProvider>(context, listen: false);
     User? user = await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
     if (user != null){
+      globalProvider.setCurrentScreen('home');
       if (context.mounted){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RootScreen()));
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (FirebaseAuth.instance.currentUser != null){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RootScreen()));
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(

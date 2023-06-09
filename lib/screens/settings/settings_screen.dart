@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:the_wallet/data_classes/user_data.dart';
 import 'package:the_wallet/main.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({super.key});
   
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SettingsScreenState extends State<SettingsScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   final ValueNotifier<bool> updateNavbar = ValueNotifier(false);
   late UserDataProvider userDataProvider;
@@ -19,6 +19,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context){
-    return const Center(child: Text('Home Screen'),);
+    return const Center(child: Text('Settings Screen'),);
   }
 }
