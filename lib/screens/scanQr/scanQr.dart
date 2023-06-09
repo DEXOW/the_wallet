@@ -136,7 +136,7 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop(); // Close the dialog
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Card successfully added', style: TextStyle(color: Color.fromARGB(255, 174, 167, 167)),), backgroundColor: bgColor,),
+                      SnackBar(content: Text('Card Successfully Added', style: TextStyle(color: Color.fromARGB(255, 174, 167, 167)),), backgroundColor: bgColor,),
                     );
                   },
                   style: ButtonStyle(
