@@ -76,12 +76,19 @@ class _RootScreenState extends State<RootScreen> {
                 padding: const EdgeInsets.only(right: 20),
                 child: IconButton(
                   onPressed: () {
-                    auth.signOut();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      (route) => route.isFirst,
-                    );
+                    try{
+                      auth.signOut();
+                      auth.currentUser?.reload();
+                      if (auth.currentUser == null){
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                          (route) => route.isFirst,
+                        );
+                      }
+                    } catch (e) {
+                      rethrow;
+                    }
                   },
                   icon: const Icon(Icons.logout),
                 ),

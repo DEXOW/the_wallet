@@ -41,20 +41,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   void login(BuildContext context) async {
-    globalProvider = Provider.of<GlobalProvider>(context, listen: false);
-    User? user = await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
-    if (user != null){
-      globalProvider.setCurrentScreen('home');
-      if (context.mounted){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RootScreen()));
+    try{
+      globalProvider = Provider.of<GlobalProvider>(context, listen: false);
+      User? user = await FireAuth.signInUsingEmailPassword(email: usrEmail.text.trim(), password: usrPassword.text, context: context);
+      if (user != null){
+        globalProvider.setCurrentScreen('home');
+        if (context.mounted){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RootScreen()));
+        }
       }
+    } catch (e){
+      rethrow;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (FirebaseAuth.instance.currentUser != null){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RootScreen()));
+    try{
+      if (FirebaseAuth.instance.currentUser != null){
+        FirebaseAuth.instance.signOut();
+      }
+    } catch (e){
+      rethrow;
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
