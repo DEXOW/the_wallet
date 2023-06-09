@@ -48,6 +48,23 @@ class _FAQScreenState extends State<FAQScreen> {
                     padding: EdgeInsets.only(top: 10, left: 20),
                     child: Row(
                       children: [
+                        GestureDetector(
+                                    onTap: () {
+                                      // Add your navigation logic here
+                                      // For example, you can use Navigator to navigate to another screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                SettingsScreen()),
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  SizedBox(width: 1),
                         Container(
                           child: Image(
                             image:
@@ -71,21 +88,6 @@ class _FAQScreenState extends State<FAQScreen> {
                             margin: EdgeInsets.only(bottom: 20),
                             child: Row(
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SettingsScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    size: 30,
-                                  ),
-                                ),
-                                SizedBox(width: 1),
                                 Expanded(
                                   child: Text(
                                     "FAQ",
@@ -112,10 +114,11 @@ class _FAQScreenState extends State<FAQScreen> {
                             ),
                           ),
 
-                          SizedBox(height: 50),
+                          const SizedBox(height: 50),
                           CollapsiblePanel(
                             title: 'How to set up a digital wallet account?',
                             content:
+                            
                                 'To set up a digital wallet account, create an account using your personal information, and link your preferred payment methods, such as a credit card or bank account.',
                           ),
                           SizedBox(height: 10),
@@ -294,17 +297,20 @@ class _CollapsiblePanelState extends State<CollapsiblePanel> {
           //   ),
 
           if (_isExpanded)
-            ClipRRect(
-              borderRadius: BorderRadius.circular(5), // Set the border radius
-              child: Container(
-                color: Color.fromARGB(141, 192, 192, 192),
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  widget.content,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'Inter',
-                    fontSize: 14,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5), // Set the border radius
+                child: Container(
+                  color: Color.fromARGB(141, 192, 192, 192),
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    widget.content,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'Inter',
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),

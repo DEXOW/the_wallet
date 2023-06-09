@@ -65,380 +65,384 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       // Middle section
                       height: screenHeight * 0.9,
                       margin: EdgeInsets.symmetric(horizontal: 40),
-                      child: Column(
-                        children: [
-                          //All your content for the page goes in here (Green zone)
-
-                          Container(
-                            margin: EdgeInsets.only(bottom: 80),
-                            child: Text(
-                              "Settings",
-                              style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.bold,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            //All your content for the page goes in here (Green zone)
+                      
+                            Container(
+                              margin: EdgeInsets.only(bottom: 80),
+                              child: Text(
+                                "Settings",
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
-                          ),
-
-                          Column(
-                            children: [
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                ManageWalletScreen()));
-                                    // Add your button click logic here
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                      
+                            Column(
+                              children: [
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ManageWalletScreen()));
+                                      // Add your button click logic here
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/MW.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Manage Wallet',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/MW.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'Manage Wallet',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 20),
-
-                              // Add spacing between the buttons
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Add your button click logic here
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                SizedBox(height: 20),
+                      
+                                // Add spacing between the buttons
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Add your button click logic here
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/logbook.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Log Book',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/logbook.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'Log Book',
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-                              SizedBox(
-                                  height:
-                                      20), // Add spacing between the buttons
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Add your button click logic here
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                                SizedBox(
+                                    height:
+                                        20), // Add spacing between the buttons
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Add your button click logic here
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/Notification.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Notification settings',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/Notification.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'Notification settings',
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-
-                              SizedBox(
-                                  height:
-                                      60), // Add spacing between the buttons
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Add your button click logic here
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) => FAQScreen()));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                      
+                                SizedBox(
+                                    height:
+                                        60), // Add spacing between the buttons
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Add your button click logic here
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => FAQScreen()));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/FAQ.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'FAQ',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/FAQ.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'FAQ',
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-
-                              SizedBox(
-                                  height:
-                                      20), // Add spacing between the buttons
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            ContactUsScreen())); // Add your button click logic here
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                      
+                                SizedBox(
+                                    height:
+                                        20), // Add spacing between the buttons
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) =>
+                                              ContactUsScreen())); // Add your button click logic here
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/Contact us.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Contact us',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/Contact us.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'Contact us',
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-
-                              SizedBox(
-                                  height:
-                                      20), // Add spacing between the buttons
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Add your button click logic here
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                TermAndCondScreen()));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                      
+                                SizedBox(
+                                    height:
+                                        20), // Add spacing between the buttons
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Add your button click logic here
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  TermAndCondScreen()));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/T & C.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Terms & Conditions',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/T & C.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'Terms & Conditions',
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-
-                              SizedBox(
-                                  height:
-                                      20), // Add spacing between the buttons
-                              Container(
-                                width: 300,
-                                height: 45,
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    // Add your button click logic here
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                privacyPolicyScreen()));
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.all(10),
-                                    backgroundColor:
-                                        Color.fromARGB(255, 192, 192, 192),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
+                      
+                                SizedBox(
+                                    height:
+                                        20), // Add spacing between the buttons
+                                Container(
+                                  width: 300,
+                                  height: 45,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // Add your button click logic here
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  privacyPolicyScreen()));
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: EdgeInsets.all(10),
+                                      backgroundColor:
+                                          Color.fromARGB(255, 192, 192, 192),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Image.asset(
+                                                'assets/icons/Privacy Policy.png',
+                                                width: 20,
+                                                height: 30,
+                                              ),
+                                              SizedBox(width: 10),
+                                              Text(
+                                                'Privacy Policy',
+                                                style: TextStyle(
+                                                  fontSize: 17,
+                                                  fontFamily: 'Inter',
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Expanded(
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Image.asset(
-                                              'assets/icons/Privacy Policy.png',
-                                              width: 20,
-                                              height: 30,
-                                            ),
-                                            SizedBox(width: 10),
-                                            Text(
-                                              'Privacy Policy',
-                                              style: TextStyle(
-                                                fontSize: 17,
-                                                fontFamily: 'Inter',
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
                                 ),
-                              ),
-                            ],
-                          )
-                        ],
+                                
+                              ],
+                            )
+                          ],
+                        ),
                       )),
                 ]),
                 Positioned(

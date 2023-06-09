@@ -64,6 +64,23 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     padding: EdgeInsets.only(top: 10, left: 20),
                     child: Row(
                       children: [
+                        GestureDetector(
+                                    onTap: () {
+                                      // Add your navigation logic here
+                                      // For example, you can use Navigator to navigate to another screen
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                ManageWalletScreen()),
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      size: 30,
+                                    ),
+                                  ),
+                                  SizedBox(width: 1),
                         Container(
                           child: Image(
                             image:
@@ -85,22 +102,6 @@ class _FeedbackFormState extends State<FeedbackForm> {
                           margin: EdgeInsets.only(bottom: 20),
                           child: Row(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ManageWalletScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Icon(
-                                  Icons.arrow_back_ios,
-                                  size: 30,
-                                ),
-                              ),
-                              SizedBox(width: 1),
                               Expanded(
                                 child: Text(
                                   "Send Feedback",
