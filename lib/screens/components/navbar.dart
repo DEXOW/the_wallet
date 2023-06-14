@@ -61,7 +61,7 @@ class _NavbarState extends State<Navbar> {
               Container(
                 height: 60,
                 width: navWidth,
-                margin: const EdgeInsets.only(top: 15, bottom: 10, left: 25, right: 25),
+                margin: const EdgeInsets.only(top: 0, bottom: 10, left: 25, right: 25),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(50),

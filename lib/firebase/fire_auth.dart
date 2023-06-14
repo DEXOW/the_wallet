@@ -66,6 +66,8 @@ class FireAuth {
           'phoneNo': phoneNo.trim(),
           'picutreUrl': '',
           'socialCardId': socialCardId,
+          'savedSocialCards': {},
+          'recentCards': {},
         }).then((value) async {
 
           await firestore.collection('users').doc(user!.uid).collection('cards').doc(socialCardId).set({
@@ -80,6 +82,7 @@ class FireAuth {
             'twitter': '',
             'facebook': '',
             'instagram': '',
+            'pictureUrl': '',
           });
         });
       });

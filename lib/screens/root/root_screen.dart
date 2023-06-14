@@ -135,40 +135,35 @@ class _RootScreenState extends State<RootScreen> {
                     pictureUrl: data['pictureUrl'],
                     socialCardId: data['socialCardId'],
                   );
-                  // print(userDataProvider.userData.fname);
                   
                   return SizedBox( //SizedBox to set the height and width of the Page
                     height: screenHeight,
                     width: screenWidth,
-                    child: Stack(
+                    child: Column(
                       children: [
-                        Column(
-                          children: [
-                            Container( // Middle section
-                              height: screenHeight,
-                              margin: const EdgeInsets.symmetric(horizontal: 40),
-                              child: LayoutBuilder(
-                                builder: (BuildContext context,Constraints constraints) {
-                                  switch (globalProvider.currentScreen) {
-                                    case 'home':
-                                      return const HomeScreen();
-                                    case 'contactless':
-                                      return const ContactlessPayScreen();
-                                    case 'wallet':
-                                      return const WalletScreen();
-                                    case 'linkup':
-                                      return const LinkUpScreen();
-                                    case 'settings':
-                                      return const SettingsScreen();
-                                    default:
-                                      return const Center(child: Text('Invalid Screen'));
-                                  }
-                                }
-                              ) 
-                            ),
-                          ]
+                        Container( // Middle section
+                          height: screenHeight,
+                          margin: const EdgeInsets.symmetric(horizontal: 40),
+                          child: LayoutBuilder(
+                            builder: (BuildContext context,Constraints constraints) {
+                              switch (globalProvider.currentScreen) {
+                                case 'home':
+                                  return const HomeScreen();
+                                case 'contactless':
+                                  return const ContactlessPayScreen();
+                                case 'wallet':
+                                  return const WalletScreen();
+                                case 'linkup':
+                                  return const LinkUpScreen();
+                                case 'settings':
+                                  return const SettingsScreen();
+                                default:
+                                  return const Center(child: Text('Invalid Screen'));
+                              }
+                            }
+                          ), 
                         ),
-                      ]
+                      ],
                     ),
                   );
                 }
