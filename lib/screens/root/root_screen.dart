@@ -157,7 +157,7 @@ class _RootScreenState extends State<RootScreen> {
                                     case 'wallet':
                                       return const WalletScreen();
                                     case 'linkup':
-                                      return const LinkUpScreen();
+                                      return LinkUpScreen();
                                     case 'settings':
                                       return const SettingsScreen();
                                     default:
