@@ -142,8 +142,15 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      ),
+                      ),
+                    foregroundColor: MaterialStateProperty.all<Color>(primaryBgColor),
                   ),
-                  child: SizedBox(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     width: 200,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,7 +160,7 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                       ],
                     ),
                   ),
-                )
+                  )
               ],
             ),
           ),
