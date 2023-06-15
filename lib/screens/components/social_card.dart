@@ -248,37 +248,37 @@ class ViewSocialCard extends StatelessWidget {
                 child: Column(
                   children: [
                     buildSocialCardRow(
-                      'assets/images/email.png',
+                      'assets/icons/email.png',
                       'email',
                       false,
                     ),
                     const SizedBox(height: 8),
                     buildSocialCardRow(
-                      'assets/images/phone.png',
+                      'assets/icons/phone.png',
                       'phone',
                       false,
                     ),
                     const SizedBox(height: 8),
                     buildSocialCardRow(
-                      'assets/images/LinkedIn.png',
+                      'assets/icons/LinkedIn.png',
                       'linkedIn',
                       true,
                     ),
                     const SizedBox(height: 8),
                     buildSocialCardRow(
-                      'assets/images/twitter.png',
+                      'assets/icons/twitter.png',
                       'twitter',
                       true,
                     ),
                     const SizedBox(height: 8),
                     buildSocialCardRow(
-                      'assets/images/instagram.png',
+                      'assets/icons/instagram.png',
                       'instagram',
                       true,
                     ),
                     const SizedBox(height: 8),
                     buildSocialCardRow(
-                      'assets/images/facebook.png',
+                      'assets/icons/facebook.png',
                       'facebook',
                       true,
                     ),

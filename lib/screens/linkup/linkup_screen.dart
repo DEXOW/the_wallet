@@ -139,7 +139,7 @@ class _LinkUpScreenState extends State<LinkUpScreen> {
                   });
                 },
                 child: Image.asset(
-                  'assets/images/qrCode.png',
+                  'assets/icons/qrCode.png',
                   width: 30,
                   height: 30,
                 ),
@@ -183,7 +183,7 @@ class _LinkUpScreenState extends State<LinkUpScreen> {
                   });
                 },
                 child: Image.asset(
-                  'assets/images/contactless.png',
+                  'assets/icons/contactless.png',
                   width: 30,
                   height: 30,
                 ),
