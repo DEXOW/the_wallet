@@ -74,7 +74,6 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
       // Handle the scanned QR code data here
       setState(() {
         scannedData = scanData.code;
-        print('This is scanned data $scannedData');
         cardID = scanData.code;
         cardIDMAP = json.decode(cardID!);
         finalCardID = cardIDMAP['cardID'];

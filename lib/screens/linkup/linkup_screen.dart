@@ -44,7 +44,6 @@ class _LinkUpScreenState extends State<LinkUpScreen> {
       if (data != null) {
         socialCardData['cardID'] = data['socialCardId'];
       }
-      print('This is data $socialCardData');
     } catch (e) {
       print(e);
     }
@@ -207,7 +206,6 @@ class _LinkUpScreenState extends State<LinkUpScreen> {
   void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       result.value = tag.data;
-      print('This is the result ${result}');
 
       NfcManager.instance.stopSession();
     });
