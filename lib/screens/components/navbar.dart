@@ -4,7 +4,7 @@ import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/main.dart';
 
 class Navbar extends StatefulWidget {
-  const Navbar({Key? key}) : super(key: key);
+  const Navbar({Key? key, required String currentPage}) : super(key: key);
 
   @override
   State<Navbar> createState() => _NavbarState();

@@ -175,7 +175,7 @@ class _RootScreenState extends State<RootScreen> {
               );
             }
           ),
-          bottomNavigationBar: const Navbar(),
+          bottomNavigationBar: const Navbar(currentPage: '',),
         ),
       ),
     );
