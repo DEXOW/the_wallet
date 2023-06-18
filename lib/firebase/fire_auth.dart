@@ -64,12 +64,14 @@ class FireAuth {
           'dob': DateTime.parse(dob.trim()),
           'phoneNoCode': phoneNoCode.trim(),
           'phoneNo': phoneNo.trim(),
-          'picutreUrl': '',
+          'pictureUrl': '',
           'socialCardId': socialCardId,
+          'savedSocialCards': [],
+          'recentCards': {},
         }).then((value) async {
 
           await firestore.collection('users').doc(user!.uid).collection('cards').doc(socialCardId).set({
-            'cardID': socialCardId,
+            'cardId': socialCardId,
             'fname': fname.trim(),
             'lname': lname.trim(),
             'career': '',
@@ -80,6 +82,7 @@ class FireAuth {
             'twitter': '',
             'facebook': '',
             'instagram': '',
+            'pictureUrl': '',
           });
         });
       });
