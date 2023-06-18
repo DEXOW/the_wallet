@@ -79,10 +79,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   future: FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid).get(),
                   builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    final cardList = snapshot.data!['recentCards'];
+                    final cardList = snapshot.data!['frequentCards'] as Map<String, dynamic>;
                     return Column(
-                      children: List.generate(cardList.length, (index) => FutureBuilder(
-                        future: FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid).collection('cards').doc(cardList[index]).get(), 
+                      children: List.generate(cardList.length < 5 ? cardList.length : 5, (index) => FutureBuilder(
+                        future: FirebaseFirestore.instance.collection('users').doc(auth.currentUser!.uid).collection('cards').doc(cardList.keys.toList()[index]).get(), 
                         builder: (context, snapshot) {
                           if(snapshot.hasData && snapshot.data != null){
                             final cardData = snapshot.data!.data() as Map<String, dynamic>;
