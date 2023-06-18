@@ -8,8 +8,10 @@ class StartupScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     // double screenWidth = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           body: Stack(
             alignment: AlignmentDirectional.center,
             children: [

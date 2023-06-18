@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:the_wallet/screens/components/global.dart';
 import 'package:the_wallet/data_classes/user_data.dart';
 import 'package:the_wallet/screens/components/card_templates.dart';
 
@@ -18,6 +19,10 @@ class _HomeScreenState extends State<HomeScreen> {
   late UserDataProvider userDataProvider;
   late DateTime now;
   String greeting = '';
+
+  void _showOverlay(BuildContext context, Widget content) {
+    Navigator.of(context).push(ModalOverlay(overlayContent: content));
+  }
 
   @override
   Widget build(BuildContext context){
@@ -83,9 +88,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             final cardData = snapshot.data!.data() as Map<String, dynamic>;
                             switch (cardData['cardType']){
                               case 'SIC':
-                                return stdCardTemplate(cardData: cardData);
+                                return GestureDetector( 
+                                  onTap: (){
+                                    _showOverlay(context, stdCardView(cardData: cardData));
+                                  },
+                                  child: stdCardTemplate(cardData: cardData),
+                                );
                               case 'NIC':
-                                return idCardTemplate(cardData: cardData);
+                                return GestureDetector( 
+                                  onTap: (){
+                                    _showOverlay(context, nicCardView(cardData: cardData));
+                                  },
+                                  child: nicCardTemplate(cardData: cardData),
+                                );
                               default:
                                 return Container();
                             }
@@ -104,27 +119,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         )
       ]
-    );
-  }
-
-  Widget cardTemplate(String cardName){
-    return Container(
-      height: 180,
-      width: 300,
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: Center(
-        child: Text(
-          cardName,
-          style: const TextStyle(
-            fontSize: 20,
-            color: Colors.black,
-          ),
-        ),
-      )
     );
   }
 }
