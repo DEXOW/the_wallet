@@ -19,6 +19,13 @@ class ChooseCardForContactlessWidegt
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.pop(context)),
+      ),
       body: SafeArea(
         child: LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
@@ -31,7 +38,7 @@ class ChooseCardForContactlessWidegt
                     false, //Keyboard doesn't resize the screen
                 body: Column(
                   children: [
-                    SizedBox(height: 70),
+                    SizedBox(height: 40),
                     Center(
                       child: Text(
                         'Choose One',

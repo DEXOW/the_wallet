@@ -127,7 +127,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     SnackBarNotify.showSnackBar(context: context, message: "Please wait for 1 minute before resending OTP", bgcolor: const Color(0xE61469EF), textColor: const Color(0xFFFFFFFF));
                                     return;
                                   }
-                                  FireAuth.verifyPhoneNumber(phoneNumber: widget.controllers[8].text + widget.controllers[9].text, context: context);
+                                  FireAuth.verifyPhoneNumber(phoneNumber: widget.controllers[6].text + widget.controllers[7].text, context: context); 
                                   SnackBarNotify.showSnackBar(context: context, message: "OTP sent successfully", bgcolor: const Color(0xE61469EF), textColor: const Color(0xFFFFFFFF));
                                   cooldown = DateTime.now().add(const Duration(minutes: 1));
                                 },

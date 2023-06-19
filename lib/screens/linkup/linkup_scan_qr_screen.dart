@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/components/social_card.dart';
-import 'package:the_wallet/screens/root/root_screen.dart';
+// import 'package:the_wallet/screens/root/root_screen.dart';
 
 class ScanQrCodeWidget extends StatefulWidget {
   const ScanQrCodeWidget({Key? key}) : super(key: key);
@@ -73,7 +73,6 @@ class ScanQrCodeWidgetState extends State<ScanQrCodeWidget> {
     controller.scannedDataStream.listen((scanData) async {
       // Handle the scanned QR code data here
       setState(() {
-        scannedData = scanData.code;
         cardID = scanData.code;
         cardIDMAP = json.decode(cardID!);
         finalCardID = cardIDMAP['cardID'];
@@ -95,15 +94,21 @@ class ScanQrCodeWidgetState extends State<ScanQrCodeWidget> {
 
   Future<void> addCard(String cardID) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    final docRef = FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(auth.currentUser!.uid)
-        .collection('cards')
-        .doc('savedsocialcards');
-    final doc = await docRef.get();
-    final List<dynamic> array = doc['cardIDs'];
-    array.add(cardID);
-    await docRef.update({'cardIDs': array});
+        .get()
+        .then((value) {
+      List<dynamic> cardIDs =
+          value.data()!['savedSocialCards'] as List<dynamic>;
+      cardIDs.add(cardID);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .update({
+        'savedSocialCards': cardIDs,
+      });
+    });
   }
 
   void openSocialCard() {
@@ -133,10 +138,12 @@ class ScanQrCodeWidgetState extends State<ScanQrCodeWidget> {
                 TextButton(
                   onPressed: () {
                     addCard(finalCardID!);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => RootScreen()),
-                    );
+
+                    int count = 0;
+                    Navigator.popUntil(context, (route) {
+                      return count++ == 2;
+                    });
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
