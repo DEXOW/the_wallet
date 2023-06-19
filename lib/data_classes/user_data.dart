@@ -9,6 +9,7 @@ class UserData extends ChangeNotifier {
   String? phoneNoCode;
   String? pictureUrl;
   String? socialCardId;
+  int? activeCard;
 
   UserData({
     required this.fname,
@@ -19,6 +20,7 @@ class UserData extends ChangeNotifier {
     required this.phoneNoCode,
     required this.pictureUrl,
     required this.socialCardId,
+    required this.activeCard,
   });
 
   void setData({
@@ -30,6 +32,7 @@ class UserData extends ChangeNotifier {
     String? phoneNoCode, 
     String? pictureUrl,
     String? socialCardId,
+    int? activeCard,
   }) {
     this.fname = fname;
     this.lname = lname;
@@ -39,6 +42,7 @@ class UserData extends ChangeNotifier {
     this.phoneNoCode = phoneNoCode;
     this.pictureUrl = pictureUrl;
     this.socialCardId = socialCardId;
+    this.activeCard = activeCard;
     notifyListeners();
   }
 }
@@ -53,6 +57,7 @@ class UserDataProvider extends ChangeNotifier {
     phoneNoCode: '',
     pictureUrl: '',
     socialCardId: '',
+    activeCard: 0,
   );
 
   UserData get userData => _userData;

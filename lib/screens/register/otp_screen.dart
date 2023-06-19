@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:pinput/pinput.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,19 +72,17 @@ class _OtpScreenState extends State<OtpScreen> {
                       height: screenHeight * 0.1,
                       alignment: Alignment.topLeft,
                       padding: const EdgeInsets.only(top: 10, left: 20),
-                      child: Row(
+                      child: const Row(
                         children: [
-                          Container(
-                            child: const Image(
-                              image: AssetImage('assets/icons/icon.png'),
-                              height: 50,
-                              width: 50,
-                            ),
+                          Image(
+                            image: AssetImage('assets/icons/icon.png'),
+                            height: 50,
+                            width: 50,
                           ),
                         ],
                       ),
                     ),
-                    Container( //Middle section
+                    SizedBox( //Middle section
                       height: screenHeight * 0.8,
                       child: Form(
                         child: Column(
@@ -103,13 +100,11 @@ class _OtpScreenState extends State<OtpScreen> {
                                 ),
                               ),
                             ),
-                            Container(
-                              child: Pinput(
-                                length: digitCount,
-                                defaultPinTheme: defaultPinTheme,
-                                controller: otpController,
-                                onChanged: (value){updateOtpValue();},
-                              ),
+                            Pinput(
+                              length: digitCount,
+                              defaultPinTheme: defaultPinTheme,
+                              controller: otpController,
+                              onChanged: (value){updateOtpValue();},
                             ),
                             Container(
                               margin: const EdgeInsets.only(top: 30),
@@ -208,7 +203,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                       )
                     ),
-                    Container( //Bottom Section
+                    SizedBox( //Bottom Section
                       height: screenHeight * 0.1,
                       width: screenWidth,
                       child: Column(
