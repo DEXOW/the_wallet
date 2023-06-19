@@ -251,6 +251,7 @@ Widget stdCardTemplate({required Map<String, dynamic> cardData}){
 }
 
 Widget nicCardView({required Map<String, dynamic> cardData}){
+  frequentCards(cardData['cardId']);
   return Container(
     width: 300,
     padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),

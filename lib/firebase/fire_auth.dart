@@ -67,7 +67,7 @@ class FireAuth {
           'pictureUrl': '',
           'socialCardId': socialCardId,
           'savedSocialCards': [],
-          'recentCards': {},
+          'frequentCards': {},
         }).then((value) async {
 
           await firestore.collection('users').doc(user!.uid).collection('cards').doc(socialCardId).set({

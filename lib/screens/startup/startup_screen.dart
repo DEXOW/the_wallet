@@ -3,6 +3,8 @@ import 'package:the_wallet/screens/login/login_screen.dart';
 import 'package:the_wallet/screens/register/register_screen.dart';
 
 class StartupScreen extends StatelessWidget {
+  const StartupScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
@@ -42,38 +44,36 @@ class StartupScreen extends StatelessWidget {
               Positioned(
                 bottom: screenHeight * 0.05, // Gap from the bottom of the screen
                 child: Column(children: [
-                  Container(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterScreen()
-                          ),
-                        );
-                      },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xE61469EF),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterScreen()
                         ),
-                        shape:
-                            MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50.0),
-                          ),
-                        ),
-                        fixedSize: MaterialStateProperty.all<Size>(
-                          const Size(230.0, 50.0),
+                      );
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color(0xE61469EF),
+                      ),
+                      shape:
+                          MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
                         ),
                       ),
-                      child: const Text(
-                        'Create Account',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                          fontFamily: 'Inter',
-                          color: Color(0xFFFFFFFF),
-                        ),
+                      fixedSize: MaterialStateProperty.all<Size>(
+                        const Size(230.0, 50.0),
+                      ),
+                    ),
+                    child: const Text(
+                      'Create Account',
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Inter',
+                        color: Color(0xFFFFFFFF),
                       ),
                     ),
                   ),

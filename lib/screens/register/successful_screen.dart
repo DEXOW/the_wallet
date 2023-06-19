@@ -50,19 +50,17 @@ class _SuccessScreenState extends State<SuccessScreen> {
                             height: screenHeight * 0.1,
                             alignment: Alignment.topLeft,
                             padding: const EdgeInsets.only(top: 10, left: 20),
-                            child: Row(
+                            child: const Row(
                               children: [
-                                Container(
-                                  child: const Image(
-                                    image: AssetImage('assets/icons/icon.png'),
-                                    height: 50,
-                                    width: 50,
-                                  ),
+                                Image(
+                                  image: AssetImage('assets/icons/icon.png'),
+                                  height: 50,
+                                  width: 50,
                                 ),
                               ],
                             ),
                           ),
-                          Container( //Middle section
+                          SizedBox( //Middle section
                             height: screenHeight * 0.8,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -110,7 +108,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                                     children: [
                                       TextButton(
                                         onPressed: () {
-                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false);
+                                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const StartupScreen()), (route) => false);
                                         },
                                         style: ButtonStyle(
                                           backgroundColor: MaterialStateProperty.all<Color>(
@@ -142,7 +140,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                               ],
                             ),
                           ),
-                          Container( //Bottom Section
+                          SizedBox( //Bottom Section
                             height: screenHeight * 0.1,
                             width: screenWidth,
                             child: Column(

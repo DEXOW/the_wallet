@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:the_wallet/data_classes/social_card_data.dart';
 import 'package:the_wallet/firebase_options.dart';
 
 import 'package:the_wallet/constants.dart';
@@ -31,6 +32,9 @@ void main() {
       providers: [
         ChangeNotifierProvider.value(value: UserDataProvider()),
         ChangeNotifierProvider.value(value: GlobalProvider()),
+        ChangeNotifierProvider.value(
+        value: SocialCardDataProvider(),
+      ),
       ],
       child: const MyApp(),
     )
@@ -57,7 +61,7 @@ class MyApp extends StatelessWidget {
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done){
-              return StartupScreen();
+              return const StartupScreen();
             } else {
               return const Center(
                 child: CircularProgressIndicator(),
