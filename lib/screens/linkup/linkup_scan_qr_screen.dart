@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/components/social_card.dart';
-import 'package:the_wallet/screens/root/root_screen.dart';
+// import 'package:the_wallet/screens/root/root_screen.dart';
 
 class ScanQrCodeWidget extends StatefulWidget {
   const ScanQrCodeWidget({Key? key}) : super(key: key);
