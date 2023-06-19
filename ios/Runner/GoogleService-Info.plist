@@ -6,8 +6,11 @@
 	<string>277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94</string>
+<<<<<<< HEAD
+=======
 	<key>ANDROID_CLIENT_ID</key>
 	<string>277225708946-0rbln2gkn6tlkvmok9um8eng6fgj1g97.apps.googleusercontent.com</string>
+>>>>>>> main
 	<key>API_KEY</key>
 	<string>AIzaSyCBKr0SieJMJ0rz6kmdMVwM0wR5nX-6PLo</string>
 	<key>GCM_SENDER_ID</key>
@@ -32,7 +35,10 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:277225708946:ios:6ba30ee575b0d46fc6354b</string>
+<<<<<<< HEAD
+=======
 	<key>DATABASE_URL</key>
 	<string>https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+>>>>>>> main
 </dict>
 </plist>

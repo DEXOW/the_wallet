@@ -34,14 +34,13 @@ class _NavbarState extends State<Navbar> {
   @override
   void initState() {
     super.initState();
+    currentScreen = 'home';
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     globalProvider = Provider.of<GlobalProvider>(context);
-
-    currentScreen = globalProvider.currentScreen;
 
     late double navWidth;
     return LayoutBuilder(
@@ -62,7 +61,7 @@ class _NavbarState extends State<Navbar> {
               Container(
                 height: 60,
                 width: navWidth,
-                margin: const EdgeInsets.only(top: 0, bottom: 10, left: 25, right: 25),
+                margin: const EdgeInsets.only(top: 15, bottom: 10, left: 25, right: 25),
                 decoration: BoxDecoration(
                   color: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.circular(50),

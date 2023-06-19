@@ -42,7 +42,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     }
     if (context.mounted){
       SnackBarNotify.showSnackBar(context: context, message: 'Password Reset Link Sent', bgcolor: Colors.green, textColor: Colors.black);
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const StartupScreen()), (route) => false,);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => StartupScreen()), (route) => false,);
     }
   }
 
@@ -74,15 +74,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                               Navigator.pop(context);
                             },
                           ),
-                          const Image(
-                            image: AssetImage('assets/icons/icon.png'),
-                            height: 50,
-                            width: 50,
+                          Container(
+                            child: const Image(
+                              image: AssetImage('assets/icons/icon.png'),
+                              height: 50,
+                              width: 50,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox( //Middle section
+                    Container( //Middle section
                       height: screenHeight * 0.8,
                       child: Form(
                         key: _loginFormKey,
@@ -162,7 +164,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                       ),
                     ),
-                    SizedBox( //Bottom Section
+                    Container( //Bottom Section
                       height: screenHeight * 0.1,
                       width: screenWidth,
                       child: Column(

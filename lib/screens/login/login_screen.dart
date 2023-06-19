@@ -90,15 +90,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pop(context);
                             },
                           ),
-                          const Image(
-                            image: AssetImage('assets/icons/icon.png'),
-                            height: 50,
-                            width: 50,
+                          Container(
+                            child: const Image(
+                              image: AssetImage('assets/icons/icon.png'),
+                              height: 50,
+                              width: 50,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox( //Middle section
+                    Container( //Middle section
                       height: screenHeight * 0.8,
                       child: Form(
                         key: _loginFormKey,
@@ -250,7 +252,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox( //Bottom Section
+                    Container( //Bottom Section
                       height: screenHeight * 0.1,
                       width: screenWidth,
                       child: Column(

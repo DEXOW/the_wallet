@@ -95,15 +95,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 Navigator.pop(context);
                               },
                             ),
-                          const Image(
-                            image: AssetImage('assets/icons/icon.png'),
-                            height: 50,
-                            width: 50,
+                          Container(
+                            child: const Image(
+                              image: AssetImage('assets/icons/icon.png'),
+                              height: 50,
+                              width: 50,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    SizedBox( //Middle section
+                    Container( //Middle section
                       height: screenHeight * 0.8,
                       child: LayoutBuilder(
                         builder:(BuildContext context, BoxConstraints constraints){
@@ -121,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       )
                     ),
                     //Middle Section (Widget will be loaded by layout builder depending on the view needed on the screen)
-                    SizedBox( //Bottom Section
+                    Container( //Bottom Section
                       height: screenHeight * 0.1,
                       width: screenWidth,
                       child: Column(
@@ -585,7 +587,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            SizedBox(
+                            Container(
                               width: //maxwidth
                                   MediaQuery.of(context).size.width * 0.38,
                               child: Row(
@@ -669,29 +671,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               barrierColor: secondaryBgColor,
                             ),
                           ),
-                          SizedBox(
-                            width: 175.0,
-                            child: TextFormField(
-                              focusNode: focusNodes[5],
-                              controller: controllers[7],
-                              validator: (value) => Validate.validatePhoneNo(phoneNo: value),
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
-                              onFieldSubmitted: (value) {
-                                focusNodes[5].unfocus();
-                              },
-                              decoration: const InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(50.0)),
-                                  borderSide: BorderSide(
-                                    style: BorderStyle.none,
-                                    width: 0,
+                          Container(
+                            child: SizedBox(
+                              width: 175.0,
+                              child: TextFormField(
+                                focusNode: focusNodes[5],
+                                controller: controllers[7],
+                                validator: (value) => Validate.validatePhoneNo(phoneNo: value),
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                onFieldSubmitted: (value) {
+                                  focusNodes[5].unfocus();
+                                },
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(50.0)),
+                                    borderSide: BorderSide(
+                                      style: BorderStyle.none,
+                                      width: 0,
+                                    ),
                                   ),
+                                  filled: true,
+                                  contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0),
+                                  hintText: '777 123 456',
                                 ),
-                                filled: true,
-                                contentPadding: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0),
-                                hintText: '777 123 456',
                               ),
                             ),
                           ),

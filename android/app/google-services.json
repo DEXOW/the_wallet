@@ -1,7 +1,10 @@
 {
   "project_info": {
     "project_number": "277225708946",
+<<<<<<< HEAD
+=======
     "firebase_url": "https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app",
+>>>>>>> main
     "project_id": "the-wallet-2fa7c",
     "storage_bucket": "the-wallet-2fa7c.appspot.com"
   },
@@ -15,6 +18,8 @@
       },
       "oauth_client": [
         {
+<<<<<<< HEAD
+=======
           "client_id": "277225708946-0rbln2gkn6tlkvmok9um8eng6fgj1g97.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -23,6 +28,7 @@
           }
         },
         {
+>>>>>>> main
           "client_id": "277225708946-tl6vrenguan3qu3l940rhnhtgk4jqt74.apps.googleusercontent.com",
           "client_type": 3
         }

@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class FireAuth{
+=======
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -7,6 +13,7 @@ import 'package:the_wallet/screens/components/global.dart';
 String _verificationId = '';
 int? _resendToken = 0;
 class FireAuth {
+>>>>>>> main
   static Future<User?> signInUsingEmailPassword({
     required String email,
     required String password,
@@ -21,14 +28,35 @@ class FireAuth {
         password: password,
       );
       user = userCredential.user;
+<<<<<<< HEAD
+      print("success");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print("usr-nf");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No user found for that email.'),
+          ),
+        );
+      } else if (e.code == 'wrong-password') {
+        print("wrong-pw");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Wrong password provided for that user.'),
+          ),
+        );
+=======
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found' || e.code == 'wrong-password') {
         SnackBarNotify.showSnackBar(context: context, message: 'Invalid Email or Password', bgcolor: Colors.red, textColor: Colors.white);
+>>>>>>> main
       }
     }
 
     return user;
   }
+<<<<<<< HEAD
+=======
 
   static Future<User?> registerUsingEmailPassword({
     required String fname,
@@ -64,14 +92,12 @@ class FireAuth {
           'dob': DateTime.parse(dob.trim()),
           'phoneNoCode': phoneNoCode.trim(),
           'phoneNo': phoneNo.trim(),
-          'pictureUrl': '',
+          'picutreUrl': '',
           'socialCardId': socialCardId,
-          'savedSocialCards': [],
-          'frequentCards': {},
         }).then((value) async {
 
           await firestore.collection('users').doc(user!.uid).collection('cards').doc(socialCardId).set({
-            'cardId': socialCardId,
+            'cardID': socialCardId,
             'fname': fname.trim(),
             'lname': lname.trim(),
             'career': '',
@@ -82,7 +108,6 @@ class FireAuth {
             'twitter': '',
             'facebook': '',
             'instagram': '',
-            'pictureUrl': '',
           });
         });
       });
@@ -148,4 +173,5 @@ class FireAuth {
     }
     return credential;
   }
+>>>>>>> main
 }

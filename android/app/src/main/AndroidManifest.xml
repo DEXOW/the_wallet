@@ -1,12 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.the_wallet">
-    <!-- nfc test -->
-
-    <uses-permission android:name="android.permission.NFC" />
-    <uses-sdk android:minSdkVersion="21"/>
-    <uses-feature android:name="android.hardware.nfc" android:required="true" />
-
-    <!-- nfc test -->
    <application
         android:label="The Wallet"
         android:name="${applicationName}"
