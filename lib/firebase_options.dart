@@ -17,7 +17,14 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
+<<<<<<< HEAD
       return web;
+=======
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
+>>>>>>> main
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,6 +32,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
+<<<<<<< HEAD
         return macos;
       case TargetPlatform.windows:
         // throw UnsupportedError(
@@ -32,6 +40,17 @@ class DefaultFirebaseOptions {
         //   'you can reconfigure this by running the FlutterFire CLI again.',
         // );
         return android;
+=======
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+>>>>>>> main
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -44,6 +63,7 @@ class DefaultFirebaseOptions {
     }
   }
 
+<<<<<<< HEAD
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDI8sc3x-08_n3veyQcCi4cCHtVQjbjvzg',
     appId: '1:277225708946:web:b3edb0733d028a90c6354b',
@@ -54,11 +74,17 @@ class DefaultFirebaseOptions {
     measurementId: 'G-X22NGRY649',
   );
 
+=======
+>>>>>>> main
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCYGSu1oYUAJi43ZAmO94sOWDMWfRhbGj8',
     appId: '1:277225708946:android:ad36ed28c820da34c6354b',
     messagingSenderId: '277225708946',
     projectId: 'the-wallet-2fa7c',
+<<<<<<< HEAD
+=======
+    databaseURL: 'https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app',
+>>>>>>> main
     storageBucket: 'the-wallet-2fa7c.appspot.com',
   );
 
@@ -67,6 +93,7 @@ class DefaultFirebaseOptions {
     appId: '1:277225708946:ios:6ba30ee575b0d46fc6354b',
     messagingSenderId: '277225708946',
     projectId: 'the-wallet-2fa7c',
+<<<<<<< HEAD
     storageBucket: 'the-wallet-2fa7c.appspot.com',
     iosClientId: '277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94.apps.googleusercontent.com',
     iosBundleId: 'com.example.theWallet',
@@ -78,6 +105,11 @@ class DefaultFirebaseOptions {
     messagingSenderId: '277225708946',
     projectId: 'the-wallet-2fa7c',
     storageBucket: 'the-wallet-2fa7c.appspot.com',
+=======
+    databaseURL: 'https://the-wallet-2fa7c-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'the-wallet-2fa7c.appspot.com',
+    androidClientId: '277225708946-0rbln2gkn6tlkvmok9um8eng6fgj1g97.apps.googleusercontent.com',
+>>>>>>> main
     iosClientId: '277225708946-a7m870sqe4d0670v9vdllbgjbcehnf94.apps.googleusercontent.com',
     iosBundleId: 'com.example.theWallet',
   );
