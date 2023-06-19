@@ -9,6 +9,8 @@ import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:the_wallet/constants.dart';
 import 'package:the_wallet/screens/components/social_card.dart';
+import 'package:the_wallet/screens/linkup/linkup_screen.dart';
+import 'package:the_wallet/screens/root/root_screen.dart';
 
 class ScanQrCodeWidget extends StatefulWidget {
   ScanQrCodeWidget({Key? key}) : super(key: key);
@@ -49,7 +51,6 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
   // Create an instance of QRViewController
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   late QRViewController controller;
-  late String? scannedData = '';
   late String? finalCardID;
 
   SocialCardData socialcardData = SocialCardData(
@@ -73,8 +74,8 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
     controller.scannedDataStream.listen((scanData) async {
       // Handle the scanned QR code data here
       setState(() {
-        scannedData = scanData.code;
         cardID = scanData.code;
+        print('This is scanned data ${scanData.code}');
         cardIDMAP = json.decode(cardID!);
         finalCardID = cardIDMAP['cardID'];
       });
@@ -82,28 +83,29 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
       // Pause the scanner after successful scan
       controller.pauseCamera();
 
-      // await addCard(finalCardID!);
-
       await searchCardFirestore(finalCardID!);
 
       openSocialCard();
-
-      // await searchCardFirestore(finalCardID!);
-      // controller.dispose();
     });
   }
 
   Future<void> addCard(String cardID) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    final docRef = FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('users')
         .doc(auth.currentUser!.uid)
-        .collection('cards')
-        .doc('savedsocialcards');
-    final doc = await docRef.get();
-    final List<dynamic> array = doc['cardIDs'];
-    array.add(cardID);
-    await docRef.update({'cardIDs': array});
+        .get()
+        .then((value) {
+      List<dynamic> cardIDs =
+          value.data()!['savedSocialCards'] as List<dynamic>;
+      cardIDs.add(cardID);
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(auth.currentUser!.uid)
+          .update({
+        'savedSocialCards': cardIDs,
+      });
+    });
   }
 
   void openSocialCard() {
@@ -133,21 +135,31 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                 TextButton(
                   onPressed: () {
                     addCard(finalCardID!);
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop(); // Close the dialog
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => RootScreen()),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Card Successfully Added', style: TextStyle(color: Color.fromARGB(255, 174, 167, 167)),), backgroundColor: primaryBgColor,),
+                      SnackBar(
+                        content: Text(
+                          'Card Successfully Added',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 174, 167, 167)),
+                        ),
+                        backgroundColor: primaryBgColor,
+                      ),
                     );
                   },
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      ),
-                    foregroundColor: MaterialStateProperty.all<Color>(primaryBgColor),
+                    ),
+                    foregroundColor:
+                        MaterialStateProperty.all<Color>(primaryBgColor),
                   ),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -160,7 +172,7 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                       ],
                     ),
                   ),
-                  )
+                )
               ],
             ),
           ),
@@ -175,7 +187,6 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
 
     if (cardList.docs.any((element) => element.id == cardID)) {
       Map<String, dynamic> cardData;
-      // cardData = cardList.docs.firstWhere((element) => element['cardID'] == cardID).data();
 
       cardData =
           cardList.docs.where((element) => element.id == cardID).first.data();
@@ -215,12 +226,9 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            double screenHeight =
-                constraints.maxHeight; //Get the height of the safe area
-            double screenWidth =
-                constraints.maxWidth; // Get the width of the safe area
-            double qrSize =
-                screenWidth * 0.7; // Adjust the size of the QR code widget
+            double screenHeight = constraints.maxHeight;
+            double screenWidth = constraints.maxWidth;
+            double qrSize = screenWidth * 0.7;
             return Stack(children: [
               Scaffold(
                 resizeToAvoidBottomInset: false,
@@ -234,8 +242,8 @@ class _scanqrcodewidgetstate extends State<ScanQrCodeWidget> {
                         margin: EdgeInsets.only(bottom: 150),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Colors.white, // Customize the border color
-                            width: 2.0, // Customize the border width
+                            color: Colors.white,
+                            width: 2.0,
                           ),
                         ),
                         child: ClipRect(

@@ -34,13 +34,14 @@ class _NavbarState extends State<Navbar> {
   @override
   void initState() {
     super.initState();
-    currentScreen = 'home';
+
   }
 
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     globalProvider = Provider.of<GlobalProvider>(context);
+    currentScreen = globalProvider.currentScreen;
 
     late double navWidth;
     return LayoutBuilder(
